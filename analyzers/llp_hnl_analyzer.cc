@@ -906,7 +906,7 @@ void llp_hnl_analyzer::Analyze(bool isData, int options, string outputfilename, 
         if (dtRechitsTpeak[i]<-25)MuonSystem->nEarly2DtRechits++;
         if (dtRechitsTpeak[i]>25)MuonSystem->nLate2DtRechits++;
         */
-        // MuonSystem->nDtRechits++;
+        MuonSystem->nDTRechits++;
       }
 
       //Do DT DBSCAN Clustering
@@ -1241,7 +1241,7 @@ void llp_hnl_analyzer::Analyze(bool isData, int options, string outputfilename, 
           MuonSystem->cscRechitCluster3MetHEM_dPhi[MuonSystem->nCscRechitClusters3] =  RazorAnalyzer::deltaPhi(MuonSystem->cscRechitCluster3Phi[MuonSystem->nCscRechitClusters3],MuonSystem->metPhiHEM);
 
           MuonSystem->nCscRechitClusters3++;
-      }
+      } // end loop on CSC clusters
 
 
       //  for (unsigned int j = 0; j < tmp.segment_id.size(); j++)
