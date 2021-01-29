@@ -72,9 +72,9 @@ typedef struct Point_
     float x, y, z, t, twire;  // X, Y, Z position
     float eta,phi;
     float dirX, dirY, dirZ;
-    int station, chamber;
+    int station, chamber, wheel;
     int clusterID;  // clustered ID
-}Point;
+} Point;
 
 class DBSCAN {
 public:

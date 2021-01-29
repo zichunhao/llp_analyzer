@@ -80,48 +80,6 @@ struct largest_pt_jet
   inline bool operator() (const jets& p1, const jets& p2){return p1.jet.Pt() > p2.jet.Pt();}
 } my_largest_pt_jet;
 
-int cscChamber(double x, double y, double z)
-{
-  double r = sqrt(x*x+y*y);
-  int sign_z = TMath::Sign(1.0, z);
-  // if (r > 80 && r < 283 && abs(z) > 568  && abs(z) < 632) return sign_z*11;
-  // if (r > 255 && r < 465.0 && abs(z) > 668.3 && abs(z) < 724) return sign_z*12;
-  // if (r > 485.5 && r < 695.5 && abs(z) > 686 && abs(z) < 724) return sign_z*13;
-  // if (r > 118.5 && r < 345 && abs(z) > 791 && abs(z) < 849.5) return sign_z*21;
-  // if (r > 337.5 && r < 695.5 && abs(z) > 791 && abs(z) < 849.5) return sign_z*22;
-  // if (r > 140.5 && r < 345 && abs(z) > 911.5 && abs(z) < 970) return sign_z*31;
-  // if (r > 337.5 && r < 695.5 && abs(z) > 911.5 && abs(z) < 970) return sign_z*32;
-  // if (r > 157.5 && r < 345 && abs(z) > 1002 && abs(z) < 1060.5) return sign_z*41;
-  // if (r > 337.5 && r < 695.5 && abs(z) > 1002 && abs(z) < 1060.5) return sign_z*42;
-  if (r < 283 && abs(z) > 568  && abs(z) < 632) return sign_z*11;
-  if (r < 470.0 && abs(z) > 668.3 && abs(z) < 724) return sign_z*12;
-  if (r > 480.0 && abs(z) > 686 && abs(z) < 724) return sign_z*13;
-  if (r < 345 && abs(z) > 791 && abs(z) < 849.5) return sign_z*21;
-  if (r > 337.5 && abs(z) > 791 && abs(z) < 849.5) return sign_z*22;
-  if (r < 345 && abs(z) > 911.5 && abs(z) < 970) return sign_z*31;
-  if (r > 337.5 && abs(z) > 911.5 && abs(z) < 970) return sign_z*32;
-  if (r < 345 && abs(z) > 1002 && abs(z) < 1060.5) return sign_z*41;
-  if (r > 337.5 && abs(z) > 1002 && abs(z) < 1060.5) return sign_z*42;
-  return -999;
-};
-int cscStation(double x, double y, double z)
-{
-  double r = sqrt(x*x+y*y);
-  // z = abs(z);
-  int sign_z = TMath::Sign(1.0, z);
-  if (r < 283 && abs(z) > 568  && abs(z) < 632) return sign_z*1;
-  if (r < 470.0 && abs(z) > 668.3 && abs(z) < 724) return sign_z*1;
-  if (r > 480.0 && abs(z) > 686 && abs(z) < 724) return sign_z*1;
-  if (r < 345 && abs(z) > 791 && abs(z) < 849.5) return sign_z*2;
-  if (r > 337.5 && abs(z) > 791 && abs(z) < 849.5) return sign_z*2;
-  if (r < 345 && abs(z) > 911.5 && abs(z) < 970) return sign_z*3;
-  if (r > 337.5 && abs(z) > 911.5 && abs(z) < 970) return sign_z*3;
-  if (r < 345 && abs(z) > 1002 && abs(z) < 1060.5) return sign_z*4;
-  if (r > 337.5 && abs(z) > 1002 && abs(z) < 1060.5) return sign_z*4;
-  return -999;
-};
-
-
 void llp_hnl_analyzer::Analyze(bool isData, int options, string outputfilename, string analysisTag)
 {
   //initialization: create one TTree for each analysis box
@@ -910,59 +868,63 @@ void llp_hnl_analyzer::Analyze(bool isData, int options, string outputfilename, 
       else if(!isData) accep_met->Fill(1.0, genWeight*MuonSystem->higgsPtWeight*MuonSystem->pileupWeight*MuonSystem->metSF);
       else Nmet200->Fill(1.0);
 
-
-
+      // DT rechit clustering
+      vector<Point> dt_points;
+      vector<int> dtRechitsClusterId;
+      dt_points.clear();
       MuonSystem->nDTRechits  = 0;
+
       for (int i = 0; i < nDtRechits; i++) {
 
-        if (dtRechitY[i]>=0.0) MuonSystem->nDTPositiveYRechits++;
-        else MuonSystem->nDTNegativeYRechits++;
-        if (dtRechitStation[i] == 1 && dtRechitWheel[i] == -2) MuonSystem->nDTRechitsChamberMinus12++;
-        if (dtRechitStation[i] == 1 && dtRechitWheel[i] == -1) MuonSystem->nDTRechitsChamberMinus11++;
-        if (dtRechitStation[i] == 1 && dtRechitWheel[i] == 0) MuonSystem->nDTRechitsChamber10++;
-        if (dtRechitStation[i] == 1 && dtRechitWheel[i] == 1) MuonSystem->nDTRechitsChamberPlus11++;
-        if (dtRechitStation[i] == 1 && dtRechitWheel[i] == 2) MuonSystem->nDTRechitsChamberPlus12++;
-        if (dtRechitStation[i] == 2 && dtRechitWheel[i] == -2) MuonSystem->nDTRechitsChamberMinus22++;
-        if (dtRechitStation[i] == 2 && dtRechitWheel[i] == -1) MuonSystem->nDTRechitsChamberMinus21++;
-        if (dtRechitStation[i] == 2 && dtRechitWheel[i] == 0) MuonSystem->nDTRechitsChamber20++;
-        if (dtRechitStation[i] == 2 && dtRechitWheel[i] == 1) MuonSystem->nDTRechitsChamberPlus21++;
-        if (dtRechitStation[i] == 2 && dtRechitWheel[i] == 2) MuonSystem->nDTRechitsChamberPlus22++;
-        if (dtRechitStation[i] == 3 && dtRechitWheel[i] == -2) MuonSystem->nDTRechitsChamberMinus32++;
-        if (dtRechitStation[i] == 3 && dtRechitWheel[i] == -1) MuonSystem->nDTRechitsChamberMinus31++;
-        if (dtRechitStation[i] == 3 && dtRechitWheel[i] == 0) MuonSystem->nDTRechitsChamber30++;
-        if (dtRechitStation[i] == 3 && dtRechitWheel[i] == 1) MuonSystem->nDTRechitsChamberPlus31++;
-        if (dtRechitStation[i] == 3 && dtRechitWheel[i] == 2) MuonSystem->nDTRechitsChamberPlus32++;
-        if (dtRechitStation[i] == 4 && dtRechitWheel[i] == -2) MuonSystem->nDTRechitsChamberMinus42++;
-        if (dtRechitStation[i] == 4 && dtRechitWheel[i] == -1) MuonSystem->nDTRechitsChamberMinus41++;
-        if (dtRechitStation[i] == 4 && dtRechitWheel[i] == 0) MuonSystem->nDTRechitsChamber40++;
-        if (dtRechitStation[i] == 4 && dtRechitWheel[i] == 1) MuonSystem->nDTRechitsChamberPlus41++;
-        if (dtRechitStation[i] == 4 && dtRechitWheel[i] == 2) MuonSystem->nDTRechitsChamberPlus42++;
-
-
-        MuonSystem->nDTRechits++;
+        //pick out the right bits for chamber
+        Point p;
+        p.phi = dtRechitPhi[i];
+        p.eta = dtRechitEta[i];
+        p.x = dtRechitX[i];
+        p.y = dtRechitY[i];
+        p.z = dtRechitZ[i];
+        // the timing is actually not used in the clustering, the distance metric only uses eta and phi
+        // p.t = dtRechitTime[i];
+        p.station = dtRechitStation[i];
+        p.wheel = dtRechitWheel[i];
+        p.clusterID = UNCLASSIFIED;
+        dt_points.push_back(p);
+        dtRechitsClusterId.push_back(-1);
+        /*
+        if (dtRechitY[i]>=0.0)
+        {
+          MuonSystem->nDtPositiveYRechits++;
+          MuonSystem->dtPosTpeak = MuonSystem->dtPosTpeak + dtRechitsTpeak[i];
+        }
+        else
+        {
+          MuonSystem->nDtNegativeYRechits++;
+          MuonSystem->dtNegTpeak = MuonSystem->dtNegTpeak + dtRechitsTpeak[i];
+        }
+        if (dtRechitsTpeak[i]<-12.5)MuonSystem->nEarlyDtRechits++;
+        if (dtRechitsTpeak[i]>12.5)MuonSystem->nLateDtRechits++;
+        if (dtRechitsTpeak[i]<-25)MuonSystem->nEarly2DtRechits++;
+        if (dtRechitsTpeak[i]>25)MuonSystem->nLate2DtRechits++;
+        */
+        // MuonSystem->nDtRechits++;
       }
-      if ( MuonSystem->nDTRechitsChamberMinus12 > 50) MuonSystem->nDtRings++;
-      if ( MuonSystem->nDTRechitsChamberMinus11 > 50) MuonSystem->nDtRings++;
-      if ( MuonSystem->nDTRechitsChamber10 > 50) MuonSystem->nDtRings++;
-      if ( MuonSystem->nDTRechitsChamberPlus11 > 50) MuonSystem->nDtRings++;
-      if ( MuonSystem->nDTRechitsChamberPlus12 > 50) MuonSystem->nDtRings++;
-      if ( MuonSystem->nDTRechitsChamberMinus22 > 50) MuonSystem->nDtRings++;
-      if ( MuonSystem->nDTRechitsChamberMinus21 > 50) MuonSystem->nDtRings++;
-      if ( MuonSystem->nDTRechitsChamber20 > 50) MuonSystem->nDtRings++;
-      if ( MuonSystem->nDTRechitsChamberPlus21 > 50) MuonSystem->nDtRings++;
-      if ( MuonSystem->nDTRechitsChamberPlus22 > 50) MuonSystem->nDtRings++;
-      if ( MuonSystem->nDTRechitsChamberMinus32 > 50) MuonSystem->nDtRings++;
-      if ( MuonSystem->nDTRechitsChamberMinus31 > 50) MuonSystem->nDtRings++;
-      if ( MuonSystem->nDTRechitsChamber30 > 50) MuonSystem->nDtRings++;
-      if ( MuonSystem->nDTRechitsChamberPlus31 > 50) MuonSystem->nDtRings++;
-      if ( MuonSystem->nDTRechitsChamberPlus32 > 50) MuonSystem->nDtRings++;
-      if ( MuonSystem->nDTRechitsChamberMinus42 > 50) MuonSystem->nDtRings++;
-      if ( MuonSystem->nDTRechitsChamberMinus41 > 50) MuonSystem->nDtRings++;
-      if ( MuonSystem->nDTRechitsChamber40 > 50) MuonSystem->nDtRings++;
-      if ( MuonSystem->nDTRechitsChamberPlus41 > 50) MuonSystem->nDtRings++;
-      if ( MuonSystem->nDTRechitsChamberPlus42 > 50) MuonSystem->nDtRings++;
 
-      // cout << "Number of rec hits: "<<ncscRechits<<endl;
+      //Do DT DBSCAN Clustering
+      int min_dt_point = 50;  //minimum number of segments to call it a cluster
+      float dt_epsilon = 0.2; //cluster radius parameter
+      DBSCAN dtds(min_dt_point, dt_epsilon, dt_points);
+      dtds.run();
+      dtds.result();
+      dtds.clusterMoments();
+      dtds.sort_clusters();
+
+      dtds.merge_clusters();
+      dtds.result();
+      dtds.clusterMoments();
+      dtds.sort_clusters();
+
+
+      // CSC rechit clustering
       vector<Point> points;
       vector<int> cscRechitsClusterId;
       points.clear();
@@ -984,7 +946,9 @@ void llp_hnl_analyzer::Analyze(bool isData, int options, string outputfilename, 
         p.chamber = cscRechitsChamber[i];
         p.clusterID = UNCLASSIFIED;
         points.push_back(p);
+
         cscRechitsClusterId.push_back(-1);
+        // these branches were actually not used in the analysis as cuts, but they were used to select for a control region that had a large number of early hits, which should have a lot of cosmic muon showers
         if (cscRechitsY[i]>=0.0)
         {
           MuonSystem->nCscPositiveYRechits++;
@@ -1001,6 +965,27 @@ void llp_hnl_analyzer::Analyze(bool isData, int options, string outputfilename, 
         if (cscRechitsTpeak[i]>25)MuonSystem->nLate2CscRechits++;
         // MuonSystem->nCscRechits++;
       }
+
+      //the nCscRings branch was actually used to cut out cosmic muon showers
+      // MuonSystem->nCscRings = 0;
+      // if ( MuonSystem->nCscRechitsChamberPlus11 > 50) MuonSystem->nCscRings++;
+      // if ( MuonSystem->nCscRechitsChamberPlus12 > 50) MuonSystem->nCscRings++;
+      // if ( MuonSystem->nCscRechitsChamberPlus13 > 50) MuonSystem->nCscRings++;
+      // if ( MuonSystem->nCscRechitsChamberPlus21 > 50) MuonSystem->nCscRings++;
+      // if ( MuonSystem->nCscRechitsChamberPlus22 > 50) MuonSystem->nCscRings++;
+      // if ( MuonSystem->nCscRechitsChamberPlus31 > 50) MuonSystem->nCscRings++;
+      // if ( MuonSystem->nCscRechitsChamberPlus32 > 50) MuonSystem->nCscRings++;
+      // if ( MuonSystem->nCscRechitsChamberPlus41 > 50) MuonSystem->nCscRings++;
+      // if ( MuonSystem->nCscRechitsChamberPlus42 > 50) MuonSystem->nCscRings++;
+      // if ( MuonSystem->nCscRechitsChamberMinus11 > 50) MuonSystem->nCscRings++;
+      // if ( MuonSystem->nCscRechitsChamberMinus12 > 50) MuonSystem->nCscRings++;
+      // if ( MuonSystem->nCscRechitsChamberMinus13 > 50) MuonSystem->nCscRings++;
+      // if ( MuonSystem->nCscRechitsChamberMinus21 > 50) MuonSystem->nCscRings++;
+      // if ( MuonSystem->nCscRechitsChamberMinus22 > 50) MuonSystem->nCscRings++;
+      // if ( MuonSystem->nCscRechitsChamberMinus31 > 50) MuonSystem->nCscRings++;
+      // if ( MuonSystem->nCscRechitsChamberMinus32 > 50) MuonSystem->nCscRings++;
+      // if ( MuonSystem->nCscRechitsChamberMinus41 > 50) MuonSystem->nCscRings++;
+      // if ( MuonSystem->nCscRechitsChamberMinus42 > 50) MuonSystem->nCscRings++;
 
       //Do DBSCAN Clustering
       int min_point = 50;  //minimum number of segments to call it a cluster
@@ -1243,9 +1228,7 @@ void llp_hnl_analyzer::Analyze(bool isData, int options, string outputfilename, 
               {
                 MuonSystem->cscRechitCluster3_match_RB1_0p6[MuonSystem->nCscRechitClusters3] ++;
               }
-
             }
-
           }
 
 

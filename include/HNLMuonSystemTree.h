@@ -1,5 +1,3 @@
-// Class to manage files for b-tag scale factors, lepton scale factors, pileup weights, and other information
-
 #ifndef HNLMuonSystemTree_H
 #define HNLMuonSystemTree_H
 
@@ -91,19 +89,16 @@ public:
 
   float genJetMET[N_MAX_GPARTICLES];
 
-  //csc
-  int           nCscRechits;
-  int           nEarlyCscRechits;
-  int           nLateCscRechits;
-  int           nEarly2CscRechits;
-  int           nLate2CscRechits;
-  int           nCscRings;
-  int           nCscPositiveYRechits;
-  int           nCscNegativeYRechits;
-  float         cscPosTpeak;
-  float         cscNegTpeak;
+  //dt
+  int           nDtSeg;
+  float         dtSegPhi[N_MAX_CSCRECHITS];   //[nCsc]
+  float         dtSegEta[N_MAX_CSCRECHITS];   //[nCsc]
+  int         dtSegStation[N_MAX_CSCRECHITS];   //[nCsc]
+  int         dtSegWheel[N_MAX_CSCRECHITS];   //[nCsc]
 
   int           nDTRechits;
+  float         dtPosTpeak;
+  float         dtNegTpeak;
   int           nDtRings;
   int           nDTPositiveYRechits;
   int           nDTNegativeYRechits;
@@ -131,17 +126,26 @@ public:
   float         dtRechitsEta[N_MAX_CSCRECHITS];   //[nCsc]
   int         dtRechitsStation[N_MAX_CSCRECHITS];   //[nCsc]
   int         dtRechitsWheel[N_MAX_CSCRECHITS];   //[nCsc]
+
+  // rpc
   int           nRpc;
   float         rpcPhi[N_MAX_CSCRECHITS];   //[nCsc]
   float         rpcEta[N_MAX_CSCRECHITS];   //[nCsc]
   bool         rpc_RE12[N_MAX_CSCRECHITS];   //[nCsc]
   bool         rpc_RB1[N_MAX_CSCRECHITS];   //[nCsc]
 
-  int           nDtSeg;
-  float         dtSegPhi[N_MAX_CSCRECHITS];   //[nCsc]
-  float         dtSegEta[N_MAX_CSCRECHITS];   //[nCsc]
-  int         dtSegStation[N_MAX_CSCRECHITS];   //[nCsc]
-  int         dtSegWheel[N_MAX_CSCRECHITS];   //[nCsc]
+  //csc
+  int           nCscRechits;
+  int           nEarlyCscRechits;
+  int           nLateCscRechits;
+  int           nEarly2CscRechits;
+  int           nLate2CscRechits;
+  int           nCscRings;
+  int           nCscPositiveYRechits;
+  int           nCscNegativeYRechits;
+  float         cscPosTpeak;
+  float         cscNegTpeak;
+
 
 
   int           nCscRechitClusters3;
