@@ -24,14 +24,17 @@ sampleName=$9
 ############################
 workDir=`pwd`
 executable=${analysisType}
+echo executable ${analysisType}
 source /cvmfs/cms.cern.ch/cmsset_default.sh
 export SCRAM_ARCH=slc7_amd64_gcc700
+echo Setting up $cmsswReleaseVersion
 #tar -zxvf cms_setup.tar.gz
 scramv1 project CMSSW $cmsswReleaseVersion
 
 #########################################
 #copy input list and exec to cmssw folder
 ########################################
+echo "Copying the input file list"
 cp input_list.tgz $cmsswReleaseVersion/src/
 cp ${executable} $cmsswReleaseVersion/src/.
 #mkdir -p $cmsswReleaseVersion/src/HHBoostedAnalyzer/data/PileupWeights/
@@ -47,6 +50,7 @@ cp ${executable} $cmsswReleaseVersion/src/.
 ###########################
 #get cmssw environment
 ###########################
+echo "get cmssw environment"
 cd $cmsswReleaseVersion/src/
 eval `scram runtime -sh`
 tar vxzf input_list.tgz
@@ -55,6 +59,7 @@ inputfilelist=input_list_${jobnumber}.txt
 ###################################
 #copy input files ahead of time
 ###################################
+echo "copy input files ahead of time"
 mkdir inputs/
 for i in `cat $inputfilelist`
 do
@@ -67,8 +72,8 @@ ls inputs/* > tmp_input_list.txt
 #run executable
 ###########################
 echo "Executing Analysis executable:"
-echo "./${executable} tmp_input_list.txt --outputFile=${outputfile}_${jobnumber}.root --optionNumber=${option} --isData=${isData} "
-./${executable} tmp_input_list.txt --outputFile=${outputfile}_${jobnumber}.root --optionNumber=${option} --isData=${isData} --year=${year} --pileupWeightName=${sampleName}
+echo "./${executable} tmp_input_list.txt llp_hnl_analyzer --outputFile=${outputfile}_${jobnumber}.root --optionNumber=${option} --isData=${isData} "
+./${executable} tmp_input_list.txt llp_hnl_analyzer --outputFile=${outputfile}_${jobnumber}.root --optionNumber=${option} --isData=${isData} --year=${year} --pileupWeightName=${sampleName}
 
 ls -l
 ##########################################################
