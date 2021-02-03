@@ -109,21 +109,21 @@ void llp_hnl_analyzer::Analyze(bool isData, int options, string outputfilename, 
   // }
 
   if( isData )
-  {
-    std::cout << "[INFO]: running on data with option: " << option << std::endl;
-  }
+    {
+      std::cout << "[INFO]: running on data with option: " << option << std::endl;
+    }
   else
-  {
-    std::cout << "[INFO]: running on MC with option: " << option << std::endl;
-  }
+    {
+      std::cout << "[INFO]: running on MC with option: " << option << std::endl;
+    }
   if( signalScan )
-  {
-    std::cout << "[INFO]: running with Signal scan" << std::endl;
-  }
+    {
+      std::cout << "[INFO]: running with Signal scan" << std::endl;
+    }
   else
-  {
-    std::cout << "[INFO]: running without Signal scan " << option << std::endl;
-  }
+    {
+      std::cout << "[INFO]: running without Signal scan " << option << std::endl;
+    }
 
 
 
@@ -246,7 +246,7 @@ void llp_hnl_analyzer::Analyze(bool isData, int options, string outputfilename, 
   for (Long64_t jentry=0; jentry<fChain->GetEntries();jentry++) {
 
     //begin event
-    if(jentry % 1 == 0)
+    if(jentry % 1000 == 0)
       {
         end = clock();
         double time_taken = double(end - start) / double(CLOCKS_PER_SEC);
@@ -259,7 +259,6 @@ void llp_hnl_analyzer::Analyze(bool isData, int options, string outputfilename, 
     //GetEntry(ientry);
     nb = fChain->GetEntry(jentry); nbytes += nb;
 
-    cout << "fill normalization histogram" <<endl;
     //std::cout << "deb0 " << jentry << std::endl;
     MuonSystem->InitVariables();
     //std::cout << "deb1 " << jentry << std::endl;
@@ -299,7 +298,6 @@ void llp_hnl_analyzer::Analyze(bool isData, int options, string outputfilename, 
 
 
 
-          cout << "Created new output file " << thisFileName << endl;
         }
         //Fill NEvents hist
         // cout<<"here"<<endl;
@@ -308,7 +306,6 @@ void llp_hnl_analyzer::Analyze(bool isData, int options, string outputfilename, 
 
       }
 
-    cout << "Access event info" << endl;
     //event info
     if (isData)
       {
@@ -328,7 +325,6 @@ void llp_hnl_analyzer::Analyze(bool isData, int options, string outputfilename, 
     MuonSystem->evtNum = eventNum;
 
     bool wzFlag = false;
-    cout<<"fill ngenparticles: "<<nGenParticle<<endl;
     if (!isData)
       {
         for (int i=0; i < nGenParticle; i++)
@@ -459,7 +455,6 @@ void llp_hnl_analyzer::Analyze(bool isData, int options, string outputfilename, 
         MuonSystem->pileupWeightDown = helper->getPileupWeightDown(MuonSystem->npu) / MuonSystem->pileupWeight;
       }
 
-    cout << "done filling GEN particles" << endl;
 
 
     //get NPU
@@ -469,9 +464,6 @@ void llp_hnl_analyzer::Analyze(bool isData, int options, string outputfilename, 
     MuonSystem->metPhi = metType1Phi;
     MuonSystem->metJESUp = MuonSystem->met;
     MuonSystem->metJESDown = MuonSystem->met;
-
-
-    cout << "done accessing the pileup information" << endl;
 
 
     MuonSystem->metSF = helper->getMetTriggerSF(MuonSystem->met);
@@ -501,13 +493,10 @@ void llp_hnl_analyzer::Analyze(bool isData, int options, string outputfilename, 
     // if (MuonSystem->met < 200) continue;
     // if (nCscRechitClusters==0) continue;
 
-    cout << "done accessing scale factors and corrections" << endl;
-
     //Triggers (trigger_names_llp_v3.dat!)
     for(int i = 0; i < NTriggersMAX; i++){
       MuonSystem->HLTDecision[i] = HLTDecision[i];
     }
-    cout << "Max number of triggers: " << NTriggersMAX << endl;
     MuonSystem->SingleMuonTrigger = (HLTDecision[135] or
                                      HLTDecision[136] or
                                      HLTDecision[196]);;
@@ -519,8 +508,6 @@ void llp_hnl_analyzer::Analyze(bool isData, int options, string outputfilename, 
     MuonSystem->SingleLepTrigger = (MuonSystem->SingleMuonTrigger or
                                     MuonSystem->SingleEleTrigger);
 
-
-    cout << "done accessing trigger information" << endl;
 
     // flags
     MuonSystem->Flag_HBHENoiseFilter = Flag_HBHENoiseFilter;
@@ -546,9 +533,6 @@ void llp_hnl_analyzer::Analyze(bool isData, int options, string outputfilename, 
     MuonSystem->Flag2_eeBadScFilter = Flag2_eeBadScFilter;
     MuonSystem->Flag2_all = Flag2_HBHENoiseFilter && Flag2_HBHEIsoNoiseFilter && Flag2_BadPFMuonFilter && Flag2_globalSuperTightHalo2016Filter && Flag2_EcalDeadCellTriggerPrimitiveFilter;
     if (isData) MuonSystem->Flag2_all = MuonSystem->Flag2_all && Flag2_eeBadScFilter;
-
-    cout << "done accessing calibrations" << endl;
-
 
     if (analysisTag!="Razor2016_07Aug2017Rereco")
       {
@@ -624,7 +608,6 @@ void llp_hnl_analyzer::Analyze(bool isData, int options, string outputfilename, 
 
     sort(Leptons.begin(), Leptons.end(), my_largest_pt);
 
-    cout << "done electron and muon selection " << Leptons.size() << endl;
 
     // set the number of leptons to 0 initially
     MuonSystem->nLeptons = 0;
@@ -636,7 +619,6 @@ void llp_hnl_analyzer::Analyze(bool isData, int options, string outputfilename, 
       MuonSystem->lepPhi[MuonSystem->nLeptons]    = tmp.lepton.Phi();
       MuonSystem->lepPdgId[MuonSystem->nLeptons]  = tmp.pdgId;
       MuonSystem->lepDZ[MuonSystem->nLeptons]     = tmp.dZ;
-      cout << "Check Id and Iso" << endl;
       MuonSystem->lepPassId[MuonSystem->nLeptons] = tmp.passId;
       MuonSystem->lepPassLooseIso[MuonSystem->nLeptons] = tmp.passLooseIso;
       MuonSystem->lepPassTightIso[MuonSystem->nLeptons] = tmp.passTightIso;
@@ -647,7 +629,6 @@ void llp_hnl_analyzer::Analyze(bool isData, int options, string outputfilename, 
 
     MuonSystem->category = MuonSystem->nLeptons;
 
-    cout << "done counting leptons" << endl;
 
     TLorentzVector met;
     met.SetPtEtaPhiE(metType1Pt,0,metType1Phi,metType1Pt);
@@ -661,7 +642,6 @@ void llp_hnl_analyzer::Analyze(bool isData, int options, string outputfilename, 
     //Select Jets
     //-----------------------------------------------
 
-    cout << "start jet selection" << endl;
 
     std::vector<jets> Jets;
     float MetXCorr_JESUp = 0.;
@@ -763,7 +743,7 @@ void llp_hnl_analyzer::Analyze(bool isData, int options, string outputfilename, 
     //Require at least 2 jets
     //-----------------------------
 
-    cout << "loop on jets" << endl;
+    MuonSystem->nJets = 0;
 
     // if( Jets.size() < 2 ) continue;
     // if (triggered) trig_lepId_dijet->Fill(1);
@@ -837,7 +817,6 @@ void llp_hnl_analyzer::Analyze(bool isData, int options, string outputfilename, 
     }
 
 
-    cout << "start calculating delta phis" << endl;
 
     MuonSystem-> jetMet_dPhiMin = jetMet_dPhiMin_temp;
     MuonSystem-> jetMet_dPhiMin4 = jetMet_dPhiMin4_temp;
@@ -888,7 +867,6 @@ void llp_hnl_analyzer::Analyze(bool isData, int options, string outputfilename, 
     dt_points.clear();
     MuonSystem->nDTRechits  = 0;
 
-    cout << "loop on DT rechits" << endl;
     for (int i = 0; i < nDtRechits; i++) {
       //pick out the right bits for chamber
       Point p;
@@ -922,9 +900,6 @@ void llp_hnl_analyzer::Analyze(bool isData, int options, string outputfilename, 
       */
       MuonSystem->nDTRechits++;
     }
-    cout << "done loop on DT rechits" << endl;
-
-    cout << "dbscan on DT rechits" << endl;
 
     //Do DT DBSCAN Clustering
     int min_dt_point = 50;  //minimum number of segments to call it a cluster
@@ -940,7 +915,6 @@ void llp_hnl_analyzer::Analyze(bool isData, int options, string outputfilename, 
     dtds.clusterMoments();
     dtds.sort_clusters();
 
-    cout << "done dbscan on DT rechits" << endl;
 
     // CSC rechit clustering
     vector<Point> points;
