@@ -160,15 +160,6 @@ void llp_hnl_analyzer::Analyze(bool isData, int options, string outputfilename, 
   map<pair<int,int>, TH1F*> Total2D;
 
 
-  // map<pair<int,int>, TH1F*> smsSumScaleWeights2D;
-  // map<pair<int,int>, TH1F*> smsSumPdfWeights2D;
-  // map<pair<int,int>, TH1F*> smsNISRJets2D;
-  // map<pair<int,int>, TH1F*> smsPtISR2D;
-  // map<pair<int,int>, TH1F*> smsNPV2D;
-
-
-
-
   //histogram containing total number of processed events (for normalization)
   TH1F *NEvents = new TH1F("NEvents", "NEvents", 1, 1, 2);
   TH1F *Total = new TH1F("Total", "Total", 1, 1, 2);
@@ -182,27 +173,11 @@ void llp_hnl_analyzer::Analyze(bool isData, int options, string outputfilename, 
   TH1F *Njet1 = new TH1F("Njet1", "Njet1", 1, 1, 2);
   TH1F *NcosmicVeto = new TH1F("NcosmicVeto", "NcosmicVeto", 1, 1, 2);
 
-
-
-  // TH1F *NEvents_genweight = new TH1F("NEvents_genweight", "NEvents_genweight", 1, 1, 2);
-
   char* cmsswPath;
   cmsswPath = getenv("CMSSW_BASE");
   string pathname;
   if(cmsswPath != NULL) pathname = string(cmsswPath) + "/src/llp_analyzer/data/JEC/";
   if(cmsswPath != NULL and option == 1) pathname = "JEC/"; //run on condor if option == 1
-
-  // cout << "Getting JEC parameters from " << pathname << endl;
-  //
-  // std::vector<JetCorrectorParameters> correctionParameters;
-  // correctionParameters.push_back(JetCorrectorParameters(Form("%s/Summer16_23Sep2016V3_MC/Summer16_23Sep2016V3_MC_L1FastJet_AK4PFchs.txt", pathname.c_str())));
-  // correctionParameters.push_back(JetCorrectorParameters(Form("%s/Summer16_23Sep2016V3_MC/Summer16_23Sep2016V3_MC_L2Relative_AK4PFchs.txt", pathname.c_str())));
-  // correctionParameters.push_back(JetCorrectorParameters(Form("%s/Summer16_23Sep2016V3_MC/Summer16_23Sep2016V3_MC_L3Absolute_AK4PFchs.txt", pathname.c_str())));
-  //
-  // FactorizedJetCorrector *JetCorrector = new FactorizedJetCorrector(correctionParameters);
-
-
-
 
   //--------------------------------
   //Initialize helper
@@ -210,22 +185,8 @@ void llp_hnl_analyzer::Analyze(bool isData, int options, string outputfilename, 
   RazorHelper *helper = 0;
   helper = new RazorHelper(analysisTag, isData, false);
 
-
-
   std::vector<FactorizedJetCorrector*> JetCorrector = helper->getJetCorrector();
   std::vector<std::pair<int,int> > JetCorrectorIOV = helper->getJetCorrectionsIOV();
-  //----------
-  //pu histo
-  //----------
-  //TH1D* puhisto = new TH1D("pileup", "", 50, 0, 50);
-  //histogram containing total number of processed events (for normalization)
-  //TH1F *histNPV = new TH1F("NPV", "NPV", 2, -0.5, 1.5);
-  //TH1F *NEvents = new TH1F("NEvents", "NEvents", 1, 1, 2);
-  //TH1F *SumWeights = new TH1F("SumWeights", "SumWeights", 1, 0.5, 1.5);
-  //TH1F *SumScaleWeights = new TH1F("SumScaleWeights", "SumScaleWeights", 6, -0.5, 5.5);
-  //TH1F *SumPdfWeights = new TH1F("SumPdfWeights", "SumPdfWeights", NUM_PDF_WEIGHTS, -0.5, NUM_PDF_WEIGHTS-0.5);
-
-
 
   //*************************************************************************
   //Loop over Input File Events
@@ -255,7 +216,6 @@ void llp_hnl_analyzer::Analyze(bool isData, int options, string outputfilename, 
     //std::cout << "deb0 " << jentry << std::endl;
     MuonSystem->InitVariables();
     //std::cout << "deb1 " << jentry << std::endl;
-
 
     // cout<<*lheComments<<endl;
     if (!isData && signalScan) {
@@ -316,16 +276,15 @@ void llp_hnl_analyzer::Analyze(bool isData, int options, string outputfilename, 
     if (!isData) {
       for (int i=0; i < nGenParticle; i++) {
 
-        if ((abs(gParticleId[i]) == 13 || abs(gParticleId[i]) == 11) && gParticleStatus[i] == 1 && abs(gParticleMotherId[i]) == 24)
-          { // choosing only the W->munu events
-            wzFlag = true;
-            MuonSystem->gLepId = gParticleId[i];
-            MuonSystem->gLepPt = gParticlePt[i];
-            MuonSystem->gLepEta = gParticleEta[i];
-            MuonSystem->gLepE = gParticleE[i];
-            MuonSystem->gLepPhi = gParticlePhi[i];
-
-          }
+        if ((abs(gParticleId[i]) == 13 || abs(gParticleId[i]) == 11) && gParticleStatus[i] == 1 && abs(gParticleMotherId[i]) == 24) {
+          // choosing only the W->munu events
+          wzFlag = true;
+          MuonSystem->gLepId = gParticleId[i];
+          MuonSystem->gLepPt = gParticlePt[i];
+          MuonSystem->gLepEta = gParticleEta[i];
+          MuonSystem->gLepE = gParticleE[i];
+          MuonSystem->gLepPhi = gParticlePhi[i];
+        }
         else if (abs(gParticleId[i]) == 15 && gParticleStatus[i] == 2 && abs(gParticleMotherId[i]) == 24){
           wzFlag = true;
           MuonSystem->gLepId = gParticleId[i];
@@ -334,24 +293,19 @@ void llp_hnl_analyzer::Analyze(bool isData, int options, string outputfilename, 
           MuonSystem->gLepE = gParticleE[i];
           MuonSystem->gLepPhi = gParticlePhi[i];
         }
-        if (abs(gParticleId[i]) == 24 && gParticleStatus[i]==62)
-          {
-            MuonSystem->gWPt = gParticlePt[i];
-
-          }
-        if (abs(gParticleId[i])== 25 || abs(gParticleId[i] == 35))
-          {
-            MuonSystem->gHiggsPt = gParticlePt[i];
-            MuonSystem->gHiggsEta = gParticleEta[i];
-            MuonSystem->gHiggsPhi = gParticlePhi[i];
-            MuonSystem->gHiggsE = gParticleE[i];
-
-          }
-        if ((abs(gParticleId[i]) == 13 || abs(gParticleId[i]) == 11) && gParticleStatus[i] == 1 && abs(gParticleMotherId[i]) == 23)
-          { //  Z->mumu/Z->ee
-            MuonSystem->ZCategory  = 0;
-
-          }
+        if (abs(gParticleId[i]) == 24 && gParticleStatus[i]==62) {
+          MuonSystem->gWPt = gParticlePt[i];
+        }
+        if (abs(gParticleId[i])== 25 || abs(gParticleId[i] == 35)) {
+          MuonSystem->gHiggsPt = gParticlePt[i];
+          MuonSystem->gHiggsEta = gParticleEta[i];
+          MuonSystem->gHiggsPhi = gParticlePhi[i];
+          MuonSystem->gHiggsE = gParticleE[i];
+        }
+        if ((abs(gParticleId[i]) == 13 || abs(gParticleId[i]) == 11) && gParticleStatus[i] == 1 && abs(gParticleMotherId[i]) == 23) {
+          //  Z->mumu/Z->ee
+          MuonSystem->ZCategory  = 0;
+        }
         else if (abs(gParticleId[i]) == 15 && gParticleStatus[i] == 2 && abs(gParticleMotherId[i]) == 23){
           //  Z->tautau
           MuonSystem->ZCategory  = 0;
@@ -861,12 +815,12 @@ void llp_hnl_analyzer::Analyze(bool isData, int options, string outputfilename, 
 
     cout << "Do DT DBScan" << endl;
 
-    /*
     // does not run yet
     //Do DT DBSCAN Clustering
     int min_dt_point = 30;  //minimum number of segments to call it a cluster
     float dt_epsilon = 0.2; //cluster radius parameter
     DBSCAN dtds(min_dt_point, dt_epsilon, dt_points);
+    /*
     dtds.run();
     dtds.result();
     dtds.clusterMoments();

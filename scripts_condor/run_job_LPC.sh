@@ -37,15 +37,15 @@ scramv1 project CMSSW $cmsswReleaseVersion
 echo "Copying the input file list"
 cp input_list.tgz $cmsswReleaseVersion/src/
 cp ${executable} $cmsswReleaseVersion/src/.
-#mkdir -p $cmsswReleaseVersion/src/HHBoostedAnalyzer/data/PileupWeights/
-#cp HHBoostedAnalyzer/data/JetHTTriggerEfficiency_2016.root $cmsswReleaseVersion/src/HHBoostedAnalyzer/data/
-#cp JetHTTriggerEfficiency_2016.root $cmsswReleaseVersion/src/HHBoostedAnalyzer/data/
-#cp HHBoostedAnalyzer/data/JetHTTriggerEfficiency_2017.root $cmsswReleaseVersion/src/HHBoostedAnalyzer/data/
-#cp JetHTTriggerEfficiency_2017.root $cmsswReleaseVersion/src/HHBoostedAnalyzer/data/
-#cp HHBoostedAnalyzer/data/JetHTTriggerEfficiency_2018.root $cmsswReleaseVersion/src/HHBoostedAnalyzer/data/
-#cp JetHTTriggerEfficiency_2018.root $cmsswReleaseVersion/src/HHBoostedAnalyzer/data/
-#cp HHBoostedAnalyzer/data/PileupWeights/PileupWeights.root $cmsswReleaseVersion/src/HHBoostedAnalyzer/data/PileupWeights/
-#cp PileupWeights.root $cmsswReleaseVersion/src/HHBoostedAnalyzer/data/PileupWeights/
+mkdir -p $cmsswReleaseVersion/src/llp_analyzer/data/PileupWeights/
+#cp llp_analyzer/data/JetHTTriggerEfficiency_2016.root $cmsswReleaseVersion/src/llp_analyzer/data/
+#cp JetHTTriggerEfficiency_2016.root $cmsswReleaseVersion/src/llp_analyzer/data/
+#cp llp_analyzer/data/JetHTTriggerEfficiency_2017.root $cmsswReleaseVersion/src/llp_analyzer/data/
+#cp JetHTTriggerEfficiency_2017.root $cmsswReleaseVersion/src/llp_analyzer/data/
+#cp llp_analyzer/data/JetHTTriggerEfficiency_2018.root $cmsswReleaseVersion/src/llp_analyzer/data/
+#cp JetHTTriggerEfficiency_2018.root $cmsswReleaseVersion/src/llp_analyzer/data/
+#cp llp_analyzer/data/PileupWeights/PileupWeights.root $cmsswReleaseVersion/src/llp_analyzer/data/PileupWeights/
+#cp PileupWeights.root $cmsswReleaseVersion/src/llp_analyzer/data/PileupWeights/
 
 ###########################
 #get cmssw environment
