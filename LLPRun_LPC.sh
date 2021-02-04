@@ -1,7 +1,8 @@
 #!/bin/sh
-dir=/mnt/hadoop/store/group/phys_susy/razor/Run2Analysis/
+#dir=/mnt/hadoop/store/group/phys_susy/razor/Run2Analysis/
+
 if [ "$1" == "" ] || [ "$2" == "" ]; then
-    echo "RazorRun <list of input files> <analyzer name> <options>"
+    echo "LLPRun_LPC <list of input files> <analyzer name> <options>"
 else
    echo "Creating tarball with analyzer"
    tar cvf input.tar ${CMSSW_BASE}/src/llp_analyzer/bin/Run$2

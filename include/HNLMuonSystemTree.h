@@ -388,6 +388,7 @@ float         cscRechitCluster3JetVetoPt[N_MAX_CSC];
   float gLLP_eta[2];
   float gLLP_phi[2];
   float gLLP_csc[2];
+  float gLLP_dt[2];
   float gLLP_beta[2];
   float gLLP_e[2];
   bool gLLP_daughterKaon[2];
