@@ -74,6 +74,14 @@ Before submitting jobs, make sure proxy and CMSSW environment is setup.
   * ```scripts_condor/submit_normalize_muonsystem_*.sh```
   * Check ```outputDir``` and ```inputDir```
   
+### Submit condor jobs in LPC
+
+The `submitJob_LPC_llp.py` script submit the analyzer `Runllp_hnl_analyzer` to LPC condor queue
+
+Example command: 
+```
+python submitJob_LPC_llp.py -l Razor2018_17SeptEarlyReReco --isData no --optionNumber 01 --njobs 5 -i lists/test.txt -o HNL/
+```
 
 Normalizing the processed ntuples
 ------------
