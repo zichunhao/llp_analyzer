@@ -821,7 +821,7 @@ void llp_hnl_analyzer::Analyze(bool isData, int options, string outputfilename, 
     int min_dt_point = 30;  //minimum number of segments to call it a cluster
     float dt_epsilon = 0.2; //cluster radius parameter
     DBSCAN dtds(min_dt_point, dt_epsilon, dt_points);
-    /*
+    
     dtds.run();
     dtds.result();
     dtds.clusterMoments();
@@ -831,7 +831,7 @@ void llp_hnl_analyzer::Analyze(bool isData, int options, string outputfilename, 
     dtds.result();
     dtds.clusterMoments();
     dtds.sort_clusters();
-    */
+    
 
     cout << "Do CSC rechit clustering" << endl;
 
@@ -844,10 +844,8 @@ void llp_hnl_analyzer::Analyze(bool isData, int options, string outputfilename, 
     float cscPosRechitsAvgT =0.0;
     float cscNegRechitsAvgT =0.0;
 
-    cout << "[CSC rechit clustering]  ncscRechits = "<< ncscRechits << endl;
     for (int i = 0; i < ncscRechits; i++) {
 
-      cout << "[CSC rechit clustering]  cscRechitsTpeak[i] = "<<i <<" "<< cscRechitsTpeak[i] << endl;
       //pick out the right bits for chamber
       Point p;
       p.phi = cscRechitsPhi[i];
@@ -880,40 +878,36 @@ void llp_hnl_analyzer::Analyze(bool isData, int options, string outputfilename, 
       if (cscRechitsTpeak[i]>25)MuonSystem->nLate2CscRechits++;
       MuonSystem->nCscRechits++;
     }
-    cout << "[CSC rechit clustering]  cscPosRechitsAvgT = "<< cscPosRechitsAvgT/ncscRechits << endl;
-    cout << "[CSC rechit clustering]  cscNegRechitsAvgT = "<< cscNegRechitsAvgT/ncscRechits << endl;
 
-    // FIXME: Setting this variable breaks the tree fill
+    //TODO: Check what to fill with  cscPosTpeak
     MuonSystem->cscPosTpeak = float(cscPosRechitsAvgT/ncscRechits);
-    cout << "[CSC rechit clustering]  MuonSystem->cscPosTpeak = "<< MuonSystem->cscPosTpeak << endl;
-    //MuonSystem->cscNegTpeak = cscNegRechitsAvgT/ncscRechits;
+    MuonSystem->cscNegTpeak = float(cscNegRechitsAvgT/ncscRechits);
     MuonSystem->nCscRings = 0;
-    // if ( MuonSystem->nCscRechitsChamberPlus11 > 50) MuonSystem->nCscRings++;
-    // if ( MuonSystem->nCscRechitsChamberPlus12 > 50) MuonSystem->nCscRings++;
-    // if ( MuonSystem->nCscRechitsChamberPlus13 > 50) MuonSystem->nCscRings++;
-    // if ( MuonSystem->nCscRechitsChamberPlus21 > 50) MuonSystem->nCscRings++;
-    // if ( MuonSystem->nCscRechitsChamberPlus22 > 50) MuonSystem->nCscRings++;
-    // if ( MuonSystem->nCscRechitsChamberPlus31 > 50) MuonSystem->nCscRings++;
-    // if ( MuonSystem->nCscRechitsChamberPlus32 > 50) MuonSystem->nCscRings++;
-    // if ( MuonSystem->nCscRechitsChamberPlus41 > 50) MuonSystem->nCscRings++;
-    // if ( MuonSystem->nCscRechitsChamberPlus42 > 50) MuonSystem->nCscRings++;
-    // if ( MuonSystem->nCscRechitsChamberMinus11 > 50) MuonSystem->nCscRings++;
-    // if ( MuonSystem->nCscRechitsChamberMinus12 > 50) MuonSystem->nCscRings++;
-    // if ( MuonSystem->nCscRechitsChamberMinus13 > 50) MuonSystem->nCscRings++;
-    // if ( MuonSystem->nCscRechitsChamberMinus21 > 50) MuonSystem->nCscRings++;
-    // if ( MuonSystem->nCscRechitsChamberMinus22 > 50) MuonSystem->nCscRings++;
-    // if ( MuonSystem->nCscRechitsChamberMinus31 > 50) MuonSystem->nCscRings++;
-    // if ( MuonSystem->nCscRechitsChamberMinus32 > 50) MuonSystem->nCscRings++;
-    // if ( MuonSystem->nCscRechitsChamberMinus41 > 50) MuonSystem->nCscRings++;
-    // if ( MuonSystem->nCscRechitsChamberMinus42 > 50) MuonSystem->nCscRings++;
+    //if ( MuonSystem->nCscRechitsChamberPlus11 > 50) MuonSystem->nCscRings++;
+    //if ( MuonSystem->nCscRechitsChamberPlus12 > 50) MuonSystem->nCscRings++;
+    //if ( MuonSystem->nCscRechitsChamberPlus13 > 50) MuonSystem->nCscRings++;
+    //if ( MuonSystem->nCscRechitsChamberPlus21 > 50) MuonSystem->nCscRings++;
+    //if ( MuonSystem->nCscRechitsChamberPlus22 > 50) MuonSystem->nCscRings++;
+    //if ( MuonSystem->nCscRechitsChamberPlus31 > 50) MuonSystem->nCscRings++;
+    //if ( MuonSystem->nCscRechitsChamberPlus32 > 50) MuonSystem->nCscRings++;
+    //if ( MuonSystem->nCscRechitsChamberPlus41 > 50) MuonSystem->nCscRings++;
+    //if ( MuonSystem->nCscRechitsChamberPlus42 > 50) MuonSystem->nCscRings++;
+    //if ( MuonSystem->nCscRechitsChamberMinus11 > 50) MuonSystem->nCscRings++;
+    //if ( MuonSystem->nCscRechitsChamberMinus12 > 50) MuonSystem->nCscRings++;
+    //if ( MuonSystem->nCscRechitsChamberMinus13 > 50) MuonSystem->nCscRings++;
+    //if ( MuonSystem->nCscRechitsChamberMinus21 > 50) MuonSystem->nCscRings++;
+    //if ( MuonSystem->nCscRechitsChamberMinus22 > 50) MuonSystem->nCscRings++;
+    //if ( MuonSystem->nCscRechitsChamberMinus31 > 50) MuonSystem->nCscRings++;
+    //if ( MuonSystem->nCscRechitsChamberMinus32 > 50) MuonSystem->nCscRings++;
+    //if ( MuonSystem->nCscRechitsChamberMinus41 > 50) MuonSystem->nCscRings++;
+    //if ( MuonSystem->nCscRechitsChamberMinus42 > 50) MuonSystem->nCscRings++;
 
-    MuonSystem->tree_->Fill();
+    //MuonSystem->tree_->Fill();
     cout << "Do CSC DBScan" << endl;
     //Do DBSCAN Clustering
     int min_point = 50;  //minimum number of segments to call it a cluster
     float epsilon = 0.2; //cluster radius parameter
     DBSCAN ds(min_point, epsilon, points);
-    /*
     ds.run();
     ds.result();
     ds.clusterMoments();
@@ -923,7 +917,7 @@ void llp_hnl_analyzer::Analyze(bool isData, int options, string outputfilename, 
     ds.result();
     ds.clusterMoments();
     ds.sort_clusters();
-    */
+
     cout << "CSC cluster analysis" << endl;
 
     MuonSystem->nCscRechitClusters3 = 0;
@@ -1147,7 +1141,7 @@ void llp_hnl_analyzer::Analyze(bool isData, int options, string outputfilename, 
     else {
       if (MuonSystem->tree_) {
         cout << "Fill tree" << endl;
-        //MuonSystem->tree_->Fill();
+        MuonSystem->tree_->Fill();
       }
       else {
         cout << "No MuonSystem tree" << endl;
