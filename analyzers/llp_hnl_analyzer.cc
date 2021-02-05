@@ -143,7 +143,8 @@ void llp_hnl_analyzer::Analyze(bool isData, int options, string outputfilename, 
   string outfilename = outputfilename;
   if (outfilename == "") outfilename = "HeavyNeutralLepton_Tree.root";
   TFile *outFile;
-  if (isData || !signalScan) outFile = new TFile(outfilename.c_str(), "RECREATE");
+  //if (isData || !signalScan) outFile = new TFile(outfilename.c_str(), "RECREATE");
+  outFile = new TFile(outfilename.c_str(), "RECREATE");
 
 
   HNLMuonSystemTree *MuonSystem = new HNLMuonSystemTree;
@@ -838,10 +839,15 @@ void llp_hnl_analyzer::Analyze(bool isData, int options, string outputfilename, 
     vector<Point> points;
     vector<int> cscRechitsClusterId;
     points.clear();
+    cscRechitsClusterId.clear();
     MuonSystem->nCscRechits  = 0;
+    float cscPosRechitsAvgT =0.0;
+    float cscNegRechitsAvgT =0.0;
 
+    cout << "[CSC rechit clustering]  ncscRechits = "<< ncscRechits << endl;
     for (int i = 0; i < ncscRechits; i++) {
 
+      cout << "[CSC rechit clustering]  cscRechitsTpeak[i] = "<<i <<" "<< cscRechitsTpeak[i] << endl;
       //pick out the right bits for chamber
       Point p;
       p.phi = cscRechitsPhi[i];
@@ -861,12 +867,12 @@ void llp_hnl_analyzer::Analyze(bool isData, int options, string outputfilename, 
       if (cscRechitsY[i]>=0.0)
         {
           MuonSystem->nCscPositiveYRechits++;
-          MuonSystem->cscPosTpeak = MuonSystem->cscPosTpeak + cscRechitsTpeak[i];
+          cscPosRechitsAvgT +=  cscRechitsTpeak[i];
         }
       else
         {
           MuonSystem->nCscNegativeYRechits++;
-          MuonSystem->cscNegTpeak = MuonSystem->cscNegTpeak + cscRechitsTpeak[i];
+          cscNegRechitsAvgT +=  cscRechitsTpeak[i];
         }
       if (cscRechitsTpeak[i]<-12.5)MuonSystem->nEarlyCscRechits++;
       if (cscRechitsTpeak[i]>12.5)MuonSystem->nLateCscRechits++;
@@ -874,6 +880,13 @@ void llp_hnl_analyzer::Analyze(bool isData, int options, string outputfilename, 
       if (cscRechitsTpeak[i]>25)MuonSystem->nLate2CscRechits++;
       MuonSystem->nCscRechits++;
     }
+    cout << "[CSC rechit clustering]  cscPosRechitsAvgT = "<< cscPosRechitsAvgT/ncscRechits << endl;
+    cout << "[CSC rechit clustering]  cscNegRechitsAvgT = "<< cscNegRechitsAvgT/ncscRechits << endl;
+
+    // FIXME: Setting this variable breaks the tree fill
+    MuonSystem->cscPosTpeak = float(cscPosRechitsAvgT/ncscRechits);
+    cout << "[CSC rechit clustering]  MuonSystem->cscPosTpeak = "<< MuonSystem->cscPosTpeak << endl;
+    //MuonSystem->cscNegTpeak = cscNegRechitsAvgT/ncscRechits;
     MuonSystem->nCscRings = 0;
     // if ( MuonSystem->nCscRechitsChamberPlus11 > 50) MuonSystem->nCscRings++;
     // if ( MuonSystem->nCscRechitsChamberPlus12 > 50) MuonSystem->nCscRings++;
@@ -894,6 +907,7 @@ void llp_hnl_analyzer::Analyze(bool isData, int options, string outputfilename, 
     // if ( MuonSystem->nCscRechitsChamberMinus41 > 50) MuonSystem->nCscRings++;
     // if ( MuonSystem->nCscRechitsChamberMinus42 > 50) MuonSystem->nCscRings++;
 
+    MuonSystem->tree_->Fill();
     cout << "Do CSC DBScan" << endl;
     //Do DBSCAN Clustering
     int min_point = 50;  //minimum number of segments to call it a cluster
@@ -1133,7 +1147,7 @@ void llp_hnl_analyzer::Analyze(bool isData, int options, string outputfilename, 
     else {
       if (MuonSystem->tree_) {
         cout << "Fill tree" << endl;
-        MuonSystem->tree_->Fill();
+        //MuonSystem->tree_->Fill();
       }
       else {
         cout << "No MuonSystem tree" << endl;
