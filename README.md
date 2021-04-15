@@ -12,6 +12,16 @@ Setup
     cd llp_analyzer
     make
   
+Setup Coffea 
+-------------
+Instructions for setting up coffea env on LPC cluster:
+```
+    source envSetup.sh              #only do this for the first time
+    source coffeaenv/bin/activate   #Load the coffea env everytime
+    jupyter notebook --no-browser   #Start the jupyter server
+```
+
+
 Defining a new analysis
 -------------
 1) Copy analyzers/DummyAnalyzer.cc and replace each instance of "DummyAnalyzer" with the name of your desired analyzer.
@@ -95,7 +105,6 @@ See lists/filestonormalize/testTTJets.txt for an example input file to be used w
 * Create input file list using ```scripts/create_normalize_txt.py```
 
 The script ```hadd_llp_bkg.sh``` automatically hadd and normalize the llp_analyzer ROOT files for the background samples.
-
 
 
 ### Hadd ntuples
