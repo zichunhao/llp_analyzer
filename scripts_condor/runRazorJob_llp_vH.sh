@@ -82,7 +82,7 @@ then
 		echo "I slept for 2 second"
 
 		##job finished, copy file to T2
-		echo "copying output file to /mnt/hadoop/${outputDirectory}"
+		echo "copying output file to ${outputDirectory}"
 		eval `scram unsetenv -sh`
 		gfal-mkdir -p gsiftp://transfer.ultralight.org//${outputDirectory}
 		while IFS= read -r line
