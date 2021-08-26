@@ -65,6 +65,25 @@ void HNLMuonSystemTree::InitVariables()
   nCscRings = 0;
 
 
+  nCscRechitsChamberPlus11 = 0;
+  nCscRechitsChamberPlus12 = 0;
+  nCscRechitsChamberPlus13 = 0;
+  nCscRechitsChamberPlus21 = 0;
+  nCscRechitsChamberPlus22 = 0;
+  nCscRechitsChamberPlus31 = 0;
+  nCscRechitsChamberPlus32 = 0;
+  nCscRechitsChamberPlus41 = 0;
+  nCscRechitsChamberPlus42 = 0;
+  nCscRechitsChamberMinus11 = 0;
+  nCscRechitsChamberMinus12 = 0;
+  nCscRechitsChamberMinus13 = 0;
+  nCscRechitsChamberMinus21 = 0;
+  nCscRechitsChamberMinus22 = 0;
+  nCscRechitsChamberMinus31 = 0;
+  nCscRechitsChamberMinus32 = 0;
+  nCscRechitsChamberMinus41 = 0;
+  nCscRechitsChamberMinus42 = 0;  
+
   nRpc = 0;
   nDTRechits = 0;
   nDtSeg = 0;
@@ -622,6 +641,25 @@ tree_->SetBranchAddress("metPhiEENoiseXYCorr",      &metPhiEENoiseXYCorr);
   tree_->SetBranchAddress("nLate2CscRechits",             &nLate2CscRechits);
   tree_->SetBranchAddress("nLate2CscRechits",             &nLate2CscRechits);
   tree_->SetBranchAddress("nCscRings",             &nCscRings);
+  tree_->SetBranchAddress("nCscRechitsChamberPlus11",           &nCscRechitsChamberPlus11);
+  tree_->SetBranchAddress("nCscRechitsChamberPlus12",           &nCscRechitsChamberPlus12);
+  tree_->SetBranchAddress("nCscRechitsChamberPlus13",           &nCscRechitsChamberPlus13);
+  tree_->SetBranchAddress("nCscRechitsChamberPlus21",           &nCscRechitsChamberPlus21);
+  tree_->SetBranchAddress("nCscRechitsChamberPlus22",           &nCscRechitsChamberPlus22);
+  tree_->SetBranchAddress("nCscRechitsChamberPlus31",           &nCscRechitsChamberPlus31);
+  tree_->SetBranchAddress("nCscRechitsChamberPlus32",           &nCscRechitsChamberPlus32);
+  tree_->SetBranchAddress("nCscRechitsChamberPlus41",           &nCscRechitsChamberPlus41);
+  tree_->SetBranchAddress("nCscRechitsChamberPlus42",           &nCscRechitsChamberPlus42);
+
+  tree_->SetBranchAddress("nCscRechitsChamberMinus11",            &nCscRechitsChamberMinus11);
+  tree_->SetBranchAddress("nCscRechitsChamberMinus12",            &nCscRechitsChamberMinus12);
+  tree_->SetBranchAddress("nCscRechitsChamberMinus13",            &nCscRechitsChamberMinus13);
+  tree_->SetBranchAddress("nCscRechitsChamberMinus21",            &nCscRechitsChamberMinus21);
+  tree_->SetBranchAddress("nCscRechitsChamberMinus22",            &nCscRechitsChamberMinus22);
+  tree_->SetBranchAddress("nCscRechitsChamberMinus31",            &nCscRechitsChamberMinus31);
+  tree_->SetBranchAddress("nCscRechitsChamberMinus32",            &nCscRechitsChamberMinus32);
+  tree_->SetBranchAddress("nCscRechitsChamberMinus41",            &nCscRechitsChamberMinus41);
+  tree_->SetBranchAddress("nCscRechitsChamberMinus42",            &nCscRechitsChamberMinus42);
 
   tree_->SetBranchAddress("nRpc",            &nRpc);
   tree_->SetBranchAddress("nDtSeg",            &nDtSeg);
@@ -1168,6 +1206,25 @@ void HNLMuonSystemTree::CreateTree()
   tree_->Branch("nCscNegativeYRechits",             &nCscNegativeYRechits, "nCscNegativeYRechits/I");
   tree_->Branch("cscPosTpeak",             &cscPosTpeak, "cscPosTpeak/F");
   tree_->Branch("cscNegTpeak",             &cscNegTpeak, "cscNegTpeak/F");
+
+  tree_->Branch("nCscRechitsChamberPlus11",            &nCscRechitsChamberPlus11,             "nCscRechitsChamberPlus11/I");
+  tree_->Branch("nCscRechitsChamberPlus12",            &nCscRechitsChamberPlus12,             "nCscRechitsChamberPlus12/I");
+  tree_->Branch("nCscRechitsChamberPlus13",            &nCscRechitsChamberPlus13,             "nCscRechitsChamberPlus13/I");
+  tree_->Branch("nCscRechitsChamberPlus21",            &nCscRechitsChamberPlus21,             "nCscRechitsChamberPlus21/I");
+  tree_->Branch("nCscRechitsChamberPlus22",            &nCscRechitsChamberPlus22,             "nCscRechitsChamberPlus22/I");
+  tree_->Branch("nCscRechitsChamberPlus31",            &nCscRechitsChamberPlus31,             "nCscRechitsChamberPlus31/I");
+  tree_->Branch("nCscRechitsChamberPlus32",            &nCscRechitsChamberPlus32,             "nCscRechitsChamberPlus32/I");
+  tree_->Branch("nCscRechitsChamberPlus41",            &nCscRechitsChamberPlus41,             "nCscRechitsChamberPlus41/I");
+  tree_->Branch("nCscRechitsChamberPlus42",            &nCscRechitsChamberPlus42,             "nCscRechitsChamberPlus42/I");
+  tree_->Branch("nCscRechitsChamberMinus11",            &nCscRechitsChamberMinus11,             "nCscRechitsChamberMinus11/I");
+  tree_->Branch("nCscRechitsChamberMinus12",            &nCscRechitsChamberMinus12,             "nCscRechitsChamberMinus12/I");
+  tree_->Branch("nCscRechitsChamberMinus13",            &nCscRechitsChamberMinus13,             "nCscRechitsChamberMinus13/I");
+  tree_->Branch("nCscRechitsChamberMinus21",            &nCscRechitsChamberMinus21,             "nCscRechitsChamberMinus21/I");
+  tree_->Branch("nCscRechitsChamberMinus22",            &nCscRechitsChamberMinus22,             "nCscRechitsChamberMinus22/I");
+  tree_->Branch("nCscRechitsChamberMinus31",            &nCscRechitsChamberMinus31,             "nCscRechitsChamberMinus31/I");
+  tree_->Branch("nCscRechitsChamberMinus32",            &nCscRechitsChamberMinus32,             "nCscRechitsChamberMinus32/I");
+  tree_->Branch("nCscRechitsChamberMinus41",            &nCscRechitsChamberMinus41,             "nCscRechitsChamberMinus41/I");
+  tree_->Branch("nCscRechitsChamberMinus42",            &nCscRechitsChamberMinus42,             "nCscRechitsChamberMinus42/I");
 
   tree_->Branch("nRpc",            &nRpc,             "nRpc/I");
   tree_->Branch("nDtSeg",            &nDtSeg,             "nDtSeg/I");

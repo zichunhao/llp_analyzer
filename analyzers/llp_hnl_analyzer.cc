@@ -204,13 +204,13 @@ void llp_hnl_analyzer::Analyze(bool isData, int options, string outputfilename, 
     if(jentry % 1 == 0) {
       end = clock();
       double time_taken = double(end - start) / double(CLOCKS_PER_SEC);
-      cout << "Processing entry " << jentry+1 << endl;
-      cout << "Time taken by program is : " << time_taken << endl;
+      //cout << "Processing entry " << jentry+1 << endl;
+      //cout << "Time taken by program is : " << time_taken << endl;
       start = clock();
     }
     Long64_t ientry = LoadTree(jentry);
     if (ientry < 0) break;
-    cout << "Load event" << endl;
+    //cout << "Load event" << endl;
     //GetEntry(ientry);
     nb = fChain->GetEntry(jentry); nbytes += nb;
 
@@ -254,7 +254,7 @@ void llp_hnl_analyzer::Analyze(bool isData, int options, string outputfilename, 
       NEvents2D[signalPair]->Fill(1.0, genWeight);
     }
 
-    cout << "Get event level info" << endl;
+    //cout << "Get event level info" << endl;
 
     //event info
     if (isData) {
@@ -271,12 +271,14 @@ void llp_hnl_analyzer::Analyze(bool isData, int options, string outputfilename, 
     MuonSystem->lumiSec = lumiNum;
     MuonSystem->evtNum = eventNum;
 
-    cout << "Get Gen level info" << endl;
+    //cout << "Get Gen level info" << endl;
 
     bool wzFlag = false;
+    bool hnl_model = false;
     if (!isData) {
       for (int i=0; i < nGenParticle; i++) {
 
+        if(abs(gParticleId[i])==9900012 || abs(gParticleId[i])==9900014 || abs(gParticleId[i])==9900016)hnl_model = true;
         if ((abs(gParticleId[i]) == 13 || abs(gParticleId[i]) == 11) && gParticleStatus[i] == 1 && abs(gParticleMotherId[i]) == 24) {
           // choosing only the W->munu events
           wzFlag = true;
@@ -326,16 +328,24 @@ void llp_hnl_analyzer::Analyze(bool isData, int options, string outputfilename, 
         MuonSystem->gParticleEta[MuonSystem->nGenParticle]  = gParticleEta[i];
         MuonSystem->gParticlePhi[MuonSystem->nGenParticle]  = gParticlePhi[i];
         MuonSystem->gParticleE[MuonSystem->nGenParticle]  = gParticleE[i];
-        // MuonSystem->nGenParticle++;
+        MuonSystem->nGenParticle++;
         // cout<<"genparticles: "<<MuonSystem->nGenParticle<<endl;
       }
-
-      cout << "Get Higgs level info" << endl;
-      MuonSystem->higgsPtWeight = helper->getHiggsPtWeight(MuonSystem->gHiggsPt);
-      for (unsigned int i = 0; i < 9; i++) {
-        MuonSystem->higgsPtWeightSys[i] = helper->getHiggsPtWeightSys(MuonSystem->gHiggsPt, i) / MuonSystem->higgsPtWeight;
-        MuonSystem->scaleWeights[i]= (*scaleWeights)[i]/genWeight;
+      MuonSystem->nGenJets = nGenJets;
+      for(int i=0; i < nGenJets; i++) {
+        MuonSystem->genJetE[i]  = genJetE[i];
+        MuonSystem->genJetPt[i]  = genJetPt[i];
+        MuonSystem->genJetEta[i]  = genJetEta[i];
+        MuonSystem->genJetPhi[i]  = genJetPhi[i]; 
       }
+
+      //cout << "Get Higgs level info" << endl;
+      MuonSystem->higgsPtWeight = helper->getHiggsPtWeight(MuonSystem->gHiggsPt);
+      //for (unsigned int i = 0; i < 9; i++) {
+      //  MuonSystem->higgsPtWeightSys[i] = helper->getHiggsPtWeightSys(MuonSystem->gHiggsPt, i) / MuonSystem->higgsPtWeight;
+      //  MuonSystem->scaleWeights[i]= (*scaleWeights)[i]/genWeight;
+      //}
+
       MuonSystem->sf_facScaleUp = MuonSystem->higgsPtWeightSys[5];
       MuonSystem->sf_facScaleDown = MuonSystem->higgsPtWeightSys[3];
       MuonSystem->sf_renScaleUp = MuonSystem->higgsPtWeightSys[7];
@@ -343,7 +353,7 @@ void llp_hnl_analyzer::Analyze(bool isData, int options, string outputfilename, 
       MuonSystem->sf_facRenScaleUp = MuonSystem->higgsPtWeightSys[8];
       MuonSystem->sf_facRenScaleDown = MuonSystem->higgsPtWeightSys[0];
 
-      cout << "Get Gen jet level info" << endl;
+      //cout << "Get Gen jet level info" << endl;
       MuonSystem->genMetPtTrue = genMetPtTrue;
       MuonSystem->genMetPhiTrue = genMetPhiTrue;
       MuonSystem->genMetPtCalo = genMetPtCalo;
@@ -360,6 +370,22 @@ void llp_hnl_analyzer::Analyze(bool isData, int options, string outputfilename, 
         float gamma = 1.0/sqrt(1-beta*beta);
         MuonSystem->gLLP_ctau[i] = gLLP_decay_vertex/(beta * gamma);
         MuonSystem->gLLP_beta[i] = gLLP_beta[i];
+        MuonSystem->gLLP_e[i] = gLLP_e[i];
+        MuonSystem->gLLP_pt[i] = gLLP_pt[i];
+        MuonSystem->gLLP_lepdPhi[i] = deltaPhi(MuonSystem->gLepPhi,MuonSystem->gLLP_phi[i]);
+        if (hnl_model)
+        {
+          //Lepton is the first daughter
+          MuonSystem->gLLP_EMFracP[i] = gLLP_daughter_pt[0]*cosh(gLLP_daughter_eta[0])/(gLLP_pt[i]*cosh(gLLP_eta[i]));
+          MuonSystem->gLLP_EMFracPz[i] = gLLP_daughter_pt[0]*sinh(gLLP_daughter_eta[0])/(gLLP_pt[i]*sinh(gLLP_eta[i]));
+          MuonSystem->gLLP_EMFracE[i] = gLLP_daughter_e[0]/(gLLP_e[i]);
+          MuonSystem->gLLP_EMFracEz[i] = gLLP_daughter_e[0]/cosh(gLLP_daughter_eta[0])*sinh(gLLP_daughter_eta[0])/(gLLP_e[i]/cosh(gLLP_eta[i])*sinh(gLLP_eta[i]));
+
+          MuonSystem->gLLP_visE[i] = gLLP_e[i];
+          MuonSystem->gLLP_visEz[i] = gLLP_e[i]/cosh(gLLP_eta[i])*sinh(gLLP_eta[i]);
+          MuonSystem->gLLP_visP[i] = gLLP_pt[i]*cosh(gLLP_eta[i]);
+          MuonSystem->gLLP_visPz[i] = gLLP_pt[i]*sinh(gLLP_eta[i]);
+        }
 
         // endcap
         if (abs(MuonSystem->gLLP_eta[i]) < 2.4 && abs(MuonSystem->gLLP_eta[i]) > 0.9
@@ -375,6 +401,120 @@ void llp_hnl_analyzer::Analyze(bool isData, int options, string outputfilename, 
           MuonSystem->gLLP_dt[i] = true;
         }
       }
+      // Fill daughter info
+      //for(int i = 0; i < 4;i++)
+      //{
+      //  MuonSystem->gLLP_daughter_id[i] = gLLP_daughter_id[i];
+      //  MuonSystem->gLLP_daughter_pt[i] = gLLP_daughter_pt[i];
+      //  MuonSystem->gLLP_daughter_eta[i] = gLLP_daughter_eta[i];
+      //  MuonSystem->gLLP_daughter_phi[i] = gLLP_daughter_phi[i];
+      //  MuonSystem->gLLP_daughter_e[i] = gLLP_daughter_e[i];
+      //  MuonSystem->gLLP_daughter_mass[i] = gLLP_daughter_mass[i];
+
+
+      //}
+      if(!isData && !hnl_model)//twin higgs model
+      {
+        // cout<<"hnl"<<MuonSystem->gLLP_daughter_id[0]<<endl;
+        int temp_id = 999;
+        float temp_energy = 999.;
+        int temp_status = 999;
+        bool has_kaon = false;
+        if (abs(MuonSystem->gLLP_daughter_id[0])==5 || abs(MuonSystem->gLLP_daughter_id[0])==1 || abs(MuonSystem->gLLP_daughter_id[0])==15) //4b and 4d
+        {
+          for (int i=0; i < nGenParticle; i++)
+          {
+            if (abs(MuonSystem->gLLP_daughter_id[0])==15 && abs(gParticleMotherId[i])!=15)continue;
+
+            if (abs(gParticleStatus[i])!=1 && abs(MuonSystem->gLLP_daughter_id[0])!=15)continue;
+            if (abs(gParticleId[i])==12 || abs(gParticleId[i])==14 || abs(gParticleId[i])==16 || abs(gParticleId[i])==13)continue;
+            if (gParticleId[i] == temp_id && temp_status == gParticleStatus[i] && abs(gParticleE[i]-temp_energy)<0.01)continue;
+
+            // cout<<i<<"here"<<endl;
+            int llp_index = 1;
+            bool matched_llp0 = false;
+            bool matched_llp1 = false;
+            float llp0_dis = sqrt(pow(gParticleProdVertexX[i]-gLLP_decay_vertex_x[0],2)+pow(gParticleProdVertexY[i]-gLLP_decay_vertex_y[0],2)+pow(gParticleProdVertexZ[i]-gLLP_decay_vertex_z[0],2));
+            float llp1_dis = sqrt(pow(gParticleProdVertexX[i]-gLLP_decay_vertex_x[1],2)+pow(gParticleProdVertexY[i]-gLLP_decay_vertex_y[1],2)+pow(gParticleProdVertexZ[i]-gLLP_decay_vertex_z[1],2));
+            // if (RazorAnalyzer::deltaR(gParticleEta[i],gParticlePhi[i], gLLP_eta[0], gLLP_phi[0]) < 0.4 && llp0_dis<100) matched_llp0 = true;
+            // if (RazorAnalyzer::deltaR(gParticleEta[i],gParticlePhi[i], gLLP_eta[1], gLLP_phi[1]) < 0.4 && llp1_dis<100) matched_llp1 = true;
+
+            if (llp0_dis<100) matched_llp0 = true;
+            if (llp1_dis<100) matched_llp1 = true;
+
+            if (matched_llp0 && matched_llp1) //both matched
+            {
+              if (llp0_dis<llp1_dis)llp_index = 0;
+              else llp_index = 1;
+            }
+            else if( matched_llp0)
+            {
+              llp_index = 0;
+            }
+            else if(matched_llp1)
+            {
+              llp_index = 1;
+            }
+            else continue; //both not mached
+
+            if (abs(gParticleId[i])==310 || abs(gParticleId[i])==311 || abs(gParticleId[i])==130)has_kaon = true; //remove matched kaons
+
+            MuonSystem->gLLP_multiplicity[llp_index] += 1;
+
+            MuonSystem->gLLP_visE[llp_index] += gParticleE[i];
+            MuonSystem->gLLP_visEz[llp_index] += gParticleE[i]/cosh(gParticleEta[i])*sinh(gParticleEta[i]);
+            MuonSystem->gLLP_visP[llp_index] += gParticlePt[i]*cosh(gParticleEta[i]);
+            MuonSystem->gLLP_visPz[llp_index] += gParticlePt[i]*sinh(gParticleEta[i]);
+
+            if (abs(gParticleId[i])==11 || abs(gParticleId[i])==22 || abs(gParticleId[i])==111) //EM don't count muon energy abs(gParticleId[i])==13 ||
+            {
+              MuonSystem->gLLP_EMFracE[llp_index] += gParticleE[i];
+              MuonSystem->gLLP_EMFracEz[llp_index] += gParticleE[i]/cosh(gParticleEta[i])*sinh(gParticleEta[i]);
+              MuonSystem->gLLP_EMFracP[llp_index] += gParticlePt[i]*cosh(gParticleEta[i]);
+              MuonSystem->gLLP_EMFracPz[llp_index] += gParticlePt[i]*sinh(gParticleEta[i]);
+              //MuonSystem->gLLP_EM_multiplicity[llp_index] += 1;
+            }
+            temp_id = gParticleId[i];
+            temp_energy = gParticleE[i];
+            temp_status = gParticleStatus[i];
+          }
+          if(has_kaon)continue;
+        }
+        else //ee, pipi，kk
+
+        {
+          for(int i = 0; i < 4;i++)
+          {
+            int llp_index = 1;
+            if (i<2) llp_index = 0;
+
+            MuonSystem->gLLP_visE[llp_index] += gLLP_daughter_e[i];
+            MuonSystem->gLLP_visEz[llp_index] += gLLP_daughter_e[i]/cosh(gLLP_daughter_eta[i])*sinh(gLLP_daughter_eta[i]);
+            MuonSystem->gLLP_visP[llp_index] += gLLP_daughter_pt[i]*cosh(gLLP_daughter_eta[i]);
+            MuonSystem->gLLP_visPz[llp_index] += gLLP_daughter_pt[i]*sinh(gLLP_daughter_eta[i]);
+            if (abs(gLLP_daughter_id[i])==11 || abs(gLLP_daughter_id[i])==22 || abs(gLLP_daughter_id[i])==111) //EM don't count muon energy abs(gParticleId[i])==13 ||
+            {
+              MuonSystem->gLLP_EMFracE[llp_index] += gLLP_daughter_e[i];
+              MuonSystem->gLLP_EMFracEz[llp_index] += gLLP_daughter_e[i]/cosh(gLLP_daughter_eta[i])*sinh(gLLP_daughter_eta[i]);
+              MuonSystem->gLLP_EMFracP[llp_index] += gLLP_daughter_pt[i]*cosh(gLLP_daughter_eta[i]);
+              MuonSystem->gLLP_EMFracPz[llp_index] += gLLP_daughter_pt[i]*sinh(gLLP_daughter_eta[i]);
+            }
+
+          }
+        }
+        for (int i=0; i < 2; i++)
+        {
+          if (MuonSystem->gLLP_visE[i] > 0)
+          {
+            MuonSystem->gLLP_EMFracE[i] /= MuonSystem->gLLP_visE[i];
+            MuonSystem->gLLP_EMFracEz[i] /= MuonSystem->gLLP_visEz[i];
+            MuonSystem->gLLP_EMFracP[i] /= MuonSystem->gLLP_visP[i];
+            MuonSystem->gLLP_EMFracPz[i] /= MuonSystem->gLLP_visPz[i];
+          }
+        }
+        // else MuonSystem->gLLP_daughterKaon[llp_index] = false;
+      }
+      MuonSystem->gLLP_deltaR = deltaR(gLLP_eta[0],gLLP_phi[0],gLLP_eta[1],gLLP_phi[1]);
       for (int i=0; i < nBunchXing; i++) {
         if (BunchXing[i] == 0) {
           MuonSystem->npu = nPUmean[i];
@@ -383,10 +523,10 @@ void llp_hnl_analyzer::Analyze(bool isData, int options, string outputfilename, 
       MuonSystem->pileupWeight = helper->getPileupWeight(MuonSystem->npu);
       MuonSystem->pileupWeightUp = helper->getPileupWeightUp(MuonSystem->npu) / MuonSystem->pileupWeight;
       MuonSystem->pileupWeightDown = helper->getPileupWeightDown(MuonSystem->npu) / MuonSystem->pileupWeight;
-    }
+    }//end MConly if loop
 
 
-    cout << "Get PU level info" << endl;
+    //cout << "Get PU level info" << endl;
 
     //get NPU
     MuonSystem->npv = nPV;
@@ -396,8 +536,7 @@ void llp_hnl_analyzer::Analyze(bool isData, int options, string outputfilename, 
     MuonSystem->metJESUp = MuonSystem->met;
     MuonSystem->metJESDown = MuonSystem->met;
 
-
-    cout << "Extract MET" << endl;
+    //cout << "Extract MET" << endl;
     MuonSystem->metSF = helper->getMetTriggerSF(MuonSystem->met);
 
     if(signalScan && !isData)Total2D[make_pair(MuonSystem->mX, MuonSystem->ctau)]->Fill(1.0, genWeight*MuonSystem->higgsPtWeight*MuonSystem->pileupWeight);
@@ -411,7 +550,7 @@ void llp_hnl_analyzer::Analyze(bool isData, int options, string outputfilename, 
     if(signalScan && !isData)accep2D[make_pair(MuonSystem->mX, MuonSystem->ctau)]->Fill(1.0, genWeight*MuonSystem->higgsPtWeight*MuonSystem->pileupWeight);
     else if (!isData) accep->Fill(1.0, genWeight*MuonSystem->higgsPtWeight*MuonSystem->pileupWeight);
 
-    cout << "Corrected MET" << endl;
+    //cout << "Corrected MET" << endl;
     std::pair<double,double> corrected_met;
     if (analysisTag=="Razor2016_07Aug2017Rereco") corrected_met = helper->METXYCorr_Met_MetPhi(metType1Pt, metType1Phi, runNum, 2016, !isData, nPV);
     else if (analysisTag=="Razor2017_17Nov2017Rereco") corrected_met = helper->METXYCorr_Met_MetPhi(metType1Pt, metType1Phi, runNum, 2017, !isData, nPV);
@@ -442,7 +581,7 @@ void llp_hnl_analyzer::Analyze(bool isData, int options, string outputfilename, 
     MuonSystem->SingleLepTrigger = (MuonSystem->SingleMuonTrigger or
                                     MuonSystem->SingleEleTrigger);
 
-    cout << "Check if trigger by single lepton " << MuonSystem->SingleLepTrigger << endl;
+    //cout << "Check if trigger by single lepton " << MuonSystem->SingleLepTrigger << endl;
 
     // flags
     MuonSystem->Flag_HBHENoiseFilter = Flag_HBHENoiseFilter;
@@ -541,7 +680,7 @@ void llp_hnl_analyzer::Analyze(bool isData, int options, string outputfilename, 
 
     sort(Leptons.begin(), Leptons.end(), my_largest_pt);
 
-    cout<< "Count leptons " << endl;
+    //cout<< "Count leptons " << endl;
 
     // set the number of leptons to 0 initially
     MuonSystem->nLeptons = 0;
@@ -577,7 +716,7 @@ void llp_hnl_analyzer::Analyze(bool isData, int options, string outputfilename, 
     //-----------------------------------------------
 
 
-    cout<< "Select jets " << endl;
+    //cout<< "Select jets " << endl;
 
     std::vector<jets> Jets;
     float MetXCorr_JESUp = 0.;
@@ -679,7 +818,7 @@ void llp_hnl_analyzer::Analyze(bool isData, int options, string outputfilename, 
     //Require at least 2 jets
     //-----------------------------
 
-    cout<< "Count jets " << endl;
+    //cout<< "Count jets " << endl;
 
     MuonSystem->nJets = 0;
 
@@ -743,7 +882,7 @@ void llp_hnl_analyzer::Analyze(bool isData, int options, string outputfilename, 
     }
 
 
-    cout<< "Select MET " << endl;
+    //cout<< "Select MET " << endl;
 
     MuonSystem-> jetMet_dPhiMin = jetMet_dPhiMin_temp;
     MuonSystem-> jetMet_dPhiMin4 = jetMet_dPhiMin4_temp;
@@ -788,7 +927,7 @@ void llp_hnl_analyzer::Analyze(bool isData, int options, string outputfilename, 
     else if(!isData) accep_met->Fill(1.0, genWeight*MuonSystem->higgsPtWeight*MuonSystem->pileupWeight*MuonSystem->metSF);
     else Nmet200->Fill(1.0);
 
-    cout<< "Rechit clustering " << endl;
+    //cout<< "Rechit clustering " << endl;
 
     // DT rechit clustering
     vector<Point> dt_points;
@@ -811,10 +950,53 @@ void llp_hnl_analyzer::Analyze(bool isData, int options, string outputfilename, 
       p.clusterID = UNCLASSIFIED;
       dt_points.push_back(p);
       dtRechitsClusterId.push_back(-1);
+
+        if (dtRechitStation[i] == 1 && dtRechitWheel[i] == -2) MuonSystem->nDTRechitsChamberMinus12++;
+        if (dtRechitStation[i] == 1 && dtRechitWheel[i] == -1) MuonSystem->nDTRechitsChamberMinus11++;
+        if (dtRechitStation[i] == 1 && dtRechitWheel[i] == 0) MuonSystem->nDTRechitsChamber10++;
+        if (dtRechitStation[i] == 1 && dtRechitWheel[i] == 1) MuonSystem->nDTRechitsChamberPlus11++;
+        if (dtRechitStation[i] == 1 && dtRechitWheel[i] == 2) MuonSystem->nDTRechitsChamberPlus12++;
+        if (dtRechitStation[i] == 2 && dtRechitWheel[i] == -2) MuonSystem->nDTRechitsChamberMinus22++;
+        if (dtRechitStation[i] == 2 && dtRechitWheel[i] == -1) MuonSystem->nDTRechitsChamberMinus21++;
+        if (dtRechitStation[i] == 2 && dtRechitWheel[i] == 0) MuonSystem->nDTRechitsChamber20++;
+        if (dtRechitStation[i] == 2 && dtRechitWheel[i] == 1) MuonSystem->nDTRechitsChamberPlus21++;
+        if (dtRechitStation[i] == 2 && dtRechitWheel[i] == 2) MuonSystem->nDTRechitsChamberPlus22++;
+        if (dtRechitStation[i] == 3 && dtRechitWheel[i] == -2) MuonSystem->nDTRechitsChamberMinus32++;
+        if (dtRechitStation[i] == 3 && dtRechitWheel[i] == -1) MuonSystem->nDTRechitsChamberMinus31++;
+        if (dtRechitStation[i] == 3 && dtRechitWheel[i] == 0) MuonSystem->nDTRechitsChamber30++;
+        if (dtRechitStation[i] == 3 && dtRechitWheel[i] == 1) MuonSystem->nDTRechitsChamberPlus31++;
+        if (dtRechitStation[i] == 3 && dtRechitWheel[i] == 2) MuonSystem->nDTRechitsChamberPlus32++;
+        if (dtRechitStation[i] == 4 && dtRechitWheel[i] == -2) MuonSystem->nDTRechitsChamberMinus42++;
+        if (dtRechitStation[i] == 4 && dtRechitWheel[i] == -1) MuonSystem->nDTRechitsChamberMinus41++;
+        if (dtRechitStation[i] == 4 && dtRechitWheel[i] == 0) MuonSystem->nDTRechitsChamber40++;
+        if (dtRechitStation[i] == 4 && dtRechitWheel[i] == 1) MuonSystem->nDTRechitsChamberPlus41++;
+        if (dtRechitStation[i] == 4 && dtRechitWheel[i] == 2) MuonSystem->nDTRechitsChamberPlus42++;
+
       MuonSystem->nDTRechits++;
     }
 
-    cout << "Do DT DBScan" << endl;
+      if ( MuonSystem->nDTRechitsChamberMinus12 > 50) MuonSystem->nDtRings++;
+      if ( MuonSystem->nDTRechitsChamberMinus11 > 50) MuonSystem->nDtRings++;
+      if ( MuonSystem->nDTRechitsChamber10 > 50) MuonSystem->nDtRings++;
+      if ( MuonSystem->nDTRechitsChamberPlus11 > 50) MuonSystem->nDtRings++;
+      if ( MuonSystem->nDTRechitsChamberPlus12 > 50) MuonSystem->nDtRings++;
+      if ( MuonSystem->nDTRechitsChamberMinus22 > 50) MuonSystem->nDtRings++;
+      if ( MuonSystem->nDTRechitsChamberMinus21 > 50) MuonSystem->nDtRings++;
+      if ( MuonSystem->nDTRechitsChamber20 > 50) MuonSystem->nDtRings++;
+      if ( MuonSystem->nDTRechitsChamberPlus21 > 50) MuonSystem->nDtRings++;
+      if ( MuonSystem->nDTRechitsChamberPlus22 > 50) MuonSystem->nDtRings++;
+      if ( MuonSystem->nDTRechitsChamberMinus32 > 50) MuonSystem->nDtRings++;
+      if ( MuonSystem->nDTRechitsChamberMinus31 > 50) MuonSystem->nDtRings++;
+      if ( MuonSystem->nDTRechitsChamber30 > 50) MuonSystem->nDtRings++;
+      if ( MuonSystem->nDTRechitsChamberPlus31 > 50) MuonSystem->nDtRings++;
+      if ( MuonSystem->nDTRechitsChamberPlus32 > 50) MuonSystem->nDtRings++;
+      if ( MuonSystem->nDTRechitsChamberMinus42 > 50) MuonSystem->nDtRings++;
+      if ( MuonSystem->nDTRechitsChamberMinus41 > 50) MuonSystem->nDtRings++;
+      if ( MuonSystem->nDTRechitsChamber40 > 50) MuonSystem->nDtRings++;
+      if ( MuonSystem->nDTRechitsChamberPlus41 > 50) MuonSystem->nDtRings++;
+      if ( MuonSystem->nDTRechitsChamberPlus42 > 50) MuonSystem->nDtRings++;
+
+    //cout << "Do DT DBScan" << endl;
 
     // does not run yet
     //Do DT DBSCAN Clustering
@@ -833,7 +1015,7 @@ void llp_hnl_analyzer::Analyze(bool isData, int options, string outputfilename, 
     dtds.sort_clusters();
     
 
-    cout << "Do CSC rechit clustering" << endl;
+    //cout << "Do CSC rechit clustering" << endl;
 
     // CSC rechit clustering
     vector<Point> points;
@@ -876,6 +1058,24 @@ void llp_hnl_analyzer::Analyze(bool isData, int options, string outputfilename, 
       if (cscRechitsTpeak[i]>12.5)MuonSystem->nLateCscRechits++;
       if (cscRechitsTpeak[i]<-25)MuonSystem->nEarly2CscRechits++;
       if (cscRechitsTpeak[i]>25)MuonSystem->nLate2CscRechits++;
+      if (cscRechitsChamber[i] == 11) MuonSystem->nCscRechitsChamberPlus11++;
+      if (cscRechitsChamber[i] == 12) MuonSystem->nCscRechitsChamberPlus12++;
+      if (cscRechitsChamber[i] == 13) MuonSystem->nCscRechitsChamberPlus13++;
+      if (cscRechitsChamber[i] == 21) MuonSystem->nCscRechitsChamberPlus21++;
+      if (cscRechitsChamber[i] == 22) MuonSystem->nCscRechitsChamberPlus22++;
+      if (cscRechitsChamber[i] == 31) MuonSystem->nCscRechitsChamberPlus31++;
+      if (cscRechitsChamber[i] == 32) MuonSystem->nCscRechitsChamberPlus32++;
+      if (cscRechitsChamber[i] == 41) MuonSystem->nCscRechitsChamberPlus41++;
+      if (cscRechitsChamber[i] == 42) MuonSystem->nCscRechitsChamberPlus42++;
+      if (cscRechitsChamber[i] == -11) MuonSystem->nCscRechitsChamberMinus11++;
+      if (cscRechitsChamber[i] == -12) MuonSystem->nCscRechitsChamberMinus12++;
+      if (cscRechitsChamber[i] == -13) MuonSystem->nCscRechitsChamberMinus13++;
+      if (cscRechitsChamber[i] == -21) MuonSystem->nCscRechitsChamberMinus21++;
+      if (cscRechitsChamber[i] == -22) MuonSystem->nCscRechitsChamberMinus22++;
+      if (cscRechitsChamber[i] == -31) MuonSystem->nCscRechitsChamberMinus31++;
+      if (cscRechitsChamber[i] == -32) MuonSystem->nCscRechitsChamberMinus32++;
+      if (cscRechitsChamber[i] == -41) MuonSystem->nCscRechitsChamberMinus41++;
+      if (cscRechitsChamber[i] == -42) MuonSystem->nCscRechitsChamberMinus42++;
       MuonSystem->nCscRechits++;
     }
 
@@ -883,27 +1083,27 @@ void llp_hnl_analyzer::Analyze(bool isData, int options, string outputfilename, 
     MuonSystem->cscPosTpeak = float(cscPosRechitsAvgT/ncscRechits);
     MuonSystem->cscNegTpeak = float(cscNegRechitsAvgT/ncscRechits);
     MuonSystem->nCscRings = 0;
-    //if ( MuonSystem->nCscRechitsChamberPlus11 > 50) MuonSystem->nCscRings++;
-    //if ( MuonSystem->nCscRechitsChamberPlus12 > 50) MuonSystem->nCscRings++;
-    //if ( MuonSystem->nCscRechitsChamberPlus13 > 50) MuonSystem->nCscRings++;
-    //if ( MuonSystem->nCscRechitsChamberPlus21 > 50) MuonSystem->nCscRings++;
-    //if ( MuonSystem->nCscRechitsChamberPlus22 > 50) MuonSystem->nCscRings++;
-    //if ( MuonSystem->nCscRechitsChamberPlus31 > 50) MuonSystem->nCscRings++;
-    //if ( MuonSystem->nCscRechitsChamberPlus32 > 50) MuonSystem->nCscRings++;
-    //if ( MuonSystem->nCscRechitsChamberPlus41 > 50) MuonSystem->nCscRings++;
-    //if ( MuonSystem->nCscRechitsChamberPlus42 > 50) MuonSystem->nCscRings++;
-    //if ( MuonSystem->nCscRechitsChamberMinus11 > 50) MuonSystem->nCscRings++;
-    //if ( MuonSystem->nCscRechitsChamberMinus12 > 50) MuonSystem->nCscRings++;
-    //if ( MuonSystem->nCscRechitsChamberMinus13 > 50) MuonSystem->nCscRings++;
-    //if ( MuonSystem->nCscRechitsChamberMinus21 > 50) MuonSystem->nCscRings++;
-    //if ( MuonSystem->nCscRechitsChamberMinus22 > 50) MuonSystem->nCscRings++;
-    //if ( MuonSystem->nCscRechitsChamberMinus31 > 50) MuonSystem->nCscRings++;
-    //if ( MuonSystem->nCscRechitsChamberMinus32 > 50) MuonSystem->nCscRings++;
-    //if ( MuonSystem->nCscRechitsChamberMinus41 > 50) MuonSystem->nCscRings++;
-    //if ( MuonSystem->nCscRechitsChamberMinus42 > 50) MuonSystem->nCscRings++;
+    if ( MuonSystem->nCscRechitsChamberPlus11 > 50) MuonSystem->nCscRings++;
+    if ( MuonSystem->nCscRechitsChamberPlus12 > 50) MuonSystem->nCscRings++;
+    if ( MuonSystem->nCscRechitsChamberPlus13 > 50) MuonSystem->nCscRings++;
+    if ( MuonSystem->nCscRechitsChamberPlus21 > 50) MuonSystem->nCscRings++;
+    if ( MuonSystem->nCscRechitsChamberPlus22 > 50) MuonSystem->nCscRings++;
+    if ( MuonSystem->nCscRechitsChamberPlus31 > 50) MuonSystem->nCscRings++;
+    if ( MuonSystem->nCscRechitsChamberPlus32 > 50) MuonSystem->nCscRings++;
+    if ( MuonSystem->nCscRechitsChamberPlus41 > 50) MuonSystem->nCscRings++;
+    if ( MuonSystem->nCscRechitsChamberPlus42 > 50) MuonSystem->nCscRings++;
+    if ( MuonSystem->nCscRechitsChamberMinus11 > 50) MuonSystem->nCscRings++;
+    if ( MuonSystem->nCscRechitsChamberMinus12 > 50) MuonSystem->nCscRings++;
+    if ( MuonSystem->nCscRechitsChamberMinus13 > 50) MuonSystem->nCscRings++;
+    if ( MuonSystem->nCscRechitsChamberMinus21 > 50) MuonSystem->nCscRings++;
+    if ( MuonSystem->nCscRechitsChamberMinus22 > 50) MuonSystem->nCscRings++;
+    if ( MuonSystem->nCscRechitsChamberMinus31 > 50) MuonSystem->nCscRings++;
+    if ( MuonSystem->nCscRechitsChamberMinus32 > 50) MuonSystem->nCscRings++;
+    if ( MuonSystem->nCscRechitsChamberMinus41 > 50) MuonSystem->nCscRings++;
+    if ( MuonSystem->nCscRechitsChamberMinus42 > 50) MuonSystem->nCscRings++;
 
     //MuonSystem->tree_->Fill();
-    cout << "Do CSC DBScan" << endl;
+    //cout << "Do CSC DBScan" << endl;
     //Do DBSCAN Clustering
     int min_point = 50;  //minimum number of segments to call it a cluster
     float epsilon = 0.2; //cluster radius parameter
@@ -918,7 +1118,7 @@ void llp_hnl_analyzer::Analyze(bool isData, int options, string outputfilename, 
     ds.clusterMoments();
     ds.sort_clusters();
 
-    cout << "CSC cluster analysis" << endl;
+    //cout << "CSC cluster analysis" << endl;
 
     MuonSystem->nCscRechitClusters3 = 0;
     for ( auto &tmp : ds.CscCluster ) {
@@ -926,6 +1126,7 @@ void llp_hnl_analyzer::Analyze(bool isData, int options, string outputfilename, 
       MuonSystem->cscRechitCluster3X[MuonSystem->nCscRechitClusters3] =tmp.x;
       MuonSystem->cscRechitCluster3Y[MuonSystem->nCscRechitClusters3] =tmp.y;
       MuonSystem->cscRechitCluster3Z[MuonSystem->nCscRechitClusters3] =tmp.z;
+      MuonSystem->cscRechitCluster3Size[MuonSystem->nCscRechitClusters3] =tmp.nCscSegments;
       MuonSystem->cscRechitCluster3Time[MuonSystem->nCscRechitClusters3] = tmp.t;
       MuonSystem->cscRechitCluster3TimeTotal[MuonSystem->nCscRechitClusters3] = tmp.tTotal;
       MuonSystem->cscRechitCluster3Eta[MuonSystem->nCscRechitClusters3] =tmp.eta;
@@ -964,7 +1165,7 @@ void llp_hnl_analyzer::Analyze(bool isData, int options, string outputfilename, 
       MuonSystem->cscRechitCluster3IsoMuonVetoPt[MuonSystem->nCscRechitClusters3] = 0.0;
 
       // jet veto
-      cout << "Check jet veto" <<endl;
+      //cout << "Check jet veto" <<endl;
       for(int i = 0; i < nJets; i++) {
         if (fabs(jetEta[i]>3.0)) continue;
         if (RazorAnalyzer::deltaR(jetEta[i], jetPhi[i], MuonSystem->cscRechitCluster3Eta[MuonSystem->nCscRechitClusters3],MuonSystem->cscRechitCluster3Phi[MuonSystem->nCscRechitClusters3]) < 0.4
@@ -983,7 +1184,7 @@ void llp_hnl_analyzer::Analyze(bool isData, int options, string outputfilename, 
       int index = 999;
 
 
-      cout << "Check muon veto" <<endl;
+      //cout << "Check muon veto" <<endl;
       for(int i = 0; i < nMuons; i++) {
         if (fabs(muonEta[i]>3.0)) continue;
         float muonIso = (muon_chargedIso[i] + fmax(0.0,  muon_photonIso[i] + muon_neutralHadIso[i] - 0.5*muon_pileupIso[i])) / muonPt[i];
@@ -1002,7 +1203,7 @@ void llp_hnl_analyzer::Analyze(bool isData, int options, string outputfilename, 
         }
       }
 
-      cout << "match to gen-level muon" <<endl;
+      //cout << "match to gen-level muon" <<endl;
 
       // match to gen-level muon
       if(!isData) {
@@ -1066,7 +1267,7 @@ void llp_hnl_analyzer::Analyze(bool isData, int options, string outputfilename, 
         }
       }
 
-      cout << "match to DT hits and segments" << endl;
+      //cout << "match to DT hits and segments" << endl;
 
       //match to MB1 DT hits
       for (int i = 0; i < nDtRechits; i++) {
@@ -1140,7 +1341,7 @@ void llp_hnl_analyzer::Analyze(bool isData, int options, string outputfilename, 
     }
     else {
       if (MuonSystem->tree_) {
-        cout << "Fill tree" << endl;
+        //cout << "Fill tree" << endl;
         MuonSystem->tree_->Fill();
       }
       else {

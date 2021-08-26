@@ -11,7 +11,7 @@ def write_condor(njobs, exe='runjob', files = [], dryRun=True):
     fname = '%s.jdl' % exe
     out = """universe = vanilla
 Executable = {exe}.sh
-Should_Transfer_Files = YES
+Should_Transfer_Files = YES 
 WhenToTransferOutput = ON_EXIT_OR_EVICT
 Transfer_Input_Files = {exe}.sh,{files}
 Output = {exe}.$(Process).$(Cluster).stdout
@@ -38,16 +38,16 @@ def tarInput(taroutput,paths,dryRun=False):
 
     tarcmd = "tar -czvf %s "% taroutput +" ".join(flatFlist)
     exec_me(tarcmd,dryRun)
-    print("cleaning up")
-    exec_me("rm %s"%" ".join(flatFlist),dryRun)
+    #print("cleaning up")
+    #exec_me("rm %s"%" ".join(flatFlist),dryRun)
 
 
-def write_bash(temp = 'runjob.sh',  command = '',CMSSW="" ):
+def write_bash(temp = 'runjob.sh',  command = '',CMSSW="" ,eoscp=""):
     out = '#!/bin/bash\n'
     out += 'date\n'
     out += 'MAINDIR=`pwd`\n'
     out += 'ls\n'
-    #out += 'voms-proxy-info --all\n'
+    out += 'voms-proxy-info --all\n'
     out += '#CMSSW from scratch (only need for root)\n'
     out += 'export CWD=${PWD}\n'
     out += 'export PATH=${PATH}:/cvmfs/cms.cern.ch/common\n'
@@ -65,11 +65,19 @@ def write_bash(temp = 'runjob.sh',  command = '',CMSSW="" ):
     out += 'echo "After Untar: "\n'
     out += 'ls\n'
     out += command + '\n'
+    if eoscp!="":
+        out += 'echo "coping to eos: "+%s  \n'%eoscp
+        out +=  eoscp + '\n'
     out += 'echo "Inside $MAINDIR:"\n'
     out += 'ls\n'
     out += 'echo "DELETING..."\n'
     out += 'rm -rf %s\n'%CMSSW
     out += 'rm -rf *.pdf *.C core*\n'
+    if eoscp!="":
+        out += 'cd $MAINDIR  \n'
+        out += 'echo "remove output local file"  \n'
+        out += 'rm -rf *.root \n'
+
     out += 'ls\n'
     out += 'date\n'
     with open(temp, 'w') as f:
@@ -81,7 +89,7 @@ if __name__ == '__main__':
     parser.add_option('--dryRun', dest='dryRun', action='store_true',default = False, help='write submission files only', metavar='dryRUn')
     parser.add_option('-o', '--odir', dest='odir', default='./', help='directory to write histograms/job output', metavar='odir')
     parser.add_option('-i', '--inputList', dest='inputList', default='./lists/test.txt', help='txt file for list of input', metavar='inputList')
-    parser.add_option( '--njobs', dest='njobs', default=500, type="int", help='Number of jobs to split into', metavar='njobs')
+    parser.add_option( '--njobs', dest='njobs', default=50, type="int", help='Number of jobs to split into', metavar='njobs')
 
     script_group  = OptionGroup(parser, "script options")
     script_group.add_option("-d","--isData", dest="isData", default="no",  help="MC = yes data = yes", metavar="isData")
@@ -97,6 +105,10 @@ if __name__ == '__main__':
 
     outpath= options.odir
 
+    #eosoutpath = '/eos/uscms/store/user/kkwok/llp/'+outpath
+    #eoscppath = 'root://cmseos.fnal.gov//store/user/kkwok/llp/'+outpath
+    eosoutpath = '/eos/uscms/store/user/lpclonglived/HNL/'+outpath
+    eoscppath = 'root://cmseos.fnal.gov//store/user/lpclonglived/HNL/'+outpath
 
     ##input files needed by analyzer:
     tarList = [
@@ -127,8 +139,14 @@ if __name__ == '__main__':
     with open(options.inputList,'r') as f:
         allinputs = [line for line in f]
         nFilesPerJob = len(allinputs)/ maxJobs
+        print(maxJobs,len(allinputs))
+        if nFilesPerJob==0:
+            print("Empty input list")
+            exit()
+        print("nFilesPerJob = %s"%nFilesPerJob)
         if not os.path.exists(outpath):
             exec_me("mkdir -p %s"%(outpath), False)
+            exec_me("mkdir -p %s"%(eosoutpath), False)
         os.chdir(outpath)
         print "submitting jobs from : ",os.getcwd()
     
@@ -140,6 +158,7 @@ if __name__ == '__main__':
 
 
     command      = './Runllp_hnl_analyzer ${MAINDIR}/tmp_input_list_$1.txt -f=${MAINDIR}/%s_$1.root '%fileName
+    eoscp        = 'xrdcp -f ${MAINDIR}/%s_$1.root %s'%(fileName,eoscppath)
     #Add script options to job command
     for opts in script_group.option_list:
             command  += " --%s=%s "%(opts.dest,getattr(options, opts.dest))
@@ -147,5 +166,5 @@ if __name__ == '__main__':
     print "command to run: ", command
 
     exe = "runjob"
-    write_bash(exe+".sh",  command, "CMSSW_10_6_20" )
+    write_bash(exe+".sh",  command, "CMSSW_10_6_20" ,eoscp)
     write_condor(maxJobs, exe,  transfer_files, dryRun)
