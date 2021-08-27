@@ -1341,10 +1341,8 @@ void llp_hnl_analyzer::Analyze(bool isData, int options, string outputfilename, 
         else MuonSystem->dtRechitCluster_match_gLLP[MuonSystem->nDtRechitClusters] = false;
 
          MuonSystem->dtRechitCluster_match_gLLP_minDeltaR[MuonSystem->nDtRechitClusters] = min_deltaR;
-         MuonSystem->dtRechitCluster_match_gLLP_index[MuonSystem->nDtRechitClusters] = index;
          MuonSystem->dtRechitCluster_match_gLLP_eta[MuonSystem->nDtRechitClusters] = MuonSystem->gLLP_eta[index];
          MuonSystem->dtRechitCluster_match_gLLP_phi[MuonSystem->nDtRechitClusters] = MuonSystem->gLLP_phi[index];
-         MuonSystem->dtRechitCluster_match_gLLP_decay_r[MuonSystem->nDtRechitClusters] = MuonSystem->gLLP_decay_vertex_r[index];
          MuonSystem->dtRechitCluster_match_gLLP_decay_x[MuonSystem->nDtRechitClusters] = MuonSystem->gLLP_decay_vertex_x[index];
          MuonSystem->dtRechitCluster_match_gLLP_decay_y[MuonSystem->nDtRechitClusters] = MuonSystem->gLLP_decay_vertex_y[index];
          MuonSystem->dtRechitCluster_match_gLLP_decay_z[MuonSystem->nDtRechitClusters] = MuonSystem->gLLP_decay_vertex_z[index];
@@ -1440,7 +1438,7 @@ void llp_hnl_analyzer::Analyze(bool isData, int options, string outputfilename, 
 
         MuonSystem->nDtRechitClusters++;
       }//end loop for dt clusters
-
+      if(isData && MuonSystem->nDtRechitClusters == 0 && MuonSystem->nCscRechitClusters3 == 0)continue;
 
 
     if(!isData && signalScan) {
