@@ -363,10 +363,10 @@ void DBSCAN::sort_clusters()
     tmpCluster.nCscSegmentChamberMinus41 = 0;
     tmpCluster.nCscSegmentChamberMinus42 = 0;
 
-    // tmpCluster.nDtSegmentStation1 = 0;
-    // tmpCluster.nDtSegmentStation2 = 0;
-    // tmpCluster.nDtSegmentStation3 = 0;
-    // tmpCluster.nDtSegmentStation4 = 0;
+    tmpCluster.nDtSegmentStation1 = 0;
+    tmpCluster.nDtSegmentStation2 = 0;
+    tmpCluster.nDtSegmentStation3 = 0;
+    tmpCluster.nDtSegmentStation4 = 0;
     for(unsigned int l=0; l < m_pointSize; l++){
       if (m_points[l].clusterID == i+1){
         cscStations.push_back(m_points[l].station);
@@ -417,10 +417,10 @@ void DBSCAN::sort_clusters()
       	if (m_points[l].chamber == -42) tmpCluster.nCscSegmentChamberMinus42++;
 
 
-        // if (m_points[l].station == 1) tmpCluster.nDtSegmentStation1++;
-        // if (m_points[l].station == 2) tmpCluster.nDtSegmentStation2++;
-        // if (m_points[l].station == 3) tmpCluster.nDtSegmentStation3++;
-        // if (m_points[l].station == 4) tmpCluster.nDtSegmentStation4++;
+        if (m_points[l].station == 1) tmpCluster.nDtSegmentStation1++;
+        if (m_points[l].station == 2) tmpCluster.nDtSegmentStation2++;
+        if (m_points[l].station == 3) tmpCluster.nDtSegmentStation3++;
+        if (m_points[l].station == 4) tmpCluster.nDtSegmentStation4++;
 
       }
     }

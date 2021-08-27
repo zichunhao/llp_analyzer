@@ -473,6 +473,8 @@ void RazorAnalyzer::EnableDT()
   fChain->SetBranchStatus("rpcT", 1);
   fChain->SetBranchStatus("rpcBx", 1);
   fChain->SetBranchStatus("rpcTError", 1);
+  fChain->SetBranchStatus("rpcRing", 1);
+  fChain->SetBranchStatus("rpcRegion", 1);
 
 };
 void RazorAnalyzer::EnableCSC()

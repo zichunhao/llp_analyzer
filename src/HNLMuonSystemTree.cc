@@ -18,7 +18,6 @@ void HNLMuonSystemTree::InitVariables()
   runNum=0; lumiSec=0; evtNum=0; category=0;
   npv=0; npu=0;
   pileupWeight = 0; pileupWeightUp = 0; pileupWeightDown = 0;
-  higgsPtWeight = 0;
   lepOverallSF = 1.0;
   metSF = 1.0;
 
@@ -27,7 +26,6 @@ void HNLMuonSystemTree::InitVariables()
 
   for (int i = 0; i < 9; i++)
   {
-    higgsPtWeightSys[i] = 0;
     scaleWeights[i] = 0.0;
   }
   weight=-1.0;rho=-1;
@@ -82,11 +80,9 @@ void HNLMuonSystemTree::InitVariables()
   nCscRechitsChamberMinus31 = 0;
   nCscRechitsChamberMinus32 = 0;
   nCscRechitsChamberMinus41 = 0;
-  nCscRechitsChamberMinus42 = 0;  
+  nCscRechitsChamberMinus42 = 0;
 
-  nRpc = 0;
   nDTRechits = 0;
-  nDtSeg = 0;
   nDTNegativeYRechits  = 0;
   nDTPositiveYRechits = 0;
   nDTRechitsChamberMinus12 = 0;
@@ -109,25 +105,19 @@ void HNLMuonSystemTree::InitVariables()
   nDTRechitsChamber40 = 0;
   nDTRechitsChamberPlus41 = 0;
   nDTRechitsChamberPlus42 = 0;
+  nDtStations25 = 0;
+  nDtWheels25 = 0;
+  nDTRechitsStation1 = 0;
+  nDTRechitsStation2 = 0;
+  nDTRechitsStation3 = 0;
+  nDTRechitsStation4 = 0;
 
-  for( int i = 0; i < N_MAX_CSCRECHITS; i++ )
-  {
-    rpcPhi[i] = -999.;   //[nCsc]
-    rpcEta[i] = -999.;   //[nCsc]
-    rpc_RE12[i] = false;   //[nCsc]
-    rpc_RB1[i] = false;   //[nCsc]
+  nDTRechitsWheelMinus2 = 0;
+  nDTRechitsWheelMinus1 = 0;
+  nDTRechitsWheel0 = 0;
+  nDTRechitsWheelPlus1 = 0;
+  nDTRechitsWheelPlus2 = 0;
 
-     dtRechitsPhi[i] = -999.;   //[nCsc]
-     dtRechitsEta[i] = -999.;   //[nCsc]
-     dtRechitsStation[i] = -999;   //[nCsc]
-     dtRechitsWheel[i] = -999;   //[nCsc]
-
-     dtSegPhi[i] = -999.;   //[nCsc]
-     dtSegEta[i] = -999.;   //[nCsc]
-     dtSegStation[i] = -999;   //[nCsc]
-     dtSegWheel[i] = -999;   //[nCsc]
-
-  }
   for( int i = 0; i < N_MAX_CSC; i++ )
   {
       cscRechitCluster3_match_Me1112_0p4[i] = 0;
@@ -193,31 +183,12 @@ void HNLMuonSystemTree::InitVariables()
         cscRechitCluster3_match_gLLP_csc[i] = false;
         cscRechitCluster3_match_gLLP_e[i] = 999.;
         cscRechitCluster3_match_gLLP_pt[i] = 999.;
-        cscRechitCluster3_match_gLLP_EMFracE[i] = 999.;
-        cscRechitCluster3_match_gLLP_EMFracEz[i] = 999.;
-        cscRechitCluster3_match_gLLP_EMFracP[i] = 999.;
-        cscRechitCluster3_match_gLLP_EMFracPz[i] = 999.;
         cscRechitCluster3_match_gLLP_lepdPhi[i] = 999.;
         cscRechitCluster3_match_gLLP_daughter0_deltaR[i] = 999.0;
         cscRechitCluster3_match_gLLP_daughter1_deltaR[i] = 999.0;
         cscRechitCluster3_match_gLLP_daughter2_deltaR[i] = 999.0;
         cscRechitCluster3_match_gLLP_daughter3_deltaR[i] = 999.0;
-        cscRechitCluster3_match_gLLP_other_daughter_deltaR[i] = 999.0;
-        cscRechitCluster3_match_gLLP_other_daughter_index[i] = 999;
-        cscRechitCluster3_match_gLLP_daughterKaon[i] = false;
 
-
-        cscRechitCluster3_match_gLLP_other_eta[i] = 999.0;
-        cscRechitCluster3_match_gLLP_other_phi[i] = 999.0;
-        cscRechitCluster3_match_gLLP_other_decay_r[i] = 999.0;
-        cscRechitCluster3_match_gLLP_other_decay_x[i] = 999.0;
-        cscRechitCluster3_match_gLLP_other_decay_y[i] = 999.0;
-        cscRechitCluster3_match_gLLP_other_decay_z[i] = 999.0;
-        cscRechitCluster3_match_gLLP_other_ctau[i] = 999.0;
-        cscRechitCluster3_match_gLLP_other_beta[i] = 999.0;
-        cscRechitCluster3_match_gLLP_other_csc[i] = false;
-        cscRechitCluster3_match_gLLP_other_e[i] = 999.0;
-        cscRechitCluster3_match_gLLP_other_pt[i] = 999.0;
         cscRechitCluster3Size[i] = -999;
         cscRechitCluster3X[i] = -999.;
         cscRechitCluster3Y[i] = -999.;
@@ -354,6 +325,90 @@ void HNLMuonSystemTree::InitVariables()
         cscRechitCluster3MetJesDown_dPhi[i] = 999.;
 
 
+        dtRechitCluster_match_gParticle_deltaR[i] = 999.;
+        dtRechitCluster_match_gParticle_Id[i] = -999;
+        dtRechitCluster_match_gParticle_Pt[i] = -999.;
+        dtRechitCluster_match_gParticle_Eta[i] = -999.;
+        dtRechitCluster_match_gParticle_Phi[i] = -999.;
+        dtRechitCluster_match_gParticle_E[i] = -999.;
+        dtRechitCluster_match_gParticle_Status[i] = -999;
+        dtRechitCluster_match_gParticle_MotherId[i] = -999;
+        dtRechitCluster_match_gParticle_deltaR[i] = -999.;
+
+        dtRechitCluster_match_MB1hits_0p4[i] = 0;
+        dtRechitCluster_match_MB1hits_0p5[i] = 0;
+        dtRechitCluster_match_MB1hits_cosmics_plus[i] = 0;
+        dtRechitCluster_match_MB1hits_cosmics_minus[i] = 0;
+        dtRechitCluster_match_RPChits_dPhi0p5[i] = 0;
+        dtRechitCluster_match_RPCBx_dPhi0p5[i] = 0;
+        dtRechitCluster_match_RB1_0p4[i] = 0;
+        dtRechitCluster_match_RB1_dPhi0p5[i] = 0;
+
+
+
+        dtRechitCluster_match_gLLP[i] = false;
+        dtRechitCluster_match_gLLP_minDeltaR[i] = 999;
+        dtRechitCluster_match_gLLP_eta[i] = 999.;
+        dtRechitCluster_match_gLLP_phi[i] = 999.;
+        dtRechitCluster_match_gLLP_decay_x[i] = 999.;
+        dtRechitCluster_match_gLLP_decay_y[i] = 999.;
+        dtRechitCluster_match_gLLP_decay_z[i] = 999.;
+        dtRechitCluster_match_gLLP_ctau[i] = 999.;
+        dtRechitCluster_match_gLLP_beta[i] = 999.;
+        dtRechitCluster_match_gLLP_csc[i] = false;
+        dtRechitCluster_match_gLLP_dt[i] = false;
+
+
+
+        dtRechitCluster_match_gLLP_e[i] = 999.;
+        dtRechitCluster_match_gLLP_pt[i] = 999.;
+        dtRechitClusterLep_dPhi[i] = 999.;
+
+
+
+        dtRechitClusterSize[i] = -999;
+        dtRechitClusterX[i] = -999.;
+        dtRechitClusterY[i] = -999.;
+        dtRechitClusterZ[i] = -999.;
+
+        dtRechitClusterWheel[i] = -999;
+
+        dtRechitClusterEta[i] = -999.;
+        dtRechitClusterPhi[i] = -999.;
+
+        dtRechitClusterJetVetoPt[i] = 0.0;
+        dtRechitClusterJetVetoEta[i] = 0.0;
+        dtRechitClusterJetVetoPhi[i] = 0.0;
+
+
+        dtRechitClusterMuonVetoPt[i] = 0.0;
+        dtRechitClusterMuonVetoE[i] = 0.0;
+        dtRechitClusterMuonVetoPhi[i] = 0.0;
+        dtRechitClusterMuonVetoEta[i] = 0.0;
+        dtRechitClusterMuonVetoLooseId[i] = false;
+        dtRechitClusterMuonVetoGlobal[i] = false;
+
+
+
+        dtRechitClusterNChamber[i] = -999;
+        dtRechitClusterMaxChamberRatio[i] = -999.;
+        dtRechitClusterMaxChamber[i] = -999;
+        dtRechitClusterNStation10[i] = -999;
+        dtRechitClusterAvgStation10[i] = -999.;
+        dtRechitClusterMaxStationRatio[i] = -999.;
+        dtRechitClusterMaxStation[i] = -999;
+
+        dtRechitClusterNSegmentStation1[i] = -999;
+        dtRechitClusterNSegmentStation2[i] = -999;
+        dtRechitClusterNSegmentStation3[i] = -999;
+        dtRechitClusterNSegmentStation4[i] = -999;
+
+
+        dtRechitClusterMetEENoise_dPhi[i] = 999.;
+
+
+
+
   }
 
   for(int i = 0;i<2;i++)
@@ -366,24 +421,15 @@ void HNLMuonSystemTree::InitVariables()
     gLLP_pt[i] = 0.0;
     gLLP_lepdPhi[i] = 0.0;
     gLLP_csc[i] = 0.0;
+    gLLP_dt[i] = 0.0;
     gLLP_ctau[i] = 0.0;
     gLLP_decay_vertex_r[i] = 0.0;
     gLLP_decay_vertex_x[i] = 0.0;
     gLLP_decay_vertex_y[i] = 0.0;
     gLLP_decay_vertex_z[i] = 0.0;
-    gLLP_daughterKaon[i] = false;
-    gLLP_EMFracE[i] = 0.;
-    gLLP_EMFracEz[i] = 0.;
-    gLLP_EMFracP[i] = 0.;
-    gLLP_EMFracPz[i] = 0.;
-    gLLP_visE[i] = 0.;
-    gLLP_visEz[i] = 0.;
-    gLLP_visP[i] = 0.;
-    gLLP_visPz[i] = 0.;
     gLLP_daughter_deltaR[i] = -999.0;
 
   }
-  gLLP_deltaR  = -999.0;
   for(int i = 0;i<4;i++)
   {
     gLLP_daughter_pt[i] = -999.0;
@@ -399,24 +445,24 @@ void HNLMuonSystemTree::InitVariables()
   genMetPhiTrue = -999.;
   genMetPtCalo = -999.;
   genMetPhiCalo = -999.;
-  nGenParticle = 0;
-  nGenJets = 0;
-  for( int i = 0; i < N_MAX_GPARTICLES; i++ )
-  {
-    gParticleId[i] = 0;
-    gParticleStatus[i] = 999;
-    gParticleMotherId[i] = 0;
-    gParticlePt[i] = -999.;
-    gParticleEta[i] = -999.;
-    gParticlePhi[i] = -999.;
-    gParticleE[i] = -999.;
-    genJetE[i] = -999.;
-    genJetPt[i] = -999.;
-    genJetEta[i] = -999.;
-    genJetPhi[i] = -999.;
-    genJetMET[i] = -999.;
-
-  }
+  // nGenParticle = 0;
+  // nGenJets = 0;
+  // for( int i = 0; i < N_MAX_GPARTICLES; i++ )
+  // {
+  //   gParticleId[i] = 0;
+  //   gParticleStatus[i] = 999;
+  //   gParticleMotherId[i] = 0;
+  //   gParticlePt[i] = -999.;
+  //   gParticleEta[i] = -999.;
+  //   gParticlePhi[i] = -999.;
+  //   gParticleE[i] = -999.;
+  //   genJetE[i] = -999.;
+  //   genJetPt[i] = -999.;
+  //   genJetEta[i] = -999.;
+  //   genJetPhi[i] = -999.;
+  //   genJetMET[i] = -999.;
+  //
+  // }
 
   //leptons
 
@@ -520,8 +566,6 @@ void HNLMuonSystemTree::InitTree()
   tree_->SetBranchAddress("npv",         &npv);
   tree_->SetBranchAddress("npu",         &npu);
   tree_->SetBranchAddress("weight",      &weight);
-  tree_->SetBranchAddress("higgsPtWeight",      &higgsPtWeight);
-  tree_->SetBranchAddress("higgsPtWeightSys",      &higgsPtWeightSys);
   tree_->SetBranchAddress("scaleWeights",      &scaleWeights);
 
 
@@ -600,21 +644,21 @@ tree_->SetBranchAddress("metPhiEENoiseXYCorr",      &metPhiEENoiseXYCorr);
   tree_->SetBranchAddress("genMetPtCalo",      &genMetPtCalo);
   tree_->SetBranchAddress("genMetPhiCalo",      &genMetPhiCalo);
 
-  tree_->SetBranchAddress("nGenParticle",      &nGenParticle);
-  tree_->SetBranchAddress("gParticleId",      &gParticleId);
-  tree_->SetBranchAddress("gParticleStatus",      &gParticleStatus);
-  tree_->SetBranchAddress("gParticleMotherId",      &gParticleMotherId);
-  tree_->SetBranchAddress("gParticleE",      &gParticleE);
-  tree_->SetBranchAddress("gParticlePt",      &gParticlePt);
-  tree_->SetBranchAddress("gParticleEta",      &gParticleEta);
-  tree_->SetBranchAddress("gParticlePhi",      &gParticlePhi);
-
-  tree_->SetBranchAddress("nGenJets",      &nGenJets);
-  tree_->SetBranchAddress("genJetE",      &genJetE);
-  tree_->SetBranchAddress("genJetPt",      &genJetPt);
-  tree_->SetBranchAddress("genJetEta",      &genJetEta);
-  tree_->SetBranchAddress("genJetPhi",      &genJetPhi);
-  tree_->SetBranchAddress("genJetMET",      &genJetMET);
+  // tree_->SetBranchAddress("nGenParticle",      &nGenParticle);
+  // tree_->SetBranchAddress("gParticleId",      &gParticleId);
+  // tree_->SetBranchAddress("gParticleStatus",      &gParticleStatus);
+  // tree_->SetBranchAddress("gParticleMotherId",      &gParticleMotherId);
+  // tree_->SetBranchAddress("gParticleE",      &gParticleE);
+  // tree_->SetBranchAddress("gParticlePt",      &gParticlePt);
+  // tree_->SetBranchAddress("gParticleEta",      &gParticleEta);
+  // tree_->SetBranchAddress("gParticlePhi",      &gParticlePhi);
+  //
+  // tree_->SetBranchAddress("nGenJets",      &nGenJets);
+  // tree_->SetBranchAddress("genJetE",      &genJetE);
+  // tree_->SetBranchAddress("genJetPt",      &genJetPt);
+  // tree_->SetBranchAddress("genJetEta",      &genJetEta);
+  // tree_->SetBranchAddress("genJetPhi",      &genJetPhi);
+  // tree_->SetBranchAddress("genJetMET",      &genJetMET);
 
   tree_->SetBranchAddress("gWPt",      &gWPt);
 
@@ -661,13 +705,25 @@ tree_->SetBranchAddress("metPhiEENoiseXYCorr",      &metPhiEENoiseXYCorr);
   tree_->SetBranchAddress("nCscRechitsChamberMinus41",            &nCscRechitsChamberMinus41);
   tree_->SetBranchAddress("nCscRechitsChamberMinus42",            &nCscRechitsChamberMinus42);
 
-  tree_->SetBranchAddress("nRpc",            &nRpc);
-  tree_->SetBranchAddress("nDtSeg",            &nDtSeg);
 
   tree_->SetBranchAddress("nDTRechits",            &nDTRechits);
   tree_->SetBranchAddress("nDTPositiveYRechits",            &nDTPositiveYRechits);
   tree_->SetBranchAddress("nDTNegativeYRechits",            &nDTNegativeYRechits);
   tree_->SetBranchAddress("nDtRings",             &nDtRings);
+  tree_->SetBranchAddress("nDtWheels25",             &nDtWheels25);
+  tree_->SetBranchAddress("nDtStations25",             &nDtStations25);
+
+  tree_->SetBranchAddress("nDTRechitsWheelMinus2",             &nDTRechitsWheelMinus2);
+  tree_->SetBranchAddress("nDTRechitsWheelMinus1",             &nDTRechitsWheelMinus1);
+  tree_->SetBranchAddress("nDTRechitsWheel0",             &nDTRechitsWheel0);
+  tree_->SetBranchAddress("nDTRechitsWheelPlus1",             &nDTRechitsWheelPlus1);
+  tree_->SetBranchAddress("nDTRechitsWheelPlus2",             &nDTRechitsWheelPlus2);
+
+  tree_->SetBranchAddress("nDTRechitsStation1",             &nDTRechitsStation1);
+  tree_->SetBranchAddress("nDTRechitsStation2",             &nDTRechitsStation2);
+  tree_->SetBranchAddress("nDTRechitsStation3",             &nDTRechitsStation3);
+  tree_->SetBranchAddress("nDTRechitsStation4",             &nDTRechitsStation4);
+
 
   tree_->SetBranchAddress("nDTRechitsChamberMinus12",            &nDTRechitsChamberMinus12);
   tree_->SetBranchAddress("nDTRechitsChamberMinus11",            &nDTRechitsChamberMinus11);
@@ -691,18 +747,72 @@ tree_->SetBranchAddress("metPhiEENoiseXYCorr",      &metPhiEENoiseXYCorr);
   tree_->SetBranchAddress("nDTRechitsChamberPlus41",            &nDTRechitsChamberPlus41);
   tree_->SetBranchAddress("nDTRechitsChamberPlus42",            &nDTRechitsChamberPlus42);
 
-  tree_->SetBranchAddress("rpcPhi",             rpcPhi);
-  tree_->SetBranchAddress("rpcEta",             rpcEta);
-  tree_->SetBranchAddress("rpc_RE12",             rpc_RE12);
-  tree_->SetBranchAddress("rpc_RB1",             rpc_RB1);
-  tree_->SetBranchAddress("dtRechitsPhi",             dtRechitsPhi);
-  tree_->SetBranchAddress("dtRechitsEta",             dtRechitsEta);
-  tree_->SetBranchAddress("dtRechitsStation",             dtRechitsStation);
-  tree_->SetBranchAddress("dtRechitsWheel",             dtRechitsWheel);
-  tree_->SetBranchAddress("dtSegPhi",             dtSegPhi);
-  tree_->SetBranchAddress("dtSegEta",             dtSegEta);
-  tree_->SetBranchAddress("dtSegStation",             dtSegStation);
-  tree_->SetBranchAddress("dtSegWheel",             dtSegWheel);
+
+  //DT CLUSTER
+
+    tree_->SetBranchAddress("nDtRechitClusters",             &nDtRechitClusters);
+    tree_->SetBranchAddress("dtRechitClusterX",             dtRechitClusterX);
+    tree_->SetBranchAddress("dtRechitClusterY",             dtRechitClusterY);
+    tree_->SetBranchAddress("dtRechitClusterZ",             dtRechitClusterZ);
+    tree_->SetBranchAddress("dtRechitClusterWheel",             dtRechitClusterWheel);
+    tree_->SetBranchAddress("dtRechitClusterEta",             dtRechitClusterEta);
+    tree_->SetBranchAddress("dtRechitClusterPhi",             dtRechitClusterPhi);
+    tree_->SetBranchAddress("dtRechitClusterSize",             dtRechitClusterSize);
+    tree_->SetBranchAddress("dtRechitClusterMaxStation",             dtRechitClusterMaxStation);
+    tree_->SetBranchAddress("dtRechitClusterMaxStationRatio",             dtRechitClusterMaxStationRatio);
+    tree_->SetBranchAddress("dtRechitClusterNStation10",             dtRechitClusterNStation10);
+    tree_->SetBranchAddress("dtRechitClusterAvgStation10",             dtRechitClusterAvgStation10);
+    tree_->SetBranchAddress("dtRechitClusterMaxChamber",             dtRechitClusterMaxChamber);
+    tree_->SetBranchAddress("dtRechitClusterMaxChamberRatio",             dtRechitClusterMaxChamberRatio);
+    tree_->SetBranchAddress("dtRechitClusterNChamber",             dtRechitClusterNChamber);
+    tree_->SetBranchAddress("dtRechitClusterJetVetoPt",             dtRechitClusterJetVetoPt);
+    tree_->SetBranchAddress("dtRechitClusterJetVetoEta",             dtRechitClusterJetVetoEta);
+    tree_->SetBranchAddress("dtRechitClusterJetVetoPhi",             dtRechitClusterJetVetoPhi);
+    tree_->SetBranchAddress("dtRechitClusterJetVetoE",             dtRechitClusterJetVetoE);
+    tree_->SetBranchAddress("dtRechitClusterMuonVetoPt",             dtRechitClusterMuonVetoPt);
+    tree_->SetBranchAddress("dtRechitClusterMuonVetoE",             dtRechitClusterMuonVetoE);
+    tree_->SetBranchAddress("dtRechitClusterMuonVetoPhi",             dtRechitClusterMuonVetoPhi);
+    tree_->SetBranchAddress("dtRechitClusterMuonVetoEta",             dtRechitClusterMuonVetoEta);
+    tree_->SetBranchAddress("dtRechitClusterMuonVetoLooseId",             dtRechitClusterMuonVetoLooseId);
+    tree_->SetBranchAddress("dtRechitClusterMuonVetoGlobal",             dtRechitClusterMuonVetoGlobal);
+    tree_->SetBranchAddress("dtRechitClusterNSegmentStation1",             dtRechitClusterNSegmentStation1);
+    tree_->SetBranchAddress("dtRechitClusterNSegmentStation2",             dtRechitClusterNSegmentStation2);
+    tree_->SetBranchAddress("dtRechitClusterNSegmentStation3",             dtRechitClusterNSegmentStation3);
+    tree_->SetBranchAddress("dtRechitClusterNSegmentStation4",             dtRechitClusterNSegmentStation4);
+    tree_->SetBranchAddress("dtRechitCluster_match_gParticle_Id",             dtRechitCluster_match_gParticle_Id);
+    tree_->SetBranchAddress("dtRechitCluster_match_gParticle_Pt",             dtRechitCluster_match_gParticle_Pt);
+    tree_->SetBranchAddress("dtRechitCluster_match_gParticle_Eta",             dtRechitCluster_match_gParticle_Eta);
+    tree_->SetBranchAddress("dtRechitCluster_match_gParticle_Phi",             dtRechitCluster_match_gParticle_Phi);
+    tree_->SetBranchAddress("dtRechitCluster_match_gParticle_E",             dtRechitCluster_match_gParticle_E);
+    tree_->SetBranchAddress("dtRechitCluster_match_gParticle_Status",             dtRechitCluster_match_gParticle_Status);
+    tree_->SetBranchAddress("dtRechitCluster_match_gParticle_MotherId",             dtRechitCluster_match_gParticle_MotherId);
+    tree_->SetBranchAddress("dtRechitCluster_match_gParticle_deltaR",             dtRechitCluster_match_gParticle_deltaR);
+    tree_->SetBranchAddress("dtRechitCluster_match_gLLP",             dtRechitCluster_match_gLLP);
+    tree_->SetBranchAddress("dtRechitCluster_match_gLLP_minDeltaR",             dtRechitCluster_match_gLLP_minDeltaR);
+    tree_->SetBranchAddress("dtRechitCluster_match_gLLP_eta",             dtRechitCluster_match_gLLP_eta);
+    tree_->SetBranchAddress("dtRechitCluster_match_gLLP_phi",             dtRechitCluster_match_gLLP_phi);
+    tree_->SetBranchAddress("dtRechitCluster_match_gLLP_decay_x",             dtRechitCluster_match_gLLP_decay_x);
+    tree_->SetBranchAddress("dtRechitCluster_match_gLLP_decay_y",             dtRechitCluster_match_gLLP_decay_y);
+    tree_->SetBranchAddress("dtRechitCluster_match_gLLP_decay_z",             dtRechitCluster_match_gLLP_decay_z);
+    tree_->SetBranchAddress("dtRechitCluster_match_gLLP_ctau",             dtRechitCluster_match_gLLP_ctau);
+    tree_->SetBranchAddress("dtRechitCluster_match_gLLP_beta",             dtRechitCluster_match_gLLP_beta);
+    tree_->SetBranchAddress("dtRechitCluster_match_gLLP_csc",             dtRechitCluster_match_gLLP_csc);
+    tree_->SetBranchAddress("dtRechitCluster_match_gLLP_dt",             dtRechitCluster_match_gLLP_dt);
+    tree_->SetBranchAddress("dtRechitCluster_match_gLLP_e",             dtRechitCluster_match_gLLP_e);
+    tree_->SetBranchAddress("dtRechitCluster_match_gLLP_pt",             dtRechitCluster_match_gLLP_pt);
+    tree_->SetBranchAddress("dtRechitClusterLep_dPhi",             dtRechitClusterLep_dPhi);
+    tree_->SetBranchAddress("dtRechitCluster_match_MB1hits_0p4",             dtRechitCluster_match_MB1hits_0p4);
+    tree_->SetBranchAddress("dtRechitCluster_match_MB1hits_0p5",             dtRechitCluster_match_MB1hits_0p5);
+    tree_->SetBranchAddress("dtRechitCluster_match_MB1hits_cosmics_plus",             dtRechitCluster_match_MB1hits_cosmics_plus);
+    tree_->SetBranchAddress("dtRechitCluster_match_MB1hits_cosmics_minus",             dtRechitCluster_match_MB1hits_cosmics_minus);
+    tree_->SetBranchAddress("dtRechitCluster_match_RPChits_dPhi0p5",             dtRechitCluster_match_RPChits_dPhi0p5);
+    tree_->SetBranchAddress("dtRechitCluster_match_RPCBx_dPhi0p5",             dtRechitCluster_match_RPCBx_dPhi0p5);
+    tree_->SetBranchAddress("dtRechitCluster_match_RB1_0p4",             dtRechitCluster_match_RB1_0p4);
+    tree_->SetBranchAddress("dtRechitCluster_match_RB1_dPhi0p5",             dtRechitCluster_match_RB1_dPhi0p5);
+    tree_->SetBranchAddress("dtRechitClusterMetEENoise_dPhi",             dtRechitClusterMetEENoise_dPhi);
+
+
+
 
   // CSC CLUSTER
   tree_->SetBranchAddress("nCscRechitClusters3",             &nCscRechitClusters3);
@@ -739,33 +849,13 @@ tree_->SetBranchAddress("metPhiEENoiseXYCorr",      &metPhiEENoiseXYCorr);
   tree_->SetBranchAddress("cscRechitCluster3_match_gLLP_csc",             &cscRechitCluster3_match_gLLP_csc);
   tree_->SetBranchAddress("cscRechitCluster3_match_gLLP_e",             &cscRechitCluster3_match_gLLP_e);
   tree_->SetBranchAddress("cscRechitCluster3_match_gLLP_pt",             &cscRechitCluster3_match_gLLP_pt);
-  tree_->SetBranchAddress("cscRechitCluster3_match_gLLP_EMFracE",             &cscRechitCluster3_match_gLLP_EMFracE);
-  tree_->SetBranchAddress("cscRechitCluster3_match_gLLP_EMFracEz",             &cscRechitCluster3_match_gLLP_EMFracEz);
-  tree_->SetBranchAddress("cscRechitCluster3_match_gLLP_EMFracP",             &cscRechitCluster3_match_gLLP_EMFracP);
-  tree_->SetBranchAddress("cscRechitCluster3_match_gLLP_EMFracPz",             &cscRechitCluster3_match_gLLP_EMFracPz);
   tree_->SetBranchAddress("cscRechitCluster3_match_gLLP_lepdPhi",             &cscRechitCluster3_match_gLLP_lepdPhi);
-  tree_->SetBranchAddress("cscRechitCluster3_match_gLLP_daughterKaon",             &cscRechitCluster3_match_gLLP_daughterKaon);
 
   tree_->SetBranchAddress("cscRechitCluster3_match_gLLP_daughter0_deltaR",             &cscRechitCluster3_match_gLLP_daughter0_deltaR);
   tree_->SetBranchAddress("cscRechitCluster3_match_gLLP_daughter1_deltaR",             &cscRechitCluster3_match_gLLP_daughter1_deltaR);
   tree_->SetBranchAddress("cscRechitCluster3_match_gLLP_daughter2_deltaR",             &cscRechitCluster3_match_gLLP_daughter2_deltaR);
   tree_->SetBranchAddress("cscRechitCluster3_match_gLLP_daughter3_deltaR",             &cscRechitCluster3_match_gLLP_daughter3_deltaR);
-  tree_->SetBranchAddress("cscRechitCluster3_match_gLLP_other_daughter_deltaR",             &cscRechitCluster3_match_gLLP_other_daughter_deltaR);
-  tree_->SetBranchAddress("cscRechitCluster3_match_gLLP_other_daughter_index",             &cscRechitCluster3_match_gLLP_other_daughter_index);
 
-  tree_->SetBranchAddress("cscRechitCluster3_match_gLLP_other_daughter_deltaR",             &cscRechitCluster3_match_gLLP_other_daughter_deltaR);
-
- tree_->SetBranchAddress("cscRechitCluster3_match_gLLP_other_eta",             &cscRechitCluster3_match_gLLP_other_eta);
- tree_->SetBranchAddress("cscRechitCluster3_match_gLLP_other_phi",             &cscRechitCluster3_match_gLLP_other_phi);
- tree_->SetBranchAddress("cscRechitCluster3_match_gLLP_other_decay_r",             &cscRechitCluster3_match_gLLP_other_decay_r);
- tree_->SetBranchAddress("cscRechitCluster3_match_gLLP_other_decay_x",             &cscRechitCluster3_match_gLLP_other_decay_x);
- tree_->SetBranchAddress("cscRechitCluster3_match_gLLP_other_decay_y",             &cscRechitCluster3_match_gLLP_other_decay_y);
- tree_->SetBranchAddress("cscRechitCluster3_match_gLLP_other_decay_z",             &cscRechitCluster3_match_gLLP_other_decay_z);
- tree_->SetBranchAddress("cscRechitCluster3_match_gLLP_other_ctau",             &cscRechitCluster3_match_gLLP_other_ctau);
- tree_->SetBranchAddress("cscRechitCluster3_match_gLLP_other_beta",             &cscRechitCluster3_match_gLLP_other_beta);
- tree_->SetBranchAddress("cscRechitCluster3_match_gLLP_other_csc",             &cscRechitCluster3_match_gLLP_other_csc);
- tree_->SetBranchAddress("cscRechitCluster3_match_gLLP_other_e",             &cscRechitCluster3_match_gLLP_other_e);
- tree_->SetBranchAddress("cscRechitCluster3_match_gLLP_other_pt",             &cscRechitCluster3_match_gLLP_other_pt);
 
   tree_->SetBranchAddress("cscRechitCluster3Me11Ratio",             &cscRechitCluster3Me11Ratio);
   tree_->SetBranchAddress("cscRechitCluster3Me12Ratio",             &cscRechitCluster3Me12Ratio);
@@ -947,23 +1037,18 @@ tree_->SetBranchAddress("metPhiEENoiseXYCorr",      &metPhiEENoiseXYCorr);
   tree_->SetBranchAddress("gLLP_eta",    gLLP_eta);
   tree_->SetBranchAddress("gLLP_phi",    gLLP_phi);
   tree_->SetBranchAddress("gLLP_csc",    gLLP_csc);
+  tree_->SetBranchAddress("gLLP_dt",    gLLP_dt);
   tree_->SetBranchAddress("gLLP_ctau",    gLLP_ctau);
   tree_->SetBranchAddress("gLLP_beta",    gLLP_beta);
   tree_->SetBranchAddress("gLLP_e",    gLLP_e);
   tree_->SetBranchAddress("gLLP_pt",    gLLP_pt);
   tree_->SetBranchAddress("gLLP_lepdPhi",    gLLP_lepdPhi);
-  tree_->SetBranchAddress("gLLP_EMFracE",    gLLP_EMFracE);
-  tree_->SetBranchAddress("gLLP_EMFracEz",    gLLP_EMFracEz);
-  tree_->SetBranchAddress("gLLP_EMFracP",    gLLP_EMFracP);
-  tree_->SetBranchAddress("gLLP_EMFracPz",    gLLP_EMFracPz);
-  tree_->SetBranchAddress("gLLP_daughterKaon",    gLLP_daughterKaon);
 
   tree_->SetBranchAddress("gLLP_decay_vertex_r",    gLLP_decay_vertex_r);
   tree_->SetBranchAddress("gLLP_decay_vertex_x",    gLLP_decay_vertex_x);
   tree_->SetBranchAddress("gLLP_decay_vertex_y",    gLLP_decay_vertex_y);
   tree_->SetBranchAddress("gLLP_decay_vertex_z",    gLLP_decay_vertex_z);
 
-  tree_->SetBranchAddress("gLLP_deltaR",    &gLLP_deltaR);
   tree_->SetBranchAddress("gLLP_daughter_deltaR",    gLLP_daughter_deltaR);
 
 
@@ -1085,14 +1170,12 @@ void HNLMuonSystemTree::CreateTree()
   tree_->Branch("mH",      &mH,     "mH/I");      // event number
   tree_->Branch("mX",      &mX,     "mX/I");      // event number
   tree_->Branch("ctau",      &ctau,     "ctau/I");      // event number
-  tree_->Branch("ZCategory",    &ZCategory,   "ZCategory/i");    // dilepton category
+  tree_->Branch("ZCategory",    &ZCategory,   "ZCategory/I");    // dilepton category
 
   tree_->Branch("category",    &category,   "category/i");    // dilepton category
   tree_->Branch("npv",         &npv,        "npv/i");         // number of primary vertices
   tree_->Branch("npu",         &npu,        "npu/i");         // number of in-time PU events (MC)
   tree_->Branch("weight",      &weight,     "weight/F");
-  tree_->Branch("higgsPtWeight",      &higgsPtWeight,     "higgsPtWeight/F");
-  tree_->Branch("higgsPtWeightSys",      higgsPtWeightSys,     "higgsPtWeightSys[9]/F");
   tree_->Branch("scaleWeights",      scaleWeights,     "scaleWeights[9]/F");
   tree_->Branch("lepOverallSF",      &lepOverallSF,     "lepOverallSF/F");
 
@@ -1167,21 +1250,21 @@ void HNLMuonSystemTree::CreateTree()
   tree_->Branch("genMetPtCalo",         &genMetPtCalo,        "genMetPtCalo/F");         // MET
   tree_->Branch("genMetPhiCalo",      &genMetPhiCalo,     "genMetPhiCalo/F");      // phi(MET)
 
-  tree_->Branch("nGenParticle",      &nGenParticle,   "nGenParticle/I");
-  tree_->Branch("gParticleId",      gParticleId,  "gParticleId[nGenParticle]/I");
-  tree_->Branch("gParticleStatus",      gParticleStatus,  "gParticleStatus[nGenParticle]/I");
-  tree_->Branch("gParticleMotherId",      gParticleMotherId,  "gParticleMotherId[nGenParticle]/I");
-  tree_->Branch("gParticleE",      gParticleE,  "gParticleE[nGenParticle]/F");
-  tree_->Branch("gParticlePt",      gParticlePt,  "gParticlePt[nGenParticle]/F");
-  tree_->Branch("gParticleEta",      gParticleEta,  "gParticleEta[nGenParticle]/F");
-  tree_->Branch("gParticlePhi",      gParticlePhi,  "gParticlePhi[nGenParticle]/F");
+  // tree_->Branch("nGenParticle",      &nGenParticle,   "nGenParticle/I");
+  // tree_->Branch("gParticleId",      gParticleId,  "gParticleId[nGenParticle]/I");
+  // tree_->Branch("gParticleStatus",      gParticleStatus,  "gParticleStatus[nGenParticle]/I");
+  // tree_->Branch("gParticleMotherId",      gParticleMotherId,  "gParticleMotherId[nGenParticle]/I");
+  // tree_->Branch("gParticleE",      gParticleE,  "gParticleE[nGenParticle]/F");
+  // tree_->Branch("gParticlePt",      gParticlePt,  "gParticlePt[nGenParticle]/F");
+  // tree_->Branch("gParticleEta",      gParticleEta,  "gParticleEta[nGenParticle]/F");
+  // tree_->Branch("gParticlePhi",      gParticlePhi,  "gParticlePhi[nGenParticle]/F");
 
-  tree_->Branch("nGenJets",      &nGenJets,  "nGenJets/I");
-  tree_->Branch("genJetE",      genJetE,  "genJetE[nGenJets]/F");
-  tree_->Branch("genJetPt",      genJetPt,  "genJetPt[nGenJets]/F");
-  tree_->Branch("genJetEta",      genJetEta,  "genJetEta[nGenJets]/F");
-  tree_->Branch("genJetPhi",      genJetPhi,  "genJetPhi[nGenJets]/F");
-  tree_->Branch("genJetMET",      genJetMET,  "genJetMET[nGenJets]/F");
+  // tree_->Branch("nGenJets",      &nGenJets,  "nGenJets/I");
+  // tree_->Branch("genJetE",      genJetE,  "genJetE[nGenJets]/F");
+  // tree_->Branch("genJetPt",      genJetPt,  "genJetPt[nGenJets]/F");
+  // tree_->Branch("genJetEta",      genJetEta,  "genJetEta[nGenJets]/F");
+  // tree_->Branch("genJetPhi",      genJetPhi,  "genJetPhi[nGenJets]/F");
+  // tree_->Branch("genJetMET",      genJetMET,  "genJetMET[nGenJets]/F");
 
   tree_->Branch("gWPt",         &gWPt,        "gWPt/F");
 
@@ -1226,9 +1309,6 @@ void HNLMuonSystemTree::CreateTree()
   tree_->Branch("nCscRechitsChamberMinus41",            &nCscRechitsChamberMinus41,             "nCscRechitsChamberMinus41/I");
   tree_->Branch("nCscRechitsChamberMinus42",            &nCscRechitsChamberMinus42,             "nCscRechitsChamberMinus42/I");
 
-  tree_->Branch("nRpc",            &nRpc,             "nRpc/I");
-  tree_->Branch("nDtSeg",            &nDtSeg,             "nDtSeg/I");
-
   tree_->Branch("nDTRechits",            &nDTRechits,             "nDTRechits/I");
   tree_->Branch("nDtRings",             &nDtRings, "nDtRings/I");
   tree_->Branch("nDTPositiveYRechits",             &nDTPositiveYRechits, "nDTPositiveYRechits/I");
@@ -1256,25 +1336,89 @@ void HNLMuonSystemTree::CreateTree()
   tree_->Branch("nDTRechitsChamberPlus41",            &nDTRechitsChamberPlus41,             "nDTRechitsChamberPlus41/I");
   tree_->Branch("nDTRechitsChamberPlus42",            &nDTRechitsChamberPlus42,             "nDTRechitsChamberPlus42/I");
 
-  tree_->Branch("dtRechitsEta",             dtRechitsEta,             "dtRechitsEta[nDTRechits]/F");
-  tree_->Branch("dtRechitsPhi",             dtRechitsPhi,             "dtRechitsPhi[nDTRechits]/F");
-  tree_->Branch("dtRechitsStation",             dtRechitsStation,             "dtRechitsStation[nDTRechits]/I");
-  tree_->Branch("dtRechitsWheel",             dtRechitsWheel,             "dtRechitsWheel[nDTRechits]/I");
+  tree_->Branch("nDtWheels25",             &nDtWheels25, "nDtWheels25/I");
+  tree_->Branch("nDtStations25",             &nDtStations25, "nDtStations25/I");
+
+  tree_->Branch("nDTRechitsWheelMinus2",             &nDTRechitsWheelMinus2, "nDTRechitsWheelMinus2/I");
+  tree_->Branch("nDTRechitsWheelMinus1",             &nDTRechitsWheelMinus1, "nDTRechitsWheelMinus1/I");
+  tree_->Branch("nDTRechitsWheel0",             &nDTRechitsWheel0, "nDTRechitsWheel0/I");
+  tree_->Branch("nDTRechitsWheelPlus1",             &nDTRechitsWheelPlus1, "nDTRechitsWheelPlus1/I");
+  tree_->Branch("nDTRechitsWheelPlus2",             &nDTRechitsWheelPlus2, "nDTRechitsWheelPlus2/I");
+
+  tree_->Branch("nDTRechitsStation1",             &nDTRechitsStation1, "nDTRechitsStation1/I");
+  tree_->Branch("nDTRechitsStation2",             &nDTRechitsStation2, "nDTRechitsStation2/I");
+  tree_->Branch("nDTRechitsStation3",             &nDTRechitsStation3, "nDTRechitsStation3/I");
+  tree_->Branch("nDTRechitsStation4",             &nDTRechitsStation4, "nDTRechitsStation4/I");
 
 
 
-  tree_->Branch("rpcEta",             rpcEta,             "rpcEta[nRpc]/F");
-  tree_->Branch("rpcPhi",             rpcPhi,             "rpcPhi[nRpc]/F");
-  tree_->Branch("rpc_RE12",             rpc_RE12,             "rpc_RE12[nRpc]/O");
-  tree_->Branch("rpc_RB1",             rpc_RB1,             "rpc_RB1[nRpc]/O");
 
 
+    // dt rechit cluster
+
+    tree_->Branch("nDtRechitClusters",             &nDtRechitClusters, "nDtRechitClusters/I");
+    tree_->Branch("dtRechitClusterX",             dtRechitClusterX,             "dtRechitClusterX[nDtRechitClusters]/F");
+    tree_->Branch("dtRechitClusterY",             dtRechitClusterY,             "dtRechitClusterY[nDtRechitClusters]/F");
+    tree_->Branch("dtRechitClusterZ",             dtRechitClusterZ,             "dtRechitClusterZ[nDtRechitClusters]/F");
+    tree_->Branch("dtRechitClusterWheel",             dtRechitClusterWheel,             "dtRechitClusterWheel[nDtRechitClusters]/I");
+    tree_->Branch("dtRechitClusterPhi",             dtRechitClusterPhi,             "dtRechitClusterPhi[nDtRechitClusters]/F");
+    tree_->Branch("dtRechitClusterEta",             dtRechitClusterEta,             "dtRechitClusterEta[nDtRechitClusters]/F");
+    tree_->Branch("dtRechitClusterJetVetoPt",             dtRechitClusterJetVetoPt,             "dtRechitClusterJetVetoPt[nDtRechitClusters]/F");
+    tree_->Branch("dtRechitClusterJetVetoEta",             dtRechitClusterJetVetoEta,             "dtRechitClusterJetVetoEta[nDtRechitClusters]/F");
+    tree_->Branch("dtRechitClusterJetVetoPhi",             dtRechitClusterJetVetoPhi,             "dtRechitClusterJetVetoPhi[nDtRechitClusters]/F");
+    tree_->Branch("dtRechitClusterJetVetoE",             dtRechitClusterJetVetoE,             "dtRechitClusterJetVetoE[nDtRechitClusters]/F");
+    tree_->Branch("dtRechitClusterMuonVetoPt",             dtRechitClusterMuonVetoPt,             "dtRechitClusterMuonVetoPt[nDtRechitClusters]/F");
+    tree_->Branch("dtRechitClusterMuonVetoE",             dtRechitClusterMuonVetoE,             "dtRechitClusterMuonVetoE[nDtRechitClusters]/F");
+    tree_->Branch("dtRechitClusterMuonVetoPhi",             dtRechitClusterMuonVetoPhi,             "dtRechitClusterMuonVetoPhi[nDtRechitClusters]/F");
+    tree_->Branch("dtRechitClusterMuonVetoEta",             dtRechitClusterMuonVetoEta,             "dtRechitClusterMuonVetoEta[nDtRechitClusters]/F");
+    tree_->Branch("dtRechitClusterMuonVetoLooseId",             dtRechitClusterMuonVetoLooseId,             "dtRechitClusterMuonVetoLooseId[nDtRechitClusters]/O");
+    tree_->Branch("dtRechitClusterMuonVetoGlobal",             dtRechitClusterMuonVetoGlobal,             "dtRechitClusterMuonVetoGlobal[nDtRechitClusters]/O");
+    tree_->Branch("dtRechitClusterSize",             dtRechitClusterSize,             "dtRechitClusterSize[nDtRechitClusters]/I");
+    tree_->Branch("dtRechitClusterNStation10",             dtRechitClusterNStation10,             "dtRechitClusterNStation10[nDtRechitClusters]/I");
+    tree_->Branch("dtRechitClusterAvgStation10",             dtRechitClusterAvgStation10,             "dtRechitClusterAvgStation10[nDtRechitClusters]/F");
+    tree_->Branch("dtRechitClusterMaxStation",             dtRechitClusterMaxStation,             "dtRechitClusterMaxStation[nDtRechitClusters]/I");
+    tree_->Branch("dtRechitClusterMaxStationRatio",             dtRechitClusterMaxStationRatio,             "dtRechitClusterMaxStationRatio[nDtRechitClusters]/F");
+    tree_->Branch("dtRechitClusterNChamber",             dtRechitClusterNChamber,             "dtRechitClusterNChamber[nDtRechitClusters]/I");
+    tree_->Branch("dtRechitClusterMaxChamber",             dtRechitClusterMaxChamber,             "dtRechitClusterMaxChamber[nDtRechitClusters]/I");
+    tree_->Branch("dtRechitClusterMaxChamberRatio",             dtRechitClusterMaxChamberRatio,             "dtRechitClusterMaxChamberRatio[nDtRechitClusters]/F");
+    tree_->Branch("dtRechitClusterNSegmentStation1",             dtRechitClusterNSegmentStation1,             "dtRechitClusterNSegmentStation1[nDtRechitClusters]/I");
+    tree_->Branch("dtRechitClusterNSegmentStation2",             dtRechitClusterNSegmentStation2,             "dtRechitClusterNSegmentStation2[nDtRechitClusters]/I");
+    tree_->Branch("dtRechitClusterNSegmentStation3",             dtRechitClusterNSegmentStation3,             "dtRechitClusterNSegmentStation3[nDtRechitClusters]/I");
+    tree_->Branch("dtRechitClusterNSegmentStation4",             dtRechitClusterNSegmentStation4,             "dtRechitClusterNSegmentStation4[nDtRechitClusters]/I");
+    tree_->Branch("dtRechitClusterMetEENoise_dPhi",             dtRechitClusterMetEENoise_dPhi,             "dtRechitClusterMetEENoise_dPhi[nDtRechitClusters]/F");
+    tree_->Branch("dtRechitCluster_match_gParticle_Id",             dtRechitCluster_match_gParticle_Id,             "dtRechitCluster_match_gParticle_Id[nDtRechitClusters]/I");
+    tree_->Branch("dtRechitCluster_match_gParticle_Pt",             dtRechitCluster_match_gParticle_Pt,             "dtRechitCluster_match_gParticle_Pt[nDtRechitClusters]/F");
+    tree_->Branch("dtRechitCluster_match_gParticle_Eta",             dtRechitCluster_match_gParticle_Eta,             "dtRechitCluster_match_gParticle_Eta[nDtRechitClusters]/F");
+    tree_->Branch("dtRechitCluster_match_gParticle_Phi",             dtRechitCluster_match_gParticle_Phi,             "dtRechitCluster_match_gParticle_Phi[nDtRechitClusters]/F");
+    tree_->Branch("dtRechitCluster_match_gParticle_E",             dtRechitCluster_match_gParticle_E,             "dtRechitCluster_match_gParticle_E[nDtRechitClusters]/F");
+    tree_->Branch("dtRechitCluster_match_gParticle_Status",             dtRechitCluster_match_gParticle_Status,             "dtRechitCluster_match_gParticle_Status[nDtRechitClusters]/I");
+    tree_->Branch("dtRechitCluster_match_gParticle_MotherId",             dtRechitCluster_match_gParticle_MotherId,             "dtRechitCluster_match_gParticle_MotherId[nDtRechitClusters]/I");
+    tree_->Branch("dtRechitCluster_match_gParticle_deltaR",             dtRechitCluster_match_gParticle_deltaR,             "dtRechitCluster_match_gParticle_deltaR[nDtRechitClusters]/F");
+    tree_->Branch("dtRechitCluster_match_gLLP",             dtRechitCluster_match_gLLP,             "dtRechitCluster_match_gLLP[nDtRechitClusters]/O");
+    tree_->Branch("dtRechitCluster_match_gLLP_minDeltaR",             dtRechitCluster_match_gLLP_minDeltaR,             "dtRechitCluster_match_gLLP_minDeltaR[nDtRechitClusters]/F");
+    tree_->Branch("dtRechitCluster_match_gLLP_eta",             dtRechitCluster_match_gLLP_eta, "dtRechitCluster_match_gLLP_eta[nDtRechitClusters]/F");
+    tree_->Branch("dtRechitCluster_match_gLLP_phi",             dtRechitCluster_match_gLLP_phi, "dtRechitCluster_match_gLLP_phi[nDtRechitClusters]/F");
+    tree_->Branch("dtRechitCluster_match_gLLP_decay_x",             dtRechitCluster_match_gLLP_decay_x, "dtRechitCluster_match_gLLP_decay_x[nDtRechitClusters]/F");
+    tree_->Branch("dtRechitCluster_match_gLLP_decay_y",             dtRechitCluster_match_gLLP_decay_y, "dtRechitCluster_match_gLLP_decay_y[nDtRechitClusters]/F");
+    tree_->Branch("dtRechitCluster_match_gLLP_decay_z",             dtRechitCluster_match_gLLP_decay_z, "dtRechitCluster_match_gLLP_decay_z[nDtRechitClusters]/F");
+    tree_->Branch("dtRechitCluster_match_gLLP_ctau",             dtRechitCluster_match_gLLP_ctau, "dtRechitCluster_match_gLLP_ctau[nDtRechitClusters]/F");
+    tree_->Branch("dtRechitCluster_match_gLLP_beta",             dtRechitCluster_match_gLLP_beta, "dtRechitCluster_match_gLLP_beta[nDtRechitClusters]/F");
+    tree_->Branch("dtRechitCluster_match_gLLP_csc",             dtRechitCluster_match_gLLP_csc, "dtRechitCluster_match_gLLP_csc[nDtRechitClusters]/O");
+    tree_->Branch("dtRechitCluster_match_gLLP_dt",             dtRechitCluster_match_gLLP_dt, "dtRechitCluster_match_gLLP_dt[nDtRechitClusters]/O");
+    tree_->Branch("dtRechitCluster_match_gLLP_e",             dtRechitCluster_match_gLLP_e, "dtRechitCluster_match_gLLP_e[nDtRechitClusters]/F");
+    tree_->Branch("dtRechitCluster_match_gLLP_pt",             dtRechitCluster_match_gLLP_pt, "dtRechitCluster_match_gLLP_pt[nDtRechitClusters]/F");
+    tree_->Branch("dtRechitClusterLep_dPhi",             dtRechitClusterLep_dPhi, "dtRechitClusterLep_dPhi[nDtRechitClusters]/F");
+    tree_->Branch("dtRechitCluster_match_RPCBx_dPhi0p5",             dtRechitCluster_match_RPCBx_dPhi0p5,             "dtRechitCluster_match_RPCBx_dPhi0p5[nDtRechitClusters]/I");
+    tree_->Branch("dtRechitCluster_match_RB1_0p4",             dtRechitCluster_match_RB1_0p4,             "dtRechitCluster_match_RB1_0p4[nDtRechitClusters]/I");
+    tree_->Branch("dtRechitCluster_match_RB1_dPhi0p5",             dtRechitCluster_match_RB1_dPhi0p5,             "dtRechitCluster_match_RB1_dPhi0p5[nDtRechitClusters]/I");
+    tree_->Branch("dtRechitCluster_match_RPChits_dPhi0p5",             dtRechitCluster_match_RPChits_dPhi0p5,             "dtRechitCluster_match_RPChits_dPhi0p5[nDtRechitClusters]/I");
+
+    tree_->Branch("dtRechitCluster_match_MB1hits_0p4",             dtRechitCluster_match_MB1hits_0p4,             "dtRechitCluster_match_MB1hits_0p4[nDtRechitClusters]/I");
+    tree_->Branch("dtRechitCluster_match_MB1hits_0p5",             dtRechitCluster_match_MB1hits_0p5,             "dtRechitCluster_match_MB1hits_0p5[nDtRechitClusters]/I");
+    tree_->Branch("dtRechitCluster_match_MB1hits_cosmics_plus",             dtRechitCluster_match_MB1hits_cosmics_plus,             "dtRechitCluster_match_MB1hits_cosmics_plus[nDtRechitClusters]/I");
+    tree_->Branch("dtRechitCluster_match_MB1hits_cosmics_minus",             dtRechitCluster_match_MB1hits_cosmics_minus,             "dtRechitCluster_match_MB1hits_cosmics_minus[nDtRechitClusters]/I");
 
 
-    tree_->Branch("dtSegEta",             dtSegEta,             "dtSegEta[nDtSeg]/F");
-    tree_->Branch("dtSegPhi",             dtSegPhi,             "dtSegPhi[nDtSeg]/F");
-    tree_->Branch("dtSegWheel",             dtSegWheel,             "dtSegWheel[nDtSeg]/I");
-    tree_->Branch("dtSegStation",             dtSegStation,             "dtSegStation[nDtSeg]/I");
 
 
     tree_->Branch("nCscRechitClusters3",             &nCscRechitClusters3, "nCscRechitClusters3/I");
@@ -1310,37 +1454,13 @@ void HNLMuonSystemTree::CreateTree()
     tree_->Branch("cscRechitCluster3_match_gLLP_ctau",             cscRechitCluster3_match_gLLP_ctau, "cscRechitCluster3_match_gLLP_ctau[nCscRechitClusters3]/F");
     tree_->Branch("cscRechitCluster3_match_gLLP_beta",             cscRechitCluster3_match_gLLP_beta, "cscRechitCluster3_match_gLLP_beta[nCscRechitClusters3]/F");
     tree_->Branch("cscRechitCluster3_match_gLLP_csc",             cscRechitCluster3_match_gLLP_csc, "cscRechitCluster3_match_gLLP_csc[nCscRechitClusters3]/O");
-    tree_->Branch("cscRechitCluster3_match_gLLP_daughterKaon",             cscRechitCluster3_match_gLLP_daughterKaon, "cscRechitCluster3_match_gLLP_daughterKaon[nCscRechitClusters3]/O");
     tree_->Branch("cscRechitCluster3_match_gLLP_e",             cscRechitCluster3_match_gLLP_e, "cscRechitCluster3_match_gLLP_e[nCscRechitClusters3]/F");
     tree_->Branch("cscRechitCluster3_match_gLLP_pt",             cscRechitCluster3_match_gLLP_pt, "cscRechitCluster3_match_gLLP_pt[nCscRechitClusters3]/F");
-    tree_->Branch("cscRechitCluster3_match_gLLP_EMFracE",             cscRechitCluster3_match_gLLP_EMFracE, "cscRechitCluster3_match_gLLP_EMFracE[nCscRechitClusters3]/F");
-    tree_->Branch("cscRechitCluster3_match_gLLP_EMFracEz",             cscRechitCluster3_match_gLLP_EMFracEz, "cscRechitCluster3_match_gLLP_EMFracEz[nCscRechitClusters3]/F");
-    tree_->Branch("cscRechitCluster3_match_gLLP_EMFracP",             cscRechitCluster3_match_gLLP_EMFracP, "cscRechitCluster3_match_gLLP_EMFracP[nCscRechitClusters3]/F");
-    tree_->Branch("cscRechitCluster3_match_gLLP_EMFracPz",             cscRechitCluster3_match_gLLP_EMFracPz, "cscRechitCluster3_match_gLLP_EMFracPz[nCscRechitClusters3]/F");
-    tree_->Branch("cscRechitCluster3_match_gLLP_visE",             cscRechitCluster3_match_gLLP_visE, "cscRechitCluster3_match_gLLP_visE[nCscRechitClusters3]/F");
-    tree_->Branch("cscRechitCluster3_match_gLLP_visEz",             cscRechitCluster3_match_gLLP_visEz, "cscRechitCluster3_match_gLLP_visEz[nCscRechitClusters3]/F");
-    tree_->Branch("cscRechitCluster3_match_gLLP_visP",             cscRechitCluster3_match_gLLP_visP, "cscRechitCluster3_match_gLLP_visP[nCscRechitClusters3]/F");
-    tree_->Branch("cscRechitCluster3_match_gLLP_visPz",             cscRechitCluster3_match_gLLP_visPz, "cscRechitCluster3_match_gLLP_visPz[nCscRechitClusters3]/F");
     tree_->Branch("cscRechitCluster3_match_gLLP_lepdPhi",             cscRechitCluster3_match_gLLP_lepdPhi, "cscRechitCluster3_match_gLLP_lepdPhi[nCscRechitClusters3]/F");
     tree_->Branch("cscRechitCluster3_match_gLLP_daughter0_deltaR",             cscRechitCluster3_match_gLLP_daughter0_deltaR, "cscRechitCluster3_match_gLLP_daughter0_deltaR[nCscRechitClusters3]/F");
     tree_->Branch("cscRechitCluster3_match_gLLP_daughter1_deltaR",             cscRechitCluster3_match_gLLP_daughter1_deltaR, "cscRechitCluster3_match_gLLP_daughter1_deltaR[nCscRechitClusters3]/F");
     tree_->Branch("cscRechitCluster3_match_gLLP_daughter2_deltaR",             cscRechitCluster3_match_gLLP_daughter2_deltaR, "cscRechitCluster3_match_gLLP_daughter2_deltaR[nCscRechitClusters3]/F");
     tree_->Branch("cscRechitCluster3_match_gLLP_daughter3_deltaR",             cscRechitCluster3_match_gLLP_daughter3_deltaR, "cscRechitCluster3_match_gLLP_daughter3_deltaR[nCscRechitClusters3]/F");
-    tree_->Branch("cscRechitCluster3_match_gLLP_other_daughter_deltaR",             cscRechitCluster3_match_gLLP_other_daughter_deltaR, "cscRechitCluster3_match_gLLP_other_daughter_deltaR[nCscRechitClusters3]/F");
-    tree_->Branch("cscRechitCluster3_match_gLLP_other_daughter_index",             cscRechitCluster3_match_gLLP_other_daughter_index, "cscRechitCluster3_match_gLLP_other_daughter_index[nCscRechitClusters3]/I");
-
-
-    tree_->Branch("cscRechitCluster3_match_gLLP_other_eta",             cscRechitCluster3_match_gLLP_other_eta, "cscRechitCluster3_match_gLLP_other_eta[nCscRechitClusters3]/F");
-    tree_->Branch("cscRechitCluster3_match_gLLP_other_phi",             cscRechitCluster3_match_gLLP_other_phi, "cscRechitCluster3_match_gLLP_other_phi[nCscRechitClusters3]/F");
-    tree_->Branch("cscRechitCluster3_match_gLLP_other_decay_r",             cscRechitCluster3_match_gLLP_other_decay_r, "cscRechitCluster3_match_gLLP_other_decay_r[nCscRechitClusters3]/F");
-    tree_->Branch("cscRechitCluster3_match_gLLP_other_decay_x",             cscRechitCluster3_match_gLLP_other_decay_x, "cscRechitCluster3_match_gLLP_other_decay_x[nCscRechitClusters3]/F");
-    tree_->Branch("cscRechitCluster3_match_gLLP_other_decay_y",             cscRechitCluster3_match_gLLP_other_decay_y, "cscRechitCluster3_match_gLLP_other_decay_y[nCscRechitClusters3]/F");
-    tree_->Branch("cscRechitCluster3_match_gLLP_other_decay_z",             cscRechitCluster3_match_gLLP_other_decay_z, "cscRechitCluster3_match_gLLP_other_decay_z[nCscRechitClusters3]/F");
-    tree_->Branch("cscRechitCluster3_match_gLLP_other_ctau",             cscRechitCluster3_match_gLLP_other_ctau, "cscRechitCluster3_match_gLLP_other_ctau[nCscRechitClusters3]/F");
-    tree_->Branch("cscRechitCluster3_match_gLLP_other_beta",             cscRechitCluster3_match_gLLP_other_beta, "cscRechitCluster3_match_gLLP_other_beta[nCscRechitClusters3]/F");
-    tree_->Branch("cscRechitCluster3_match_gLLP_other_csc",             cscRechitCluster3_match_gLLP_other_csc, "cscRechitCluster3_match_gLLP_other_csc[nCscRechitClusters3]/O");
-    tree_->Branch("cscRechitCluster3_match_gLLP_other_e",             cscRechitCluster3_match_gLLP_other_e, "cscRechitCluster3_match_gLLP_other_e[nCscRechitClusters3]/F");
-    tree_->Branch("cscRechitCluster3_match_gLLP_other_pt",             cscRechitCluster3_match_gLLP_other_pt, "cscRechitCluster3_match_gLLP_other_pt[nCscRechitClusters3]/F");
 
     tree_->Branch("cscRechitCluster3X",             cscRechitCluster3X,             "cscRechitCluster3X[nCscRechitClusters3]/F");
     tree_->Branch("cscRechitCluster3Y",             cscRechitCluster3Y,             "cscRechitCluster3Y[nCscRechitClusters3]/F");
@@ -1425,7 +1545,7 @@ void HNLMuonSystemTree::CreateTree()
     tree_->Branch("cscRechitCluster3ZLep2Tag",             cscRechitCluster3ZLep2Tag,             "cscRechitCluster3ZLep2Tag[nCscRechitClusters3]/O");
     tree_->Branch("cscRechitCluster3ZLep1Id",             cscRechitCluster3ZLep1Id,             "cscRechitCluster3ZLep1Id[nCscRechitClusters3]/I");
     tree_->Branch("cscRechitCluster3ZLep2Id",             cscRechitCluster3ZLep2Id,             "cscRechitCluster3ZLep2Id[nCscRechitClusters3]/I");
-    tree_->Branch("cscRechitCluster2ZLep1LooseIso",             cscRechitCluster3ZLep1LooseIso,             "cscRechitCluster3ZLep1LooseIso[nCscRechitClusters3]/O");
+    tree_->Branch("cscRechitCluster3ZLep1LooseIso",             cscRechitCluster3ZLep1LooseIso,             "cscRechitCluster3ZLep1LooseIso[nCscRechitClusters3]/O");
     tree_->Branch("cscRechitCluster3ZLep1TightIso",             cscRechitCluster3ZLep1TightIso,             "cscRechitCluster3ZLep1TightIso[nCscRechitClusters3]/O");
     tree_->Branch("cscRechitCluster3ZLep1VTightIso",             cscRechitCluster3ZLep1VTightIso,             "cscRechitCluster3ZLep1VTightIso[nCscRechitClusters3]/O");
     tree_->Branch("cscRechitCluster3ZLep1VVTightIso",             cscRechitCluster3ZLep1VVTightIso,             "cscRechitCluster3ZLep1VVTightIso[nCscRechitClusters3]/O");
@@ -1515,39 +1635,31 @@ void HNLMuonSystemTree::CreateTree()
 
 
   //gLLP branches
-  tree_->Branch("gLLP_multiplicity",          gLLP_multiplicity,          "gLLP_multiplicity[2]/I");
-  tree_->Branch("gLLP_eta",          gLLP_eta,          "gLLP_eta[2]/F");
-  tree_->Branch("gLLP_phi",          gLLP_phi,          "gLLP_phi[2]/F");
-  tree_->Branch("gLLP_csc",          gLLP_csc,          "gLLP_csc[2]/F");
-  tree_->Branch("gLLP_beta",          gLLP_beta,          "gLLP_beta[2]/F");
-  tree_->Branch("gLLP_e",          gLLP_e,          "gLLP_e[2]/F");
-  tree_->Branch("gLLP_pt",          gLLP_pt,          "gLLP_pt[2]/F");
-  tree_->Branch("gLLP_lepdPhi",          gLLP_lepdPhi,          "gLLP_lepdPhi[2]/F");
-  tree_->Branch("gLLP_daughterKaon",          gLLP_daughterKaon,          "gLLP_daughterKaon[2]/O");
+  tree_->Branch("gLLP_multiplicity",          gLLP_multiplicity,          "gLLP_multiplicity[1]/I");
+  tree_->Branch("gLLP_eta",          gLLP_eta,          "gLLP_eta[1]/F");
+  tree_->Branch("gLLP_phi",          gLLP_phi,          "gLLP_phi[1]/F");
+  tree_->Branch("gLLP_csc",          gLLP_csc,          "gLLP_csc[1]/F");
+  tree_->Branch("gLLP_dt",          gLLP_dt,          "gLLP_dt[1]/F");
+  tree_->Branch("gLLP_beta",          gLLP_beta,          "gLLP_beta[1]/F");
+  tree_->Branch("gLLP_e",          gLLP_e,          "gLLP_e[1]/F");
+  tree_->Branch("gLLP_pt",          gLLP_pt,          "gLLP_pt[1]/F");
+  tree_->Branch("gLLP_lepdPhi",          gLLP_lepdPhi,          "gLLP_lepdPhi[1]/F");
 
-  tree_->Branch("gLLP_ctau",          gLLP_ctau,          "gLLP_ctau[2]/F");
-  tree_->Branch("gLLP_EMFracE",          gLLP_EMFracE,          "gLLP_EMFracE[2]/F");
-  tree_->Branch("gLLP_EMFracEz",          gLLP_EMFracEz,          "gLLP_EMFracEz[2]/F");
-  tree_->Branch("gLLP_EMFracP",          gLLP_EMFracP,          "gLLP_EMFracP[2]/F");
-  tree_->Branch("gLLP_EMFracPz",          gLLP_EMFracPz,          "gLLP_EMFracPz[2]/F");
-  tree_->Branch("gLLP_visE",          gLLP_visE,          "gLLP_visE[2]/F");
-  tree_->Branch("gLLP_visEz",          gLLP_visEz,          "gLLP_visEz[2]/F");
-  tree_->Branch("gLLP_visP",          gLLP_visP,          "gLLP_visP[2]/F");
-  tree_->Branch("gLLP_visPz",          gLLP_visPz,          "gLLP_visPz[2]/F");
+  tree_->Branch("gLLP_ctau",          gLLP_ctau,          "gLLP_ctau[1]/F");
 
-  tree_->Branch("gLLP_decay_vertex_r",          gLLP_decay_vertex_r,          "gLLP_decay_vertex_r[2]/F");
-  tree_->Branch("gLLP_decay_vertex_x",          gLLP_decay_vertex_x,          "gLLP_decay_vertex_x[2]/F");
-  tree_->Branch("gLLP_decay_vertex_y",          gLLP_decay_vertex_y,          "gLLP_decay_vertex_y[2]/F");
-  tree_->Branch("gLLP_decay_vertex_z",          gLLP_decay_vertex_z,          "gLLP_decay_vertex_z[2]/F");
-  tree_->Branch("gLLP_deltaR",          &gLLP_deltaR,          "gLLP_deltaR/F");
-  tree_->Branch("gLLP_daughter_deltaR",          gLLP_daughter_deltaR,          "gLLP_daughter_deltaR[2]/F");
 
-  tree_->Branch("gLLP_daughter_pt",          gLLP_daughter_pt,          "gLLP_daughter_pt[4]/F");
-  tree_->Branch("gLLP_daughter_id",          gLLP_daughter_id,          "gLLP_daughter_id[4]/I");
-  tree_->Branch("gLLP_daughter_eta",          gLLP_daughter_eta,          "gLLP_daughter_eta[4]/F");
-  tree_->Branch("gLLP_daughter_phi",          gLLP_daughter_phi,          "gLLP_daughter_phi[4]/F");
-  tree_->Branch("gLLP_daughter_e",          gLLP_daughter_e,          "gLLP_daughter_e[4]/F");
-  tree_->Branch("gLLP_daughter_mass",          gLLP_daughter_mass,          "gLLP_daughter_mass[4]/F");
+  tree_->Branch("gLLP_decay_vertex_r",          gLLP_decay_vertex_r,          "gLLP_decay_vertex_r[1]/F");
+  tree_->Branch("gLLP_decay_vertex_x",          gLLP_decay_vertex_x,          "gLLP_decay_vertex_x[1]/F");
+  tree_->Branch("gLLP_decay_vertex_y",          gLLP_decay_vertex_y,          "gLLP_decay_vertex_y[1]/F");
+  tree_->Branch("gLLP_decay_vertex_z",          gLLP_decay_vertex_z,          "gLLP_decay_vertex_z[1]/F");
+  tree_->Branch("gLLP_daughter_deltaR",          gLLP_daughter_deltaR,          "gLLP_daughter_deltaR[1]/F");
+
+  tree_->Branch("gLLP_daughter_pt",          gLLP_daughter_pt,          "gLLP_daughter_pt[3]/F");
+  tree_->Branch("gLLP_daughter_id",          gLLP_daughter_id,          "gLLP_daughter_id[3]/I");
+  tree_->Branch("gLLP_daughter_eta",          gLLP_daughter_eta,          "gLLP_daughter_eta[3]/F");
+  tree_->Branch("gLLP_daughter_phi",          gLLP_daughter_phi,          "gLLP_daughter_phi[3]/F");
+  tree_->Branch("gLLP_daughter_e",          gLLP_daughter_e,          "gLLP_daughter_e[3]/F");
+  tree_->Branch("gLLP_daughter_mass",          gLLP_daughter_mass,          "gLLP_daughter_mass[3]/F");
 
 
   //leptons
@@ -1588,7 +1700,7 @@ void HNLMuonSystemTree::CreateTree()
   tree_->Branch("lepPassVTightIso", lepPassVTightIso, "lepPassVTightIso[nLeptons]/O");
   tree_->Branch("lepPassVVTightIso", lepPassVVTightIso, "lepPassVVTightIso[nLeptons]/O");
 
-  // tree_->Branch("lepPassVetoId", lepPassVetoId, "lepPassVetoId[nLeptons]/O");
+  tree_->Branch("lepPassVetoId", lepPassVetoId, "lepPassVetoId[nLeptons]/O");
 
   // tree_->Branch("lepLoosePassId", lepLoosePassId, "lepLoosePassId[nLeptons]/O");
   // tree_->Branch("lepMediumPassId", lepMediumPassId, "lepMediumPassId[nLeptons]/O");

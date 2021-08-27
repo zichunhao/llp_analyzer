@@ -418,6 +418,8 @@ public :
    Float_t         rpcT[500];   //[nRpc]
    Int_t           rpcBx[500];   //[nRpc]
    Float_t         rpcTError[500];   //[nRpc]
+   Int_t         rpcRing[500];   //[nRpc]
+   Int_t         rpcRegion[500];   //[nRpc]
    Int_t           nDtSeg;
    Float_t         dtSegPhi[1000];   //[nDtSeg]
    Float_t         dtSegEta[1000];   //[nDtSeg]
@@ -1116,6 +1118,8 @@ public :
    TBranch        *b_rpcT;   //!
    TBranch        *b_rpcBx;   //!
    TBranch        *b_rpcTError;   //!
+   TBranch        *b_rpcRegion;   //!
+   TBranch        *b_rpcRing;   //!
    TBranch        *b_nDtSeg;   //!
    TBranch        *b_dtSegPhi;   //!
    TBranch        *b_dtSegEta;   //!
@@ -1888,6 +1892,8 @@ void llp_event::Init(TTree *tree)
    fChain->SetBranchAddress("rpcT", rpcT, &b_rpcT);
    fChain->SetBranchAddress("rpcBx", rpcBx, &b_rpcBx);
    fChain->SetBranchAddress("rpcTError", rpcTError, &b_rpcTError);
+   fChain->SetBranchAddress("rpcRing", rpcRing, &b_rpcRing);
+   fChain->SetBranchAddress("rpcRegion", rpcRegion, &b_rpcRegion);
    fChain->SetBranchAddress("nDtSeg", &nDtSeg, &b_nDtSeg);
    fChain->SetBranchAddress("dtSegPhi", dtSegPhi, &b_dtSegPhi);
    fChain->SetBranchAddress("dtSegEta", dtSegEta, &b_dtSegEta);

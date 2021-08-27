@@ -5,6 +5,7 @@
 #define N_MAX_JETS 100
 #define N_MAX_CSC 200
 #define N_MAX_CSCRECHITS 5000
+#define N_MAX_DTRECHITS 5000
 #define NTriggersMAX 1201 // Number of trigger in the .dat file
 #define N_MAX_GPARTICLES 5000
 
@@ -43,8 +44,6 @@ public:
   UInt_t  npv, npu;
   float rho, weight;
   float pileupWeight, pileupWeightUp, pileupWeightDown;
-  float higgsPtWeight;
-  float higgsPtWeightSys[9];
   float scaleWeights[9];
   int ZCategory;
   float metSF;
@@ -64,37 +63,33 @@ public:
   float gWPt;
   int gLepId;
   float gLepPt, gLepPhi, gLepEta, gLepE;
-  int nGenParticle;
-  int gParticleId[N_MAX_GPARTICLES];
-  int gParticleStatus[N_MAX_GPARTICLES];
-  int gParticleMotherId[N_MAX_GPARTICLES];
-  float gParticlePt[N_MAX_GPARTICLES];
-  float gParticleEta[N_MAX_GPARTICLES];
-  float gParticlePhi[N_MAX_GPARTICLES];
-  float gParticleE[N_MAX_GPARTICLES];
+  // int nGenParticle;
+  // int gParticleId[N_MAX_GPARTICLES];
+  // int gParticleStatus[N_MAX_GPARTICLES];
+  // int gParticleMotherId[N_MAX_GPARTICLES];
+  // float gParticlePt[N_MAX_GPARTICLES];
+  // float gParticleEta[N_MAX_GPARTICLES];
+  // float gParticlePhi[N_MAX_GPARTICLES];
+  // float gParticleE[N_MAX_GPARTICLES];
 
   float genMetPtTrue;
   float genMetPhiTrue;
   float genMetPtCalo;
   float genMetPhiCalo;
 
-
-  int nGenJets;
-  float genJetE[N_MAX_GPARTICLES];
-  float genJetPt[N_MAX_GPARTICLES];
-  float genJetEta[N_MAX_GPARTICLES];
-  float genJetPhi[N_MAX_GPARTICLES];
-
-
-
-  float genJetMET[N_MAX_GPARTICLES];
+  //
+  // int nGenJets;
+  // float genJetE[N_MAX_GPARTICLES];
+  // float genJetPt[N_MAX_GPARTICLES];
+  // float genJetEta[N_MAX_GPARTICLES];
+  // float genJetPhi[N_MAX_GPARTICLES];
+  //
+  //
+  //
+  // float genJetMET[N_MAX_GPARTICLES];
 
   //dt
-  int           nDtSeg;
-  float         dtSegPhi[N_MAX_CSCRECHITS];   //[nCsc]
-  float         dtSegEta[N_MAX_CSCRECHITS];   //[nCsc]
-  int         dtSegStation[N_MAX_CSCRECHITS];   //[nCsc]
-  int         dtSegWheel[N_MAX_CSCRECHITS];   //[nCsc]
+
 
   int           nDTRechits;
   float         dtPosTpeak;
@@ -122,17 +117,102 @@ public:
   int           nDTRechitsChamber40;
   int           nDTRechitsChamberPlus41;
   int           nDTRechitsChamberPlus42;
-  float         dtRechitsPhi[N_MAX_CSCRECHITS];   //[nCsc]
-  float         dtRechitsEta[N_MAX_CSCRECHITS];   //[nCsc]
-  int         dtRechitsStation[N_MAX_CSCRECHITS];   //[nCsc]
-  int         dtRechitsWheel[N_MAX_CSCRECHITS];   //[nCsc]
+  int           nDTRechitsStation1;
+  int           nDTRechitsStation2;
+  int           nDTRechitsStation3;
+  int           nDTRechitsStation4;
+  int           nDTRechitsWheelMinus2;
+  int           nDTRechitsWheelMinus1;
+  int           nDTRechitsWheel0;
+  int           nDTRechitsWheelPlus1;
+  int           nDTRechitsWheelPlus2;
+  int           nDtStations25;
+  int           nDtWheels25;
 
   // rpc
-  int           nRpc;
-  float         rpcPhi[N_MAX_CSCRECHITS];   //[nCsc]
-  float         rpcEta[N_MAX_CSCRECHITS];   //[nCsc]
-  bool         rpc_RE12[N_MAX_CSCRECHITS];   //[nCsc]
-  bool         rpc_RB1[N_MAX_CSCRECHITS];   //[nCsc]
+
+
+  // DT
+
+  int nDtRechitClusters;
+
+
+  float     dtRechitClusterX[N_MAX_DTRECHITS];
+  float     dtRechitClusterY[N_MAX_DTRECHITS];
+  float     dtRechitClusterZ[N_MAX_DTRECHITS];
+  int       dtRechitClusterWheel[N_MAX_DTRECHITS];
+  float     dtRechitClusterEta[N_MAX_DTRECHITS];
+  float     dtRechitClusterPhi[N_MAX_DTRECHITS];
+  int       dtRechitClusterSize[N_MAX_DTRECHITS];
+
+  int       dtRechitClusterNSegmentStation1[N_MAX_DTRECHITS];
+  int       dtRechitClusterNSegmentStation2[N_MAX_DTRECHITS];
+  int       dtRechitClusterNSegmentStation3[N_MAX_DTRECHITS];
+  int       dtRechitClusterNSegmentStation4[N_MAX_DTRECHITS];
+
+  int       dtRechitClusterMaxChamber[N_MAX_DTRECHITS];
+  float     dtRechitClusterMaxChamberRatio[N_MAX_DTRECHITS];
+  int       dtRechitClusterNChamber[N_MAX_DTRECHITS];
+  int       dtRechitClusterMaxStation[N_MAX_DTRECHITS];
+  float     dtRechitClusterMaxStationRatio[N_MAX_DTRECHITS];
+  int       dtRechitClusterNStation[N_MAX_DTRECHITS];
+  int       dtRechitClusterNStation10[N_MAX_DTRECHITS];
+  float       dtRechitClusterAvgStation10[N_MAX_DTRECHITS];
+
+  float     dtRechitClusterJetVetoPt[N_MAX_DTRECHITS];
+  float     dtRechitClusterJetVetoE[N_MAX_DTRECHITS];
+  float     dtRechitClusterJetVetoPhi[N_MAX_DTRECHITS];
+  float     dtRechitClusterJetVetoEta[N_MAX_DTRECHITS];
+
+  float     dtRechitClusterMuonVetoPt[N_MAX_DTRECHITS];
+  float     dtRechitClusterMuonVetoE[N_MAX_DTRECHITS];
+  float     dtRechitClusterMuonVetoPhi[N_MAX_DTRECHITS];
+  float     dtRechitClusterMuonVetoEta[N_MAX_DTRECHITS];
+  bool      dtRechitClusterMuonVetoGlobal[N_MAX_DTRECHITS];
+  bool      dtRechitClusterMuonVetoLooseId[N_MAX_DTRECHITS];
+
+
+  float     dtRechitCluster_match_gParticle_deltaR[N_MAX_DTRECHITS];
+  int       dtRechitCluster_match_gParticle_Id[N_MAX_DTRECHITS];
+  float     dtRechitCluster_match_gParticle_Pt[N_MAX_DTRECHITS];
+  float     dtRechitCluster_match_gParticle_Eta[N_MAX_DTRECHITS];
+  float     dtRechitCluster_match_gParticle_Phi[N_MAX_DTRECHITS];
+  float     dtRechitCluster_match_gParticle_E[N_MAX_DTRECHITS];
+  int       dtRechitCluster_match_gParticle_Status[N_MAX_DTRECHITS];
+  int       dtRechitCluster_match_gParticle_MotherId[N_MAX_DTRECHITS];
+
+  bool      dtRechitCluster_match_gLLP[N_MAX_DTRECHITS];
+  float     dtRechitCluster_match_gLLP_minDeltaR[N_MAX_DTRECHITS];
+  float     dtRechitCluster_match_gLLP_eta[N_MAX_DTRECHITS];
+  float     dtRechitCluster_match_gLLP_phi[N_MAX_DTRECHITS];
+  float     dtRechitCluster_match_gLLP_decay_x[N_MAX_DTRECHITS];
+  float     dtRechitCluster_match_gLLP_decay_y[N_MAX_DTRECHITS];
+  float     dtRechitCluster_match_gLLP_decay_z[N_MAX_DTRECHITS];
+  float     dtRechitCluster_match_gLLP_ctau[N_MAX_DTRECHITS];
+  float     dtRechitCluster_match_gLLP_beta[N_MAX_DTRECHITS];
+  bool      dtRechitCluster_match_gLLP_csc[N_MAX_DTRECHITS];
+  bool      dtRechitCluster_match_gLLP_dt[N_MAX_DTRECHITS];
+  float     dtRechitCluster_match_gLLP_e[N_MAX_DTRECHITS];
+  float     dtRechitCluster_match_gLLP_pt[N_MAX_DTRECHITS];
+  float     dtRechitClusterLep_dPhi[N_MAX_DTRECHITS];
+
+
+  int       dtRechitCluster_match_MB1hits_0p5[N_MAX_DTRECHITS];
+  int       dtRechitCluster_match_MB1hits_0p4[N_MAX_DTRECHITS];
+  int       dtRechitCluster_match_MB1hits_cosmics_plus[N_MAX_DTRECHITS];
+  int       dtRechitCluster_match_MB1hits_cosmics_minus[N_MAX_DTRECHITS];
+  int       dtRechitCluster_match_RPCBx_dPhi0p5[N_MAX_DTRECHITS];
+  int       dtRechitCluster_match_RB1_0p4[N_MAX_DTRECHITS];
+  int       dtRechitCluster_match_RB1_dPhi0p5[N_MAX_DTRECHITS];
+  int       dtRechitCluster_match_RPChits_dPhi0p5[N_MAX_DTRECHITS];
+  float     dtRechitClusterMetEENoise_dPhi[N_MAX_DTRECHITS];
+
+
+
+
+
+
+
 
   //csc
   int           nCscRechits;
@@ -227,34 +307,12 @@ public:
   bool         cscRechitCluster3_match_gLLP_csc[N_MAX_CSC];
   float         cscRechitCluster3_match_gLLP_e[N_MAX_CSC];
   float         cscRechitCluster3_match_gLLP_pt[N_MAX_CSC];
-  float         cscRechitCluster3_match_gLLP_EMFracE[N_MAX_CSC];
-  float         cscRechitCluster3_match_gLLP_EMFracEz[N_MAX_CSC];
-  float         cscRechitCluster3_match_gLLP_EMFracP[N_MAX_CSC];
-  float         cscRechitCluster3_match_gLLP_EMFracPz[N_MAX_CSC];
-  bool          cscRechitCluster3_match_gLLP_daughterKaon[N_MAX_CSC];
-  float         cscRechitCluster3_match_gLLP_visE[N_MAX_CSC];
-  float         cscRechitCluster3_match_gLLP_visEz[N_MAX_CSC];
-  float         cscRechitCluster3_match_gLLP_visP[N_MAX_CSC];
-  float         cscRechitCluster3_match_gLLP_visPz[N_MAX_CSC];
   float         cscRechitCluster3_match_gLLP_lepdPhi[N_MAX_CSC];
   float         cscRechitCluster3_match_gLLP_daughter0_deltaR[N_MAX_CSC];
   float         cscRechitCluster3_match_gLLP_daughter1_deltaR[N_MAX_CSC];
   float         cscRechitCluster3_match_gLLP_daughter2_deltaR[N_MAX_CSC];
   float         cscRechitCluster3_match_gLLP_daughter3_deltaR[N_MAX_CSC];
-  float         cscRechitCluster3_match_gLLP_other_daughter_deltaR[N_MAX_CSC];
-  int         cscRechitCluster3_match_gLLP_other_daughter_index[N_MAX_CSC];
 
-  float         cscRechitCluster3_match_gLLP_other_eta[N_MAX_CSC];
-  float         cscRechitCluster3_match_gLLP_other_phi[N_MAX_CSC];
-  float         cscRechitCluster3_match_gLLP_other_decay_r[N_MAX_CSC];
-  float         cscRechitCluster3_match_gLLP_other_decay_x[N_MAX_CSC];
-  float         cscRechitCluster3_match_gLLP_other_decay_y[N_MAX_CSC];
-  float         cscRechitCluster3_match_gLLP_other_decay_z[N_MAX_CSC];
-  float         cscRechitCluster3_match_gLLP_other_ctau[N_MAX_CSC];
-  float         cscRechitCluster3_match_gLLP_other_beta[N_MAX_CSC];
-  bool         cscRechitCluster3_match_gLLP_other_csc[N_MAX_CSC];
-  float         cscRechitCluster3_match_gLLP_other_e[N_MAX_CSC];
-  float         cscRechitCluster3_match_gLLP_other_pt[N_MAX_CSC];
   float         cscRechitCluster3X[N_MAX_CSC];   //[nCsc]
   float         cscRechitCluster3Y[N_MAX_CSC];   //[nCsc]
   float         cscRechitCluster3Z[N_MAX_CSC];   //[nCsc]
@@ -278,14 +336,6 @@ public:
   float         cscRechitCluster3RSpread[N_MAX_CSC];   //[nCsc]
   float         cscRechitCluster3DeltaRSpread[N_MAX_CSC];
 
-
-  float         cscRechitCluster3XYSpread_r1p2[N_MAX_CSC];   //[nCsc]
-  float         cscRechitCluster3XSpread_r1p2[N_MAX_CSC];   //[nCsc]
-  float         cscRechitCluster3YSpread_r1p2[N_MAX_CSC];   //[nCsc]
-  float         cscRechitCluster3PhiSpread_r1p2[N_MAX_CSC];   //[nCsc]
-  float         cscRechitCluster3EtaSpread_r1p2[N_MAX_CSC];   //[nCsc]
-  float         cscRechitCluster3EtaPhiSpread_r1p2[N_MAX_CSC];   //[nCsc]
-  float         cscRechitCluster3RSpread_r1p2[N_MAX_CSC];   //[nCsc]
 
   float         cscRechitCluster3EtaPhiSpread[N_MAX_CSC];   //[nCsc]
   float         cscRechitCluster3EtaSpread[N_MAX_CSC];   //[nCsc]
@@ -404,40 +454,31 @@ float         cscRechitCluster3JetVetoPt[N_MAX_CSC];
 
 
   //gLLP
-  float gLLP_eta[2];
-  float gLLP_phi[2];
-  float gLLP_csc[2];
-  float gLLP_dt[2];
-  float gLLP_beta[2];
-  float gLLP_e[2];
-  bool gLLP_daughterKaon[2];
-  float gLLP_pt[2];
-  float gLLP_lepdPhi[2];
-  int gLLP_multiplicity[2];
+  float gLLP_eta[1];
+  float gLLP_phi[1];
+  float gLLP_csc[1];
+  float gLLP_dt[1];
+  float gLLP_beta[1];
+  float gLLP_e[1];
+  float gLLP_pt[1];
+  float gLLP_lepdPhi[1];
+  int gLLP_multiplicity[1];
 
 
 
-  float gLLP_ctau[2];
-  float gLLP_decay_vertex_r[2];
-  float gLLP_decay_vertex_x[2];
-  float gLLP_decay_vertex_y[2];
-  float gLLP_decay_vertex_z[2];
-  float gLLP_EMFracE[2];
-  float gLLP_EMFracEz[2];
-  float gLLP_EMFracP[2];
-  float gLLP_EMFracPz[2];
-  float gLLP_visE[2];
-  float gLLP_visEz[2];
-  float gLLP_visP[2];
-  float gLLP_visPz[2];
-  float gLLP_deltaR;
-  float gLLP_daughter_deltaR[2];
-  float gLLP_daughter_pt[4];
-  int   gLLP_daughter_id[4];
-  float gLLP_daughter_eta[4];
-  float gLLP_daughter_phi[4];
-  float gLLP_daughter_e[4];
-  float gLLP_daughter_mass[4];
+  float gLLP_ctau[1];
+  float gLLP_decay_vertex_r[1];
+  float gLLP_decay_vertex_x[1];
+  float gLLP_decay_vertex_y[1];
+  float gLLP_decay_vertex_z[1];
+
+  float gLLP_daughter_deltaR[1];
+  float gLLP_daughter_pt[3];
+  int   gLLP_daughter_id[3];
+  float gLLP_daughter_eta[3];
+  float gLLP_daughter_phi[3];
+  float gLLP_daughter_e[3];
+  float gLLP_daughter_mass[3];
   float gHiggsPt;
   float gHiggsEta;
   float gHiggsPhi;

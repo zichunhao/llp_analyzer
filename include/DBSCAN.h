@@ -34,6 +34,7 @@ struct cscCluster
 
   int nLayersChamberPlus11, nLayersChamberPlus12, nLayersChamberPlus13, nLayersChamberPlus21, nLayersChamberPlus22, nLayersChamberPlus31, nLayersChamberPlus32, nLayersChamberPlus41, nLayersChamberPlus42;
   int nLayersChamberMinus11, nLayersChamberMinus12, nLayersChamberMinus13, nLayersChamberMinus21, nLayersChamberMinus22, nLayersChamberMinus31, nLayersChamberMinus32, nLayersChamberMinus41, nLayersChamberMinus42;
+  int nDtSegmentStation1,nDtSegmentStation2,nDtSegmentStation3,nDtSegmentStation4;
 
 
   float Me11Ratio, Me12Ratio;
