@@ -318,14 +318,14 @@ void llp_hnl_analyzer::Analyze(bool isData, int options, string outputfilename, 
           //Z->qq
           MuonSystem->ZCategory  = 2;
         }
-        // MuonSystem->gParticleStatus[MuonSystem->nGenParticle] = gParticleStatus[i];
-        // MuonSystem->gParticleId[MuonSystem->nGenParticle]  = gParticleId[i];
-        // MuonSystem->gParticleMotherId[MuonSystem->nGenParticle]  = gParticleMotherId[i];
-        // MuonSystem->gParticlePt[MuonSystem->nGenParticle]  = gParticlePt[i];
-        // MuonSystem->gParticleEta[MuonSystem->nGenParticle]  = gParticleEta[i];
-        // MuonSystem->gParticlePhi[MuonSystem->nGenParticle]  = gParticlePhi[i];
-        // MuonSystem->gParticleE[MuonSystem->nGenParticle]  = gParticleE[i];
-        // MuonSystem->nGenParticle++;
+         MuonSystem->gParticleStatus[MuonSystem->nGenParticle] = gParticleStatus[i];
+         MuonSystem->gParticleId[MuonSystem->nGenParticle]  = gParticleId[i];
+         MuonSystem->gParticleMotherId[MuonSystem->nGenParticle]  = gParticleMotherId[i];
+         MuonSystem->gParticlePt[MuonSystem->nGenParticle]  = gParticlePt[i];
+         MuonSystem->gParticleEta[MuonSystem->nGenParticle]  = gParticleEta[i];
+         MuonSystem->gParticlePhi[MuonSystem->nGenParticle]  = gParticlePhi[i];
+         MuonSystem->gParticleE[MuonSystem->nGenParticle]  = gParticleE[i];
+         MuonSystem->nGenParticle++;
         // cout<<"genparticles: "<<MuonSystem->nGenParticle<<endl;
       }
       // MuonSystem->nGenJets = nGenJets;
@@ -1439,6 +1439,7 @@ void llp_hnl_analyzer::Analyze(bool isData, int options, string outputfilename, 
         MuonSystem->nDtRechitClusters++;
       }//end loop for dt clusters
       if(isData && MuonSystem->nDtRechitClusters == 0 && MuonSystem->nCscRechitClusters3 == 0)continue;
+      if(MuonSystem->nDtRechitClusters == 0 && MuonSystem->nCscRechitClusters3 == 0)continue;
 
 
     if(!isData && signalScan) {
