@@ -318,15 +318,19 @@ void llp_hnl_analyzer::Analyze(bool isData, int options, string outputfilename, 
           //Z->qq
           MuonSystem->ZCategory  = 2;
         }
-         MuonSystem->gParticleStatus[MuonSystem->nGenParticle] = gParticleStatus[i];
-         MuonSystem->gParticleId[MuonSystem->nGenParticle]  = gParticleId[i];
-         MuonSystem->gParticleMotherId[MuonSystem->nGenParticle]  = gParticleMotherId[i];
-         MuonSystem->gParticlePt[MuonSystem->nGenParticle]  = gParticlePt[i];
-         MuonSystem->gParticleEta[MuonSystem->nGenParticle]  = gParticleEta[i];
-         MuonSystem->gParticlePhi[MuonSystem->nGenParticle]  = gParticlePhi[i];
-         MuonSystem->gParticleE[MuonSystem->nGenParticle]  = gParticleE[i];
-         MuonSystem->nGenParticle++;
-        // cout<<"genparticles: "<<MuonSystem->nGenParticle<<endl;
+         //MuonSystem->gParticleStatus[MuonSystem->nGenParticle] = gParticleStatus[i];
+         //MuonSystem->gParticleId[MuonSystem->nGenParticle]  = gParticleId[i];
+         //MuonSystem->gParticleMotherId[MuonSystem->nGenParticle]  = gParticleMotherId[i];
+         //MuonSystem->gParticleMotherIndex[MuonSystem->nGenParticle]  = gParticleMotherIndex[i];
+         //MuonSystem->gParticlePt[MuonSystem->nGenParticle]  = gParticlePt[i];
+         //MuonSystem->gParticleEta[MuonSystem->nGenParticle]  = gParticleEta[i];
+         //MuonSystem->gParticlePhi[MuonSystem->nGenParticle]  = gParticlePhi[i];
+         //MuonSystem->gParticleE[MuonSystem->nGenParticle]  = gParticleE[i];
+         //MuonSystem->gParticleProdVertexX[MuonSystem->nGenParticle]  = gParticleProdVertexX[i];
+         //MuonSystem->gParticleProdVertexY[MuonSystem->nGenParticle]  = gParticleProdVertexY[i];
+         //MuonSystem->gParticleProdVertexZ[MuonSystem->nGenParticle]  = gParticleProdVertexZ[i];
+         //MuonSystem->nGenParticle++;
+         //cout<<"genparticles: "<<MuonSystem->nGenParticle<<endl;
       }
       // MuonSystem->nGenJets = nGenJets;
       // for(int i=0; i < nGenJets; i++) {
@@ -1043,13 +1047,13 @@ void llp_hnl_analyzer::Analyze(bool isData, int options, string outputfilename, 
       MuonSystem->cscRechitCluster3Me12Ratio[MuonSystem->nCscRechitClusters3] = tmp.Me12Ratio;
 
       //Jet veto/ muon veto
-      MuonSystem->cscRechitCluster3JetVetoPt[MuonSystem->nCscRechitClusters3] = 0.0;
-      MuonSystem->cscRechitCluster3JetVetoE[MuonSystem->nCscRechitClusters3] = 0.0;
-      MuonSystem->cscRechitCluster3MuonVetoPt[MuonSystem->nCscRechitClusters3] = 0.0;
-      MuonSystem->cscRechitCluster3MuonVetoE[MuonSystem->nCscRechitClusters3] = 0.0;
-      MuonSystem->cscRechitCluster3GenMuonVetoPt[MuonSystem->nCscRechitClusters3] = 0.0;
-      MuonSystem->cscRechitCluster3GenMuonVetoE[MuonSystem->nCscRechitClusters3] = 0.0;
-      MuonSystem->cscRechitCluster3IsoMuonVetoPt[MuonSystem->nCscRechitClusters3] = 0.0;
+      MuonSystem->cscRechitCluster3JetVetoPt[MuonSystem->nCscRechitClusters3]     = -999.0;
+      MuonSystem->cscRechitCluster3JetVetoE[MuonSystem->nCscRechitClusters3]      = -999.0;
+      MuonSystem->cscRechitCluster3MuonVetoPt[MuonSystem->nCscRechitClusters3]    = -999.0;
+      MuonSystem->cscRechitCluster3MuonVetoE[MuonSystem->nCscRechitClusters3]     = -999.0;
+      MuonSystem->cscRechitCluster3GenMuonVetoPt[MuonSystem->nCscRechitClusters3] = -999.0;
+      MuonSystem->cscRechitCluster3GenMuonVetoE[MuonSystem->nCscRechitClusters3]  = -999.0;
+      MuonSystem->cscRechitCluster3IsoMuonVetoPt[MuonSystem->nCscRechitClusters3] = -999.0;
 
       // jet veto
       //cout << "Check jet veto" <<endl;
@@ -1261,10 +1265,10 @@ void llp_hnl_analyzer::Analyze(bool isData, int options, string outputfilename, 
         MuonSystem->dtRechitClusterAvgStation10[MuonSystem->nDtRechitClusters] = tmp.avgStation10;
 
         //Jet veto/ muon veto
-        MuonSystem->dtRechitClusterJetVetoPt[MuonSystem->nDtRechitClusters] = 0.0;
-        MuonSystem->dtRechitClusterJetVetoE[MuonSystem->nDtRechitClusters] = 0.0;
-        MuonSystem->dtRechitClusterMuonVetoPt[MuonSystem->nDtRechitClusters] = 0.0;
-        MuonSystem->dtRechitClusterMuonVetoE[MuonSystem->nDtRechitClusters] = 0.0;
+        MuonSystem->dtRechitClusterJetVetoPt[MuonSystem->nDtRechitClusters] = -999.9;
+        MuonSystem->dtRechitClusterJetVetoE[MuonSystem->nDtRechitClusters]  = -999.9;
+        MuonSystem->dtRechitClusterMuonVetoPt[MuonSystem->nDtRechitClusters]= -999.9;
+        MuonSystem->dtRechitClusterMuonVetoE[MuonSystem->nDtRechitClusters] = -999.9;
 
 
         // jet veto
@@ -1438,6 +1442,7 @@ void llp_hnl_analyzer::Analyze(bool isData, int options, string outputfilename, 
 
         MuonSystem->nDtRechitClusters++;
       }//end loop for dt clusters
+      // NCLUSTER
       if(isData && MuonSystem->nDtRechitClusters == 0 && MuonSystem->nCscRechitClusters3 == 0)continue;
       if(MuonSystem->nDtRechitClusters == 0 && MuonSystem->nCscRechitClusters3 == 0)continue;
 
