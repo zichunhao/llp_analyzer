@@ -573,7 +573,20 @@ void llp_hnl_analyzer::Analyze(bool isData, int options, string outputfilename, 
       MuonSystem->lepPassVVTightIso[MuonSystem->nLeptons] = tmp.passVVTightIso;
       MuonSystem->nLeptons++;
     }
+    for(int i = 0; i < nMuons; i++) {
+      if (fabs(muonEta[i]>3.0)) continue;
+      float muonIso = (muon_chargedIso[i] + fmax(0.0,  muon_photonIso[i] + muon_neutralHadIso[i] - 0.5*muon_pileupIso[i])) / muonPt[i];
+        MuonSystem->muonPt[i]   = muonPt[i];
+        MuonSystem->muonPt[i]   = muonE[i];
+        MuonSystem->muonEta[i]  = muonEta[i];
+        MuonSystem->muonPhi[i]  = muonPhi[i];
+        MuonSystem->muonIso[i]  = muonIso;
+        MuonSystem->muonIsGlobal[i]  = muon_isGlobal[i];
+        MuonSystem->muonTightId[i]  = isMuonPOGTightMuon(i);
+        MuonSystem->muonLooseId[i]  = isMuonPOGLooseMuon(i);
+    }
 
+    MuonSystem->nMuons = nMuons;
     MuonSystem->category = MuonSystem->nLeptons;
 
 
@@ -1079,7 +1092,7 @@ void llp_hnl_analyzer::Analyze(bool isData, int options, string outputfilename, 
       for(int i = 0; i < nMuons; i++) {
         if (fabs(muonEta[i]>3.0)) continue;
         float muonIso = (muon_chargedIso[i] + fmax(0.0,  muon_photonIso[i] + muon_neutralHadIso[i] - 0.5*muon_pileupIso[i])) / muonPt[i];
-        if (RazorAnalyzer::deltaR(muonEta[i], muonPhi[i], MuonSystem->cscRechitCluster3Eta[MuonSystem->nCscRechitClusters3],MuonSystem->cscRechitCluster3Phi[MuonSystem->nCscRechitClusters3]) < 0.4
+        if (RazorAnalyzer::deltaR(muonEta[i], muonPhi[i], MuonSystem->cscRechitCluster3Eta[MuonSystem->nCscRechitClusters3],MuonSystem->cscRechitCluster3Phi[MuonSystem->nCscRechitClusters3]) < 0.8
             && muonPt[i] > MuonSystem->cscRechitCluster3MuonVetoPt[MuonSystem->nCscRechitClusters3] ) {
           MuonSystem->cscRechitCluster3MuonVetoPt[MuonSystem->nCscRechitClusters3]  = muonPt[i];
           MuonSystem->cscRechitCluster3MuonVetoE[MuonSystem->nCscRechitClusters3]  = muonE[i];
@@ -1227,6 +1240,20 @@ void llp_hnl_analyzer::Analyze(bool isData, int options, string outputfilename, 
 
 
 
+    // RPC hits
+    MuonSystem->nRpc = nRpc;
+    for(int i = 0; i < nRpc; i++) {
+        MuonSystem -> rpcX[i]       =rpcX[i]       ;
+        MuonSystem -> rpcY[i]       =rpcY[i]       ;
+        MuonSystem -> rpcZ[i]       =rpcZ[i]       ;
+        MuonSystem -> rpcEta[i]     =rpcEta[i]     ;
+        MuonSystem -> rpcPhi[i]     =rpcPhi[i]     ;
+        MuonSystem -> rpcBx[i]      =rpcBx[i]      ;
+        MuonSystem -> rpcStation[i] =rpcStation[i] ;
+        MuonSystem -> rpcRing[i]    =rpcRing[i]    ;
+        MuonSystem -> rpcSector[i]  =rpcSector[i]  ;
+        MuonSystem -> rpcLayer[i]   =rpcLayer[i]   ;
+    }
 
     // DT cluster
 
@@ -1290,15 +1317,13 @@ void llp_hnl_analyzer::Analyze(bool isData, int options, string outputfilename, 
         {
           if (fabs(muonEta[i]>3.0)) continue;
           float muonIso = (muon_chargedIso[i] + fmax(0.0,  muon_photonIso[i] + muon_neutralHadIso[i] - 0.5*muon_pileupIso[i])) / muonPt[i];
-          if (RazorAnalyzer::deltaR(muonEta[i], muonPhi[i], MuonSystem->dtRechitClusterEta[MuonSystem->nDtRechitClusters],MuonSystem->dtRechitClusterPhi[MuonSystem->nDtRechitClusters]) < 0.4 && muonPt[i] > MuonSystem->dtRechitClusterMuonVetoPt[MuonSystem->nDtRechitClusters] ) {
+          if (RazorAnalyzer::deltaR(muonEta[i], muonPhi[i], MuonSystem->dtRechitClusterEta[MuonSystem->nDtRechitClusters],MuonSystem->dtRechitClusterPhi[MuonSystem->nDtRechitClusters]) < 0.8 && muonPt[i] > MuonSystem->dtRechitClusterMuonVetoPt[MuonSystem->nDtRechitClusters] ) {
             MuonSystem->dtRechitClusterMuonVetoPt[MuonSystem->nDtRechitClusters]  = muonPt[i];
             MuonSystem->dtRechitClusterMuonVetoE[MuonSystem->nDtRechitClusters]  = muonE[i];
             MuonSystem->dtRechitClusterMuonVetoPhi[MuonSystem->nDtRechitClusters]  = muonPhi[i];
             MuonSystem->dtRechitClusterMuonVetoEta[MuonSystem->nDtRechitClusters]  = muonEta[i];
             MuonSystem->dtRechitClusterMuonVetoGlobal[MuonSystem->nDtRechitClusters]  = muon_isGlobal[i];
             MuonSystem->dtRechitClusterMuonVetoLooseId[MuonSystem->nDtRechitClusters]  = isMuonPOGLooseMuon(i);
-
-
           }
         }
         // match to gen-level muon

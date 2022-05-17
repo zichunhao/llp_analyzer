@@ -63,14 +63,18 @@ public:
   float gWPt;
   int gLepId;
   float gLepPt, gLepPhi, gLepEta, gLepE;
-  // int nGenParticle;
-  // int gParticleId[N_MAX_GPARTICLES];
-  // int gParticleStatus[N_MAX_GPARTICLES];
-  // int gParticleMotherId[N_MAX_GPARTICLES];
-  // float gParticlePt[N_MAX_GPARTICLES];
-  // float gParticleEta[N_MAX_GPARTICLES];
-  // float gParticlePhi[N_MAX_GPARTICLES];
-  // float gParticleE[N_MAX_GPARTICLES];
+  int nGenParticle;
+  int gParticleId[N_MAX_GPARTICLES];
+  int gParticleStatus[N_MAX_GPARTICLES];
+  int gParticleMotherId[N_MAX_GPARTICLES];
+  int gParticleMotherIndex[N_MAX_GPARTICLES];
+  float gParticlePt[N_MAX_GPARTICLES];
+  float gParticleEta[N_MAX_GPARTICLES];
+  float gParticlePhi[N_MAX_GPARTICLES];
+  float gParticleE[N_MAX_GPARTICLES];
+  float gParticleProdVertexX[N_MAX_GPARTICLES];
+  float gParticleProdVertexY[N_MAX_GPARTICLES];
+  float gParticleProdVertexZ[N_MAX_GPARTICLES];
 
   float genMetPtTrue;
   float genMetPhiTrue;
@@ -78,15 +82,15 @@ public:
   float genMetPhiCalo;
 
   //
-  // int nGenJets;
-  // float genJetE[N_MAX_GPARTICLES];
-  // float genJetPt[N_MAX_GPARTICLES];
-  // float genJetEta[N_MAX_GPARTICLES];
-  // float genJetPhi[N_MAX_GPARTICLES];
+   int nGenJets;
+   float genJetE[N_MAX_GPARTICLES];
+   float genJetPt[N_MAX_GPARTICLES];
+   float genJetEta[N_MAX_GPARTICLES];
+   float genJetPhi[N_MAX_GPARTICLES];
   //
   //
   //
-  // float genJetMET[N_MAX_GPARTICLES];
+   float genJetMET[N_MAX_GPARTICLES];
 
   //dt
 
@@ -130,6 +134,17 @@ public:
   int           nDtWheels25;
 
   // rpc
+  int           nRpc;
+  float         rpcX[N_MAX_CSCRECHITS];   //[npc]
+  float         rpcY[N_MAX_CSCRECHITS];   //[npc]
+  float         rpcZ[N_MAX_CSCRECHITS];   //[npc]
+  float         rpcPhi[N_MAX_CSCRECHITS];   //[npc]
+  float         rpcEta[N_MAX_CSCRECHITS];   //[npc]
+  int           rpcBx[N_MAX_CSCRECHITS];   //[npc]
+  int           rpcStation[N_MAX_CSCRECHITS];   //[npc]
+  int           rpcRing[N_MAX_CSCRECHITS];   //[npc]
+  int           rpcSector[N_MAX_CSCRECHITS];   //[npc]
+  int           rpcLayer[N_MAX_CSCRECHITS];   //[npc]
 
 
   // DT
@@ -487,8 +502,13 @@ float         cscRechitCluster3JetVetoPt[N_MAX_CSC];
   //leptons
   int nMuons;
   float muonPt[N_MAX_LEPTONS];
+  float muonE[N_MAX_LEPTONS];
   float muonEta[N_MAX_LEPTONS];
   float muonPhi[N_MAX_LEPTONS];
+  float muonIso[N_MAX_LEPTONS];
+  bool  muonIsGlobal[N_MAX_LEPTONS];
+  bool  muonTightId[N_MAX_LEPTONS];
+  bool  muonLooseId[N_MAX_LEPTONS];
   int nLeptons;
   float lepE[N_MAX_LEPTONS];
   float lepPt[N_MAX_LEPTONS];

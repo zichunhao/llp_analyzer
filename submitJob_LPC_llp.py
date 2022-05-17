@@ -90,6 +90,7 @@ if __name__ == '__main__':
     parser.add_option('-o', '--odir', dest='odir', default='./', help='directory to write histograms/job output', metavar='odir')
     parser.add_option('-i', '--inputList', dest='inputList', default='./lists/test.txt', help='txt file for list of input', metavar='inputList')
     parser.add_option( '--njobs', dest='njobs', default=50, type="int", help='Number of jobs to split into', metavar='njobs')
+    parser.add_option( '--exe', dest='exe', default="Runllp_hnl_analyzer",  help='Executable name to run', metavar='exe')
 
     script_group  = OptionGroup(parser, "script options")
     script_group.add_option("-d","--isData", dest="isData", default="no",  help="MC = yes data = yes", metavar="isData")
@@ -104,6 +105,7 @@ if __name__ == '__main__':
     maxJobs = options.njobs 
 
     outpath= options.odir
+    exe    = options.exe
 
     #eosoutpath = '/eos/uscms/store/user/kkwok/llp/'+outpath
     #eoscppath = 'root://cmseos.fnal.gov//store/user/kkwok/llp/'+outpath
@@ -127,7 +129,7 @@ if __name__ == '__main__':
 
     ##Small files used by the exe
     transfer_files = [
-        os.getcwd()+"/Runllp_hnl_analyzer",
+        os.getcwd()+"/%s"%exe,
         os.getcwd()+"/data/JEC.tar.gz",
         os.getcwd()+"/corrections.tar.gz",
     ]
@@ -157,7 +159,8 @@ if __name__ == '__main__':
                 for line in tmp_inputs: fout.write(line)
 
 
-    command      = './Runllp_hnl_analyzer ${MAINDIR}/tmp_input_list_$1.txt -f=${MAINDIR}/%s_$1.root '%fileName
+    #command      = './Runllp_hnl_analyzer ${MAINDIR}/tmp_input_list_$1.txt -f=${MAINDIR}/%s_$1.root '%fileName
+    command      = './%s ${MAINDIR}/tmp_input_list_$1.txt -f=${MAINDIR}/%s_$1.root '%(exe,fileName)
     eoscp        = 'xrdcp -f ${MAINDIR}/%s_$1.root %s'%(fileName,eoscppath)
     #Add script options to job command
     for opts in script_group.option_list:

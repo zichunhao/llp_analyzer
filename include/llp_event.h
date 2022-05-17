@@ -1197,12 +1197,9 @@ public :
    TBranch        *b_rpcTError;   //!
    TBranch        *b_rpcRegion;   //!
    TBranch        *b_rpcRing;   //!
-<<<<<<< HEAD
-=======
    TBranch        *b_rpcSector;   //!
    TBranch        *b_rpcStation;   //!
    TBranch        *b_rpcLayer;   //!
->>>>>>> dd9a7e6fd17892c7e57a5973aa37b498c93eeb65
    TBranch        *b_nDtSeg;   //!
    TBranch        *b_dtSegPhi;   //!
    TBranch        *b_dtSegEta;   //!
@@ -2019,16 +2016,11 @@ void llp_event::Init(TTree *tree)
    fChain->SetBranchAddress("rpcT", rpcT, &b_rpcT);
    fChain->SetBranchAddress("rpcBx", rpcBx, &b_rpcBx);
    fChain->SetBranchAddress("rpcTError", rpcTError, &b_rpcTError);
-<<<<<<< HEAD
-   fChain->SetBranchAddress("rpcRing", rpcRing, &b_rpcRing);
-   fChain->SetBranchAddress("rpcRegion", rpcRegion, &b_rpcRegion);
-=======
    fChain->SetBranchAddress("rpcRegion", rpcRegion, &b_rpcRegion);
    fChain->SetBranchAddress("rpcRing", rpcRing, &b_rpcRing);
    fChain->SetBranchAddress("rpcSector", rpcSector, &b_rpcSector);
    fChain->SetBranchAddress("rpcStation", rpcStation, &b_rpcStation);
    fChain->SetBranchAddress("rpcLayer", rpcLayer, &b_rpcLayer);
->>>>>>> dd9a7e6fd17892c7e57a5973aa37b498c93eeb65
    fChain->SetBranchAddress("nDtSeg", &nDtSeg, &b_nDtSeg);
    fChain->SetBranchAddress("dtSegPhi", dtSegPhi, &b_dtSegPhi);
    fChain->SetBranchAddress("dtSegEta", dtSegEta, &b_dtSegEta);

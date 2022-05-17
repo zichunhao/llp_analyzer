@@ -513,7 +513,6 @@ void RazorAnalyzer::EnableDT()
   fChain->SetBranchStatus("dtRechitClusterNSegmentStation3", 1);
   fChain->SetBranchStatus("dtRechitClusterNSegmentStation4", 1);
 
->>>>>>> dd9a7e6fd17892c7e57a5973aa37b498c93eeb65
 
 };
 void RazorAnalyzer::EnableCSC()

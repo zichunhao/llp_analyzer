@@ -445,33 +445,55 @@ void HNLMuonSystemTree::InitVariables()
   genMetPhiTrue = -999.;
   genMetPtCalo = -999.;
   genMetPhiCalo = -999.;
-  // nGenParticle = 0;
-  // nGenJets = 0;
-  // for( int i = 0; i < N_MAX_GPARTICLES; i++ )
-  // {
-  //   gParticleId[i] = 0;
-  //   gParticleStatus[i] = 999;
-  //   gParticleMotherId[i] = 0;
-  //   gParticlePt[i] = -999.;
-  //   gParticleEta[i] = -999.;
-  //   gParticlePhi[i] = -999.;
-  //   gParticleE[i] = -999.;
-  //   genJetE[i] = -999.;
-  //   genJetPt[i] = -999.;
-  //   genJetEta[i] = -999.;
-  //   genJetPhi[i] = -999.;
-  //   genJetMET[i] = -999.;
-  //
-  // }
+  nGenParticle = 0;
+  nGenJets = 0;
+   for( int i = 0; i < N_MAX_GPARTICLES; i++ )
+   {
+     gParticleId[i] = 0;
+     gParticleStatus[i] = 999;
+     gParticleMotherId[i] = 0;
+     gParticleMotherIndex[i] = -999;
+     gParticlePt[i] = -999.;
+     gParticleEta[i] = -999.;
+     gParticlePhi[i] = -999.;
+     gParticleE[i] = -999.;
+     gParticleProdVertexX [i] =-999.;
+     gParticleProdVertexY [i] =-999.;
+     gParticleProdVertexZ [i] =-999.;
+     genJetE[i] = -999.;
+     genJetPt[i] = -999.;
+     genJetEta[i] = -999.;
+     genJetPhi[i] = -999.;
+     genJetMET[i] = -999.;
+  
+   }
 
+  nRpc = 0;
+  for( int i = 0; i < N_MAX_CSCRECHITS; i++ ){
+     rpcX[i]       =-999.;  
+     rpcY[i]       =-999.;   
+     rpcZ[i]       =-999.;
+     rpcEta[i]     =-999.;
+     rpcPhi[i]     =-999.;
+     rpcBx[i]      = -99;
+     rpcStation[i] = -99;
+     rpcRing[i]    = -99;
+     rpcSector[i]  = -99;
+     rpcLayer[i]   = -99;
+  }
   //leptons
 
   nMuons = 0;
   for( int i = 0; i < N_MAX_LEPTONS; i++ )
   {
+    muonE[i]     = -999.;
     muonPt[i]     = -999.;
     muonEta[i]    = -999.;
     muonPhi[i]    = -999.;
+    muonIso[i]    = -999.;
+    muonIsGlobal[i]    = false;
+    muonTightId[i]    = false;
+    muonLooseId[i]    = false;
   }
   nLeptons = 0;
   for( int i = 0; i < N_MAX_LEPTONS; i++ )
@@ -644,21 +666,25 @@ tree_->SetBranchAddress("metPhiEENoiseXYCorr",      &metPhiEENoiseXYCorr);
   tree_->SetBranchAddress("genMetPtCalo",      &genMetPtCalo);
   tree_->SetBranchAddress("genMetPhiCalo",      &genMetPhiCalo);
 
-  // tree_->SetBranchAddress("nGenParticle",      &nGenParticle);
-  // tree_->SetBranchAddress("gParticleId",      &gParticleId);
-  // tree_->SetBranchAddress("gParticleStatus",      &gParticleStatus);
-  // tree_->SetBranchAddress("gParticleMotherId",      &gParticleMotherId);
-  // tree_->SetBranchAddress("gParticleE",      &gParticleE);
-  // tree_->SetBranchAddress("gParticlePt",      &gParticlePt);
-  // tree_->SetBranchAddress("gParticleEta",      &gParticleEta);
-  // tree_->SetBranchAddress("gParticlePhi",      &gParticlePhi);
+  tree_->SetBranchAddress("nGenParticle",      &nGenParticle);
+  tree_->SetBranchAddress("gParticleId",      &gParticleId);
+  tree_->SetBranchAddress("gParticleStatus",      &gParticleStatus);
+  tree_->SetBranchAddress("gParticleMotherId",      &gParticleMotherId);
+  tree_->SetBranchAddress("gParticleMotherIndex",      &gParticleMotherIndex);
+  tree_->SetBranchAddress("gParticleE",      &gParticleE);
+  tree_->SetBranchAddress("gParticlePt",      &gParticlePt);
+  tree_->SetBranchAddress("gParticleEta",      &gParticleEta);
+  tree_->SetBranchAddress("gParticlePhi",      &gParticlePhi);
+  tree_->SetBranchAddress("gParticleProdVertexX ",      &gParticleProdVertexX );
+  tree_->SetBranchAddress("gParticleProdVertexY ",      &gParticleProdVertexY );
+  tree_->SetBranchAddress("gParticleProdVertexZ ",      &gParticleProdVertexZ );
   //
-  // tree_->SetBranchAddress("nGenJets",      &nGenJets);
-  // tree_->SetBranchAddress("genJetE",      &genJetE);
-  // tree_->SetBranchAddress("genJetPt",      &genJetPt);
-  // tree_->SetBranchAddress("genJetEta",      &genJetEta);
-  // tree_->SetBranchAddress("genJetPhi",      &genJetPhi);
-  // tree_->SetBranchAddress("genJetMET",      &genJetMET);
+   tree_->SetBranchAddress("nGenJets",      &nGenJets);
+   tree_->SetBranchAddress("genJetE",      &genJetE);
+   tree_->SetBranchAddress("genJetPt",      &genJetPt);
+   tree_->SetBranchAddress("genJetEta",      &genJetEta);
+   tree_->SetBranchAddress("genJetPhi",      &genJetPhi);
+   tree_->SetBranchAddress("genJetMET",      &genJetMET);
 
   tree_->SetBranchAddress("gWPt",      &gWPt);
 
@@ -704,6 +730,20 @@ tree_->SetBranchAddress("metPhiEENoiseXYCorr",      &metPhiEENoiseXYCorr);
   tree_->SetBranchAddress("nCscRechitsChamberMinus32",            &nCscRechitsChamberMinus32);
   tree_->SetBranchAddress("nCscRechitsChamberMinus41",            &nCscRechitsChamberMinus41);
   tree_->SetBranchAddress("nCscRechitsChamberMinus42",            &nCscRechitsChamberMinus42);
+
+
+  tree_->SetBranchAddress("nRpc"         ,&nRpc       );
+  tree_->SetBranchAddress("rpcX"         ,rpcX        );
+  tree_->SetBranchAddress("rpcY"         ,rpcY        );
+  tree_->SetBranchAddress("rpcZ"         ,rpcZ        );
+  tree_->SetBranchAddress("rpcPhi"       ,rpcPhi      );
+  tree_->SetBranchAddress("rpcEta"       ,rpcEta      );
+  tree_->SetBranchAddress("rpcBx"        ,rpcBx       );
+  tree_->SetBranchAddress("rpcStation"   ,rpcStation  );
+  tree_->SetBranchAddress("rpcRing"      ,rpcRing     );
+  tree_->SetBranchAddress("rpcSector"    ,rpcSector   );
+  tree_->SetBranchAddress("rpcLayer"     ,rpcLayer    );
+
 
 
   tree_->SetBranchAddress("nDTRechits",            &nDTRechits);
@@ -1061,9 +1101,13 @@ tree_->SetBranchAddress("gLLP_daughter_pt",          gLLP_daughter_pt);
     tree_->SetBranchAddress("gLLP_daughter_mass",          gLLP_daughter_mass);
 
     tree_->SetBranchAddress("nMuons",    &nMuons);
+    tree_->SetBranchAddress("muonE",       muonE);
     tree_->SetBranchAddress("muonPt",       muonPt);
     tree_->SetBranchAddress("muonEta",      muonEta);
-    tree_->SetBranchAddress("muonPhi",      muonPhi);
+    tree_->SetBranchAddress("muonIso",      muonIso);
+    tree_->SetBranchAddress("muonIsGlobal",      muonIsGlobal);
+    tree_->SetBranchAddress("muonTightId",      muonTightId);
+    tree_->SetBranchAddress("muonLooseId",      muonLooseId);
 
   //Leptons
   tree_->SetBranchAddress("nLeptons",    &nLeptons);
@@ -1250,21 +1294,25 @@ void HNLMuonSystemTree::CreateTree()
   tree_->Branch("genMetPtCalo",         &genMetPtCalo,        "genMetPtCalo/F");         // MET
   tree_->Branch("genMetPhiCalo",      &genMetPhiCalo,     "genMetPhiCalo/F");      // phi(MET)
 
-  // tree_->Branch("nGenParticle",      &nGenParticle,   "nGenParticle/I");
-  // tree_->Branch("gParticleId",      gParticleId,  "gParticleId[nGenParticle]/I");
-  // tree_->Branch("gParticleStatus",      gParticleStatus,  "gParticleStatus[nGenParticle]/I");
-  // tree_->Branch("gParticleMotherId",      gParticleMotherId,  "gParticleMotherId[nGenParticle]/I");
-  // tree_->Branch("gParticleE",      gParticleE,  "gParticleE[nGenParticle]/F");
-  // tree_->Branch("gParticlePt",      gParticlePt,  "gParticlePt[nGenParticle]/F");
-  // tree_->Branch("gParticleEta",      gParticleEta,  "gParticleEta[nGenParticle]/F");
-  // tree_->Branch("gParticlePhi",      gParticlePhi,  "gParticlePhi[nGenParticle]/F");
+   tree_->Branch("nGenParticle",      &nGenParticle,   "nGenParticle/I");
+   tree_->Branch("gParticleId",      gParticleId,  "gParticleId[nGenParticle]/I");
+   tree_->Branch("gParticleStatus",      gParticleStatus,  "gParticleStatus[nGenParticle]/I");
+   tree_->Branch("gParticleMotherId",      gParticleMotherId,  "gParticleMotherId[nGenParticle]/I");
+   tree_->Branch("gParticleMotherIndex",      gParticleMotherIndex,  "gParticleMotherIndex[nGenParticle]/I");
+   tree_->Branch("gParticleE",      gParticleE,  "gParticleE[nGenParticle]/F");
+   tree_->Branch("gParticlePt",      gParticlePt,  "gParticlePt[nGenParticle]/F");
+   tree_->Branch("gParticleEta",      gParticleEta,  "gParticleEta[nGenParticle]/F");
+   tree_->Branch("gParticlePhi",      gParticlePhi,  "gParticlePhi[nGenParticle]/F");
+   tree_->Branch("gParticleProdVertexX",     gParticleProdVertexX ,  "gParticleProdVertexX[nGenParticle]/F");
+   tree_->Branch("gParticleProdVertexY",     gParticleProdVertexY ,  "gParticleProdVertexY[nGenParticle]/F");
+   tree_->Branch("gParticleProdVertexZ",     gParticleProdVertexZ ,  "gParticleProdVertexZ[nGenParticle]/F");
 
-  // tree_->Branch("nGenJets",      &nGenJets,  "nGenJets/I");
-  // tree_->Branch("genJetE",      genJetE,  "genJetE[nGenJets]/F");
-  // tree_->Branch("genJetPt",      genJetPt,  "genJetPt[nGenJets]/F");
-  // tree_->Branch("genJetEta",      genJetEta,  "genJetEta[nGenJets]/F");
-  // tree_->Branch("genJetPhi",      genJetPhi,  "genJetPhi[nGenJets]/F");
-  // tree_->Branch("genJetMET",      genJetMET,  "genJetMET[nGenJets]/F");
+   tree_->Branch("nGenJets",      &nGenJets,  "nGenJets/I");
+   tree_->Branch("genJetE",      genJetE,  "genJetE[nGenJets]/F");
+   tree_->Branch("genJetPt",      genJetPt,  "genJetPt[nGenJets]/F");
+   tree_->Branch("genJetEta",      genJetEta,  "genJetEta[nGenJets]/F");
+   tree_->Branch("genJetPhi",      genJetPhi,  "genJetPhi[nGenJets]/F");
+   tree_->Branch("genJetMET",      genJetMET,  "genJetMET[nGenJets]/F");
 
   tree_->Branch("gWPt",         &gWPt,        "gWPt/F");
 
@@ -1351,8 +1399,18 @@ void HNLMuonSystemTree::CreateTree()
   tree_->Branch("nDTRechitsStation4",             &nDTRechitsStation4, "nDTRechitsStation4/I");
 
 
-
-
+    // nRPC
+    tree_->Branch("nRpc"         ,&nRpc        ,"nRpc/I");
+    tree_->Branch("rpcX"         ,rpcX         ,"rpcX[nRpc]/F");
+    tree_->Branch("rpcY"         ,rpcY         ,"rpcY[nRpc]/F");
+    tree_->Branch("rpcZ"         ,rpcZ         ,"rpcZ[nRpc]/F");
+    tree_->Branch("rpcPhi"       ,rpcPhi       ,"rpcPhi[nRpc]/F");
+    tree_->Branch("rpcEta"       ,rpcEta       ,"rpcEta[nRpc]/F");
+    tree_->Branch("rpcBx"        ,rpcBx        ,"rpcBx[nRpc]/I");
+    tree_->Branch("rpcStation"   ,rpcStation   ,"rpcStation[nRpc]/I");
+    tree_->Branch("rpcRing"      ,rpcRing      ,"rpcRing[nRpc]/I");
+    tree_->Branch("rpcSector"    ,rpcSector    ,"rpcSector[nRpc]/I");
+    tree_->Branch("rpcLayer"     ,rpcLayer     ,"rpcLayer[nRpc]/I");
 
     // dt rechit cluster
 
@@ -1664,9 +1722,14 @@ void HNLMuonSystemTree::CreateTree()
 
   //leptons
   tree_->Branch("nMuons",  &nMuons, "nMuons/I");
+  tree_->Branch("muonE",     muonE,     "muonE[nMuons]/F");
   tree_->Branch("muonPt",     muonPt,     "muonPt[nMuons]/F");
   tree_->Branch("muonEta",    muonEta,    "muonEta[nMuons]/F");
   tree_->Branch("muonPhi",    muonPhi,    "muonPhi[nMuons]/F");
+  tree_->Branch("muonIso",    muonIso,    "muonIso[nMuons]/F");
+  tree_->Branch("muonIsGlobal",    muonIsGlobal,    "muonIsGlobal[nMuons]/O");
+  tree_->Branch("muonTightId",    muonTightId,    "muonTightId[nMuons]/O");
+  tree_->Branch("muonLooseId",    muonLooseId,    "muonLooseId[nMuons]/O");
 
 
   //leptons
