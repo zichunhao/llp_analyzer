@@ -97,23 +97,6 @@ then
 			fi
 		done <"output.txt"
 
-		#if [ -f ${outputfile} ]
-		#then
-		#	eval `scram unsetenv -sh`
-		#	gfal-mkdir -p gsiftp://transfer.ultralight.org//${outputDirectory}
-		#	gfal-copy --checksum-mode=both ${outputfile} gsiftp://transfer.ultralight.org//${outputDirectory}/${outputfile}
-		#	#mkdir -p ${outputDirectory}
-		#	#cp ${outputfile} ${outputDirectory}/${outputfile}
-		#else
-		#	echo "output doesn't exist"
-		#fi
-		#if [ -f /mnt/hadoop/${outputDirectory}/${outputfile} ]
-		##if [ -f /${outputDirectory}/${outputfile} ]
-		#then
-		#	echo "ZZZZAAAA ============ good news, job finished successfully "
-		#else
-		#	echo "YYYYZZZZ ============ somehow job failed, please consider resubmitting"
-		#fi
 	else
 		echo echo "WWWWYYYY ============= failed to access file RazorRun_T2, job anandoned"
 	fi
