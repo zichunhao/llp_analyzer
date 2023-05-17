@@ -195,12 +195,15 @@ void HNLMuonSystemTree::InitVariables()
         cscRechitCluster3Z[i] = -999.;
         cscRechitCluster3Time[i] = -999.;
         cscRechitCluster3TimeTotal[i] = -999.;
+        cscRechitCluster3TimeWeighted[i] = -999.;
         cscRechitCluster3TimeWire[i] = -999.;
         cscRechitCluster3TimeWirePruned[i] = -999.;
 
 
         cscRechitCluster3GenMuonDeltaR[i] = 999.;
         cscRechitCluster3TimeSpread[i] = -999.;
+        cscRechitCluster3TimeSpreadWeighted[i] = -999.;
+        cscRechitCluster3TimeSpreadWeightedAll[i] = -999.;
         cscRechitCluster3TimeTotalSpread[i] = -999.;
         cscRechitCluster3TimeTotalSpreadPruned[i] = -999.;
         cscRechitCluster3TimeWireSpread[i] = -999.;
@@ -551,6 +554,8 @@ void HNLMuonSystemTree::InitVariables()
     JecUnc[i] = -999.;
     ecalNRechits[i] = -999.;
     ecalRechitE[i] = -999.;
+    jetCISV[i]     = 0.0; 
+    jetCMVA[i]     = 0.0; 
 
     jetElectronEnergyFraction[i] = -999.;
     jetPhotonEnergyFraction[i] = -999.;
@@ -919,10 +924,13 @@ tree_->SetBranchAddress("metPhiEENoiseXYCorr",      &metPhiEENoiseXYCorr);
   tree_->SetBranchAddress("cscRechitCluster3TimeWire",             cscRechitCluster3TimeWire);
   tree_->SetBranchAddress("cscRechitCluster3TimeWirePruned",             cscRechitCluster3TimeWirePruned);
   tree_->SetBranchAddress("cscRechitCluster3TimeTotal",             cscRechitCluster3TimeTotal);
+  tree_->SetBranchAddress("cscRechitCluster3TimeWeighted",             cscRechitCluster3TimeWeighted);
 
   tree_->SetBranchAddress("cscRechitCluster3GenMuonDeltaR",             cscRechitCluster3GenMuonDeltaR);
 
   tree_->SetBranchAddress("cscRechitCluster3TimeSpread",             cscRechitCluster3TimeSpread);
+  tree_->SetBranchAddress("cscRechitCluster3TimeSpreadWeighted",             cscRechitCluster3TimeSpreadWeighted);
+  tree_->SetBranchAddress("cscRechitCluster3TimeSpreadWeightedAll",             cscRechitCluster3TimeSpreadWeightedAll);
   tree_->SetBranchAddress("cscRechitCluster3TimeTotalSpread",             cscRechitCluster3TimeTotalSpread);
   tree_->SetBranchAddress("cscRechitCluster3TimeTotalSpreadPruned",             cscRechitCluster3TimeTotalSpreadPruned);
   tree_->SetBranchAddress("cscRechitCluster3TimeWireSpread",             cscRechitCluster3TimeWireSpread);
@@ -1527,8 +1535,11 @@ void HNLMuonSystemTree::CreateTree()
     tree_->Branch("cscRechitCluster3TimeWire",             cscRechitCluster3TimeWire,             "cscRechitCluster3TimeWire[nCscRechitClusters3]/F");
     tree_->Branch("cscRechitCluster3TimeWirePruned",             cscRechitCluster3TimeWirePruned,             "cscRechitCluster3TimeWirePruned[nCscRechitClusters3]/F");
     tree_->Branch("cscRechitCluster3TimeTotal",             cscRechitCluster3TimeTotal,             "cscRechitCluster3TimeTotal[nCscRechitClusters3]/F");
+    tree_->Branch("cscRechitCluster3TimeWeighted",             cscRechitCluster3TimeWeighted,             "cscRechitCluster3TimeWeighted[nCscRechitClusters3]/F");
 
     tree_->Branch("cscRechitCluster3TimeSpread",             cscRechitCluster3TimeSpread,             "cscRechitCluster3TimeSpread[nCscRechitClusters3]/F");
+    tree_->Branch("cscRechitCluster3TimeSpreadWeighted",             cscRechitCluster3TimeSpreadWeighted,             "cscRechitCluster3TimeSpreadWeighted[nCscRechitClusters3]/F");
+    tree_->Branch("cscRechitCluster3TimeSpreadWeightedAll",             cscRechitCluster3TimeSpreadWeightedAll,             "cscRechitCluster3TimeSpreadWeightedAll[nCscRechitClusters3]/F");
     tree_->Branch("cscRechitCluster3TimeTotalSpread",             cscRechitCluster3TimeTotalSpread,             "cscRechitCluster3TimeTotalSpread[nCscRechitClusters3]/F");
     tree_->Branch("cscRechitCluster3TimeTotalSpreadPruned",             cscRechitCluster3TimeTotalSpreadPruned,             "cscRechitCluster3TimeTotalSpreadPruned[nCscRechitClusters3]/F");
     tree_->Branch("cscRechitCluster3TimeWireSpread",             cscRechitCluster3TimeWireSpread,             "cscRechitCluster3TimeWireSpread[nCscRechitClusters3]/F");
@@ -1765,9 +1776,9 @@ void HNLMuonSystemTree::CreateTree()
 
   tree_->Branch("lepPassVetoId", lepPassVetoId, "lepPassVetoId[nLeptons]/O");
 
-  // tree_->Branch("lepLoosePassId", lepLoosePassId, "lepLoosePassId[nLeptons]/O");
-  // tree_->Branch("lepMediumPassId", lepMediumPassId, "lepMediumPassId[nLeptons]/O");
-  // tree_->Branch("lepTightPassId", lepTightPassId, "lepTightPassId[nLeptons]/O");
+  tree_->Branch("lepLoosePassId", lepLoosePassId, "lepLoosePassId[nLeptons]/O");
+  tree_->Branch("lepMediumPassId", lepMediumPassId, "lepMediumPassId[nLeptons]/O");
+  tree_->Branch("lepTightPassId", lepTightPassId, "lepTightPassId[nLeptons]/O");
 
 
   tree_->Branch("MT",      &MT,  "MT/F");
@@ -1789,6 +1800,8 @@ void HNLMuonSystemTree::CreateTree()
   tree_->Branch("jetPhi",    jetPhi,    "jetPhi[nJets]/F");
   tree_->Branch("jetTime",   jetTime,   "jetTime[nJets]/F");
   tree_->Branch("jetPassId", jetPassId, "jetPassId[nJets]/O");
+  tree_->Branch("jetCISV",   jetCISV,"jetCISV[nJets]/F");
+  tree_->Branch("jetCMVA",   jetCMVA,"jetCMVA[nJets]/F");
 
   tree_->Branch("jetPtJESUp",     jetPtJESUp,     "jetPtJESUp[nJets]/F");
   tree_->Branch("jetPtJESDown",     jetPtJESDown,     "jetPtJESDown[nJets]/F");

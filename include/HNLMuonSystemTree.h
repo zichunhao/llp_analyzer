@@ -3,9 +3,9 @@
 
 #define N_MAX_LEPTONS 100
 #define N_MAX_JETS 100
-#define N_MAX_CSC 200
-#define N_MAX_CSCRECHITS 5000
-#define N_MAX_DTRECHITS 5000
+#define N_MAX_CSC 20
+#define N_MAX_CSCRECHITS 1000
+#define N_MAX_DTRECHITS 100
 #define NTriggersMAX 1201 // Number of trigger in the .dat file
 #define N_MAX_GPARTICLES 5000
 
@@ -39,7 +39,9 @@ public:
   TTree *tree_;
   TFile *f_;
 
-  UInt_t  runNum, lumiSec, evtNum;
+  UInt_t  runNum, lumiSec;
+  //ULong64_t evtNum;
+  UInt_t evtNum;
   UInt_t  category;
   UInt_t  npv, npu;
   float rho, weight;
@@ -333,10 +335,13 @@ public:
   float         cscRechitCluster3Z[N_MAX_CSC];   //[nCsc]
   float         cscRechitCluster3Time[N_MAX_CSC];   //[nCsc]
   float         cscRechitCluster3TimeTotal[N_MAX_CSC];
+  float         cscRechitCluster3TimeWeighted[N_MAX_CSC];
   float         cscRechitCluster3TimeWire[N_MAX_CSC];
   float         cscRechitCluster3TimeWirePruned[N_MAX_CSC];
 
   float         cscRechitCluster3TimeSpread[N_MAX_CSC];
+  float         cscRechitCluster3TimeSpreadWeighted[N_MAX_CSC];
+  float         cscRechitCluster3TimeSpreadWeightedAll[N_MAX_CSC];
   float         cscRechitCluster3TimeWireSpread[N_MAX_CSC];
   float         cscRechitCluster3TimeTotalSpread[N_MAX_CSC];
   float         cscRechitCluster3TimeTotalSpreadPruned[N_MAX_CSC];
@@ -530,9 +535,9 @@ float         cscRechitCluster3JetVetoPt[N_MAX_CSC];
   float lepSF[N_MAX_LEPTONS];
   bool lepTag[N_MAX_LEPTONS];
 
-  // bool lepLoosePassId[N_MAX_LEPTONS];
-  // bool lepMediumPassId[N_MAX_LEPTONS];
-  // bool lepTightPassId[N_MAX_LEPTONS];
+  bool lepLoosePassId[N_MAX_LEPTONS];
+  bool lepMediumPassId[N_MAX_LEPTONS];
+  bool lepTightPassId[N_MAX_LEPTONS];
   bool lepPassVetoId[N_MAX_LEPTONS];
   bool lepFromZ[N_MAX_LEPTONS];
   bool lepPassId[N_MAX_LEPTONS];
@@ -562,6 +567,8 @@ float         cscRechitCluster3JetVetoPt[N_MAX_CSC];
   float jetEJESUp[N_MAX_JETS];
   float jetEJESDown[N_MAX_JETS];
   float JecUnc[N_MAX_JETS];
+  float jetCISV[N_MAX_JETS]; 
+  float jetCMVA[N_MAX_JETS]; 
 
 
   float ecalNRechits[N_MAX_JETS];
