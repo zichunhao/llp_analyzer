@@ -182,7 +182,8 @@ if __name__ == '__main__':
     cutString    = ""
     command      = '%s tmp_input_list_$1.txt ${MAINDIR} "skim" "%s"'%(exe,cutString)
     # copy to eos output
-    eoscp        = 'xrdcp -f ${MAINDIR}/displacedJetMuon_ntupler_*_skim.root %s'%(eoscppath)
+    # eoscp        = 'xrdcp -f ${MAINDIR}/displacedJetMuon_ntupler_*_skim.root %s'%(eoscppath)
+    eoscp        = 'xrdcp -f ${MAINDIR}/displacedJetMuon_ntupler_*.root %s'%(eoscppath)
 
     #Add script options to job command
     #for opts in script_group.option_list:
