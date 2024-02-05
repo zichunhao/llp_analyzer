@@ -54,7 +54,7 @@ def write_bash(temp = 'runjob.sh',  command = '',CMSSW="" ,eoscp=""):
     out += 'export PATH=${PATH}:/cvmfs/cms.cern.ch/common\n'
     out += 'export SCRAM_ARCH=slc7_amd64_gcc700\n'
     out += 'scramv1 project CMSSW %s\n'%CMSSW
-    out += 'mv %s %s/src\n'%(command.split()[0],CMSSW) ## move executable to folder
+    out += 'cp %s %s/src\n'%(command.split()[0],CMSSW) ## move executable to folder
     #out += 'mv corrections.tar.gz %s/src\n'%CMSSW                            ## move tar to folder
     #out += 'mv JEC.tar.gz %s/src\n'%CMSSW                            ## move tar to folder
     out += 'cd %s/src\n'%CMSSW
@@ -109,8 +109,11 @@ if __name__ == '__main__':
 
     #eosoutpath = '/eos/uscms/store/user/kkwok/llp/'+outpath
     #eoscppath = 'root://cmseos.fnal.gov//store/user/kkwok/llp/'+outpath
-    eosoutpath = '/eos/uscms/store/user/lpclonglived/HNL/'+outpath
-    eoscppath = 'root://cmseos.fnal.gov//store/user/lpclonglived/HNL/'+outpath
+    # eosoutpath = '/eos/uscms/store/user/lpclonglived/HNL/'+outpath
+    # eoscppath = 'root://cmseos.fnal.gov//store/user/lpclonglived/HNL/'+outpath
+    username = os.getenv('LOGNAME') or os.getenv('USER') or os.getenv('LNAME') or os.getenv('USERNAME')
+    eosoutpath = '/eos/uscms/store/user/' + username + '/llp/'+outpath
+    eoscppath = 'root://cmseos.fnal.gov//store/user/' + username + '/llp/'+outpath
 
     ##input files needed by analyzer:
     #tarList = [
@@ -177,7 +180,7 @@ if __name__ == '__main__':
     #Skim cmd:
     #./SkimNtuple ./local_list.txt ./ "skimTest" "(runNum==304797) &&(lumiNum==2520) &&(eventNum==3297891544)"
     cutString    = ""
-    command      = '%s .${MAINDIR}/tmp_input_list_$1.txt ${MAINDIR} "skim" "%s"'%(exe,cutString)
+    command      = '%s tmp_input_list_$1.txt ${MAINDIR} "skim" "%s"'%(exe,cutString)
     # copy to eos output
     eoscp        = 'xrdcp -f ${MAINDIR}/displacedJetMuon_ntupler_*_skim.root %s'%(eoscppath)
 
