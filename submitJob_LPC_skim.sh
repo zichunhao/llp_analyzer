@@ -33,7 +33,7 @@ for era in B C D; do
     if [[ $submit == true ]]; then
         cd ${working_dir}/skim_Run2023${era}_Muon0
         condor_submit runjob.jdl
-        cd ${working_dir}/skim_Run2023${era}_Muon0
+        cd ${working_dir}/skim_Run2023${era}_Muon1
         condor_submit runjob.jdl
     fi
 done

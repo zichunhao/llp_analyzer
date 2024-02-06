@@ -66,12 +66,12 @@ def write_bash(temp = 'runjob.sh',  command = '',CMSSW="" ,eoscp=""):
     out += 'echo "After Untar: "\n'
     out += 'ls\n'
     out += 'python ${MAINDIR}/convertList.py -i ${MAINDIR}/tmp_input_list_$1.txt\n'
-    out += command + '\n'
+    out += './' + command + '\n'
     if eoscp!="":
         out += 'echo "coping to eos: "+%s  \n'%eoscp
         out +=  eoscp + '\n'
     out += 'echo "Inside $MAINDIR:"\n'
-    out += 'ls\n'
+    out += 'ls -la\n'
     out += 'echo "DELETING..."\n'
     out += 'rm -rf %s\n'%CMSSW
     out += 'rm -rf *.pdf *.C core*\n'
@@ -179,11 +179,11 @@ if __name__ == '__main__':
 
     #Skim cmd:
     #./SkimNtuple ./local_list.txt ./ "skimTest" "(runNum==304797) &&(lumiNum==2520) &&(eventNum==3297891544)"
-    cutString    = ""
-    command      = '%s tmp_input_list_$1.txt ${MAINDIR} "skim" "%s"'%(exe,cutString)
+    cutString    = "(cscRechitClusterNRechitChamberPlus11+cscRechitClusterNRechitChamberPlus12+cscRechitClusterNRechitChamberMinus11+cscRechitClusterNRechitChamberMinus12)==0 && (nCscRechitClusters>=1)"
+    command      = '%s local_list.txt ${MAINDIR} "skim" "%s"'%(exe,cutString)
     # copy to eos output
-    # eoscp        = 'xrdcp -f ${MAINDIR}/displacedJetMuon_ntupler_*_skim.root %s'%(eoscppath)
-    eoscp        = 'xrdcp -f ${MAINDIR}/displacedJetMuon_ntupler_*.root %s'%(eoscppath)
+    eoscp        = 'xrdcp -f ${MAINDIR}/displacedJetMuon_ntupler_*_skim.root %s'%(eoscppath)
+    # eoscp        = 'xrdcp -f ${MAINDIR}/displacedJetMuon_ntupler_*.root %s'%(eoscppath)
 
     #Add script options to job command
     #for opts in script_group.option_list:
