@@ -117,6 +117,8 @@ export CWD=${{PWD}}
 export PATH=${{PATH}}:/cvmfs/cms.cern.ch/common
 export SCRAM_ARCH=slc7_amd64_gcc700
 scramv1 project CMSSW {CMSSW}
+echo "Inside $MAINDIR:"
+ls -lah
 cp {exe_name} {CMSSW}/src
 cd {CMSSW}/src
 eval `scramv1 runtime -sh` # cmsenv
@@ -133,14 +135,14 @@ echo "Running job..."
     if args.copy_root:
         # copy NanoAODs and ntupler to current directory
         script_sh += f"""
-python3 ${{MAINDIR}}/convertListMerge.py -i ${{MAINDIR}}/temp_nanoAOD_{{$2}}.txt
-xrdcp -f {dir_ntupler}/ntupler_{{$1}}.root ntupler.root
-./{exe_name} ntupler.root local_list.txt ntupler_{{$1}}_nanoAOD_{{$2}}.root ""
+python3 ${{MAINDIR}}/convertListMerge.py -i ${{MAINDIR}}/temp_nanoAOD_${{2}}.txt
+xrdcp -f {dir_ntupler}/ntupler_${{1}}.root ntupler.root
+./{exe_name} ntupler.root local_list.txt ntupler_${{1}}_nanoAOD_${{2}}.root ""
 """.strip()
     else:
         # run with NanoAODs and ntupler in the original directory
         script_sh += f"""
-./{exe_name} {dir_ntupler}/ntupler_{{$1}}.root ${{MAINDIR}}/temp_nanoAOD_{{$2}}.txt ntupler_{{$1}}_nanoAOD_{{$2}}.root ""
+./{exe_name} {dir_ntupler}/ntupler_${{1}}.root ${{MAINDIR}}/temp_nanoAOD_${{2}}.txt ntupler_${{1}}_nanoAOD_${{2}}.root ""
 """.strip()
 
     # copy root files to eos and clean up
@@ -149,8 +151,8 @@ xrdcp -f {dir_ntupler}/ntupler_{{$1}}.root ntupler.root
     script_sh += f"""
 echo "Inside $MAINDIR:"
 ls -lah
-echo "coping to eos: +xrdcp -f ntupler_{{$1}}_nanoAOD_{{$2}}.root {dir_output}"
-xrdcp -f ntupler_{{$1}}_nanoAOD_{{$2}}.root {dir_output}
+echo "coping to eos: +xrdcp -f ntupler_${{1}}_nanoAOD_${{2}}.root {dir_output}"
+xrdcp -f ntupler_${{1}}_nanoAOD_${{2}}.root {dir_output}
 echo "DELETING..."
 rm -rf {CMSSW}
 rm -rf *.pdf *.C core*
@@ -162,13 +164,14 @@ date
 """
     script_sh = script_sh.strip()
 
+    list_path_temp_nanoAODs = [f"temp_nanoAOD_{i}.txt" for i in range(n_tmp_list)]
     # write jdl
     script_jdl = f"""
 universe = vanilla
 Executable = runjob.sh
 Should_Transfer_Files = YES
 WhenToTransferOutput = ON_EXIT_OR_EVICT
-Transfer_Input_Files = runjob.sh,{path_exe},{path_convertList}
+Transfer_Input_Files = runjob.sh,{path_exe},{path_convertList},{",".join(list_path_temp_nanoAODs)}
 Output = runjob.$(Process).$(Cluster).stdout
 Error  = runjob.$(Process).$(Cluster).stdout
 Log    = runjob.$(Process).$(Cluster).log
