@@ -33,10 +33,6 @@ def partition_root_files(n: int, path_input: Path) -> List[List[str]]:
 
 
 if __name__ == "__main__":
-    # Usage:
-    # python3 submitJob_LPC_llpMerge_hadd.py --input {ntupler path} --output {output dir of hadded skim} --job-dir {dir to job script} --n {number of hadded files}
-    # Example:
-    # python3 submitJob_LPC_llpMerge_hadd.py --input /eos/uscms/store/user/xxxx/llp/skim_Run2023D_Muon0 --output /eos/uscms/store/user/xxxx/llp/skim_hadd_Run2023C_Muon0 --job hadd_test --n 10
     import argparse
     import os
 
@@ -46,16 +42,14 @@ if __name__ == "__main__":
     arg_parser.add_argument(
         "--input", required=True, help="Path that contains ntupler files to hadd."
     )
-    arg_parser.add_argument(
-        "--output", required=True, help="Output root file."
-    )
+    arg_parser.add_argument("--output", required=True, help="Output root file.")
     arg_parser.add_argument("--job", required=True, help="Path to the job directory.")
     args = arg_parser.parse_args()
 
     path_output = Path(args.output)
     path_input = Path(args.input)
     path_job = Path(args.job)
-    path_output.mkdir(parents=True, exist_ok=True)
+    path_output.parent.mkdir(parents=True, exist_ok=True)
     path_job.mkdir(parents=True, exist_ok=True)
 
     script_sh = """
@@ -81,13 +75,10 @@ echo "Running job..."
 """
     file_paths = list(path_input.glob("*.root"))
     str_file_paths = [
-        str(f).replace("/eos/uscms/", "root://cmseos.fnal.gov//")
-        for f in file_paths
+        str(f).replace("/eos/uscms/", "root://cmseos.fnal.gov//") for f in file_paths
     ]
     str_file_paths = " ".join(str_file_paths)
-    str_dir_output = str(path_output).replace(
-        "/eos/uscms/", "root://cmseos.fnal.gov//"
-    )
+    str_dir_output = str(path_output).replace("/eos/uscms/", "root://cmseos.fnal.gov//")
     script_sh += f"hadd -f {str_dir_output} {str_file_paths}\n"
 
     # write to file
