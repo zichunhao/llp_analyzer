@@ -44,7 +44,7 @@ def split_nanoAOD_txt_file(n: int, file_dir: Path) -> List[List[str]]:
 if __name__ == "__main__":
     # Example:
     # python3 submitJob_LPC_llpMerge_split.py --exe ./MergeNTuples --dir-ntupler /eos/uscms/store/user/xxx/llp/skim_hadd_Run2023C_Muon0 --NanoAOD lists/Run3_nanoAOD/Muon0_2023C.txt --n 50 --job-dir merge_split_test --dir-output /eos/uscms/store/user/xxx/llp/skim_hadd_Run2023C_Muon0 --copy-root
-
+    
     # parse arguments
     import argparse
 
@@ -75,6 +75,9 @@ if __name__ == "__main__":
     )
     arg_parser.add_argument(
         "--dir-output", required=True, help="Path to the resulting root file directory."
+    )
+    arg_parser.add_argument(
+        "--memory", type=int, default=2048, help="Memory to request for the worker nodes (in MB)"
     )
     args = arg_parser.parse_args()
 
@@ -124,9 +127,6 @@ cd {CMSSW}/src
 eval `scramv1 runtime -sh` # cmsenv
 echo "Untar JEC:" 
 echo "After Untar: "
-echo "ls -la"
-ls -la
-echo "Running job..."
 # jobs
 """
 
@@ -137,11 +137,17 @@ echo "Running job..."
         script_sh += f"""
 python3 ${{MAINDIR}}/convertListMerge.py -i ${{MAINDIR}}/temp_nanoAOD_${{2}}.txt
 xrdcp -f {dir_ntupler}/ntupler_${{1}}.root ntupler.root
+echo "ls -lha"
+ls -lha
+echo "Running job..."
 ./{exe_name} ntupler.root local_list.txt ntupler_${{1}}_nanoAOD_${{2}}.root ""
 """.strip()
     else:
         # run with NanoAODs and ntupler in the original directory
         script_sh += f"""
+echo "ls -lha"
+ls -lha
+echo "Running job..."
 ./{exe_name} {dir_ntupler}/ntupler_${{1}}.root ${{MAINDIR}}/temp_nanoAOD_${{2}}.txt ntupler_${{1}}_nanoAOD_${{2}}.root ""
 """.strip()
 
@@ -168,18 +174,19 @@ date
     # write jdl
     script_jdl = f"""
 universe = vanilla
+request_memory = {args.memory}
 Executable = runjob.sh
 Should_Transfer_Files = YES
 WhenToTransferOutput = ON_EXIT_OR_EVICT
 Transfer_Input_Files = runjob.sh,{path_exe},{path_convertList},{",".join(list_path_temp_nanoAODs)}
-Output = runjob.$(Process).$(Cluster).stdout
-Error  = runjob.$(Process).$(Cluster).stdout
-Log    = runjob.$(Process).$(Cluster).log
 n1 = {n_ntuplers}
 n2 = {n_tmp_list}
 N = $(n1) * $(n2)
-I = ($(Process) / $(n1))
+I = ($(Process) / $(n2))
 J = ($(Process) % $(n2))
+Output = runjob-$(Process)-$INT(I)_$INT(J).stdout
+Error  = runjob-$(Process)-$INT(I)_$INT(J).stderr
+Log    = runjob-$(Process)-$INT(I)_$INT(J).log
 Arguments  = "$INT(I) $INT(J)"
 Queue $(N)
 """.strip()
