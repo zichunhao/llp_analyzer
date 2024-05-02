@@ -42,7 +42,7 @@ $(SRCDIR)/SimpleTable.o: $(SRCDIR)/SimpleTable.cc
 $(SRCDIR)/llp_event.o: $(SRCDIR)/llp_event.C $(INCLUDEDIR)/llp_event.h
 	$(CXX) $(SRCDIR)/llp_event.C $(CXXFLAGS) -I$(INCLUDEDIR) -c $(LDFLAGS) $(LIBS) -o $@ $(CXX14FLAGS)
 
-$(SRCDIR)/RazorAnalyzer.o: $(SRCDIR)/llp_event.o $(SRCDIR)/RazorAnalyzer.cc
+$(SRCDIR)/RazorAnalyzer.o: $(SRCDIR)/llp_event.o $(SRCDIR)/RazorAnalyzer.cc $(INCLUDEDIR)/RazorAnalyzer.h
 	$(CXX) $(SRCDIR)/RazorAnalyzer.cc $(CXXFLAGS) -I$(INCLUDEDIR) -c $(LDFLAGS) $(LIBS) -o $@ $(CXX14FLAGS)
 
 $(UTILSOBJ): %.o: %.cc
