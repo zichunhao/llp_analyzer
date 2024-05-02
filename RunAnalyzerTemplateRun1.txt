@@ -11,7 +11,7 @@
 #include <TTree.h>
 #include <TChain.h>
 
-#include <llp_hnl_analyzer.h>
+#include <%ANALYZER%.h>
 
 using namespace std;
 
@@ -32,11 +32,11 @@ std::string ParseCommandLine( int argc, char* argv[], std::string opt )
 
 void usage()
 {
-  std::cerr << "Usage: Runllp_hnl_analyzer  <input list>  [options]\n[options]:\n"
+  std::cerr << "Usage: Run%ANALYZER%  <input list>  [options]\n[options]:\n"
 	    << "-d  --isData\n"
-	    << "-f=  --outputFile=<output filename> (optional)\n"
-	    << "-n=  --optionNumber=<option number> (optional)\n"
-	    << "-l=  --optionLabel=<option Label> (optional)\n" 
+	    << "-f  --outputFile=<output filename> (optional)\n"
+	    << "-n  --optionNumber=<option number> (optional)\n"
+	    << "-l  --optionLabel=<option Label> (optional)\n" 
 	    << "-h  --help"
 	    << std::endl;
 };
@@ -144,12 +144,12 @@ int main(int argc, char* argv[]){
 	    TFile* f_0 = TFile::Open( curFileName.c_str() );
 	    if( f_0->GetDirectory("ntuples") )
 	      {
-		theChain->SetName("ntuples/llp");
+		theChain->SetName("ntuples/RazorEvents");
 		std::cout << "[INFO]: default configuration for tchain" << std::endl;
 	      }
 	    else
 	      {
-		theChain->SetName("llp");
+		theChain->SetName("RazorEvents");
 		std::cout << "[INFO]: alternative configuration for tchain"<< std::endl;
 	      }
 	    theChain->Add( curFileName.c_str() );
@@ -165,10 +165,10 @@ int main(int argc, char* argv[]){
     std::cout << "Loaded Total of " << NFilesLoaded << " files\n";
     if ( theChain == NULL ) return -1;
     
-    llp_hnl_analyzer analyzer(theChain);
+    %ANALYZER% analyzer(theChain);
     
     //------ EXECUTE ------//
-    cout << "Executing llp_hnl_analyzer..." << endl;
+    cout << "Executing %ANALYZER%..." << endl;
     analyzer.EnableAll();
     analyzer.Analyze(isData, option, outputFileName, label);
     cout << "Process completed!" << endl;

@@ -11,7 +11,7 @@
 #include <TTree.h>
 #include <TChain.h>
 
-#include <llp_hnl_analyzer.h>
+#include <%ANALYZER%.h>
 
 using namespace std;
 
@@ -32,11 +32,14 @@ std::string ParseCommandLine( int argc, char* argv[], std::string opt )
 
 void usage()
 {
-  std::cerr << "Usage: Runllp_hnl_analyzer  <input list>  [options]\n[options]:\n"
+  std::cerr << "Usage: Run%ANALYZER%  <input list>  [options]\n[options]:\n"
 	    << "-d  --isData\n"
-	    << "-f=  --outputFile=<output filename> (optional)\n"
-	    << "-n=  --optionNumber=<option number> (optional)\n"
-	    << "-l=  --optionLabel=<option Label> (optional)\n" 
+	    << "-t  --useTiming\n"
+	    << "-c  --usePhoChi2\n"
+	    << "-e  --useOddEvent\n"
+	    << "-f  --outputFile=<output filename> (optional)\n"
+	    << "-n  --optionNumber=<option number> (optional)\n"
+	    << "-l  --optionLabel=<option Label> (optional)\n" 
 	    << "-h  --help"
 	    << std::endl;
 };
@@ -62,6 +65,20 @@ int main(int argc, char* argv[]){
   std::string _d = ParseCommandLine( argc, argv, "-d" );
   bool isData = false;
   if ( _isData == "yes" || _d == "yes" ) isData = true;
+  
+  std::string _useTiming = ParseCommandLine( argc, argv, "--useTiming" );
+  std::string _usePhoChi2 = ParseCommandLine( argc, argv, "--usePhoChi2" );
+  std::string _useOddEvent = ParseCommandLine( argc, argv, "--useOddEvent" );
+  std::string _t = ParseCommandLine( argc, argv, "-t" );
+  std::string _c = ParseCommandLine( argc, argv, "-c" );
+  std::string _e = ParseCommandLine( argc, argv, "-e" );
+  bool useTiming = false;
+  bool usePhoChi2 = false;
+  bool useOddEvent = false;
+  if ( _useTiming == "yes" || _t == "yes" ) useTiming = true;
+  if ( _usePhoChi2 == "yes" || _c == "yes" ) usePhoChi2 = true;
+  if ( _useOddEvent == "yes" || _e == "yes" ) useOddEvent = true;
+
 
   //---------------------------------------------
   //G e t t i n g   o u t p u t F i l e   N a m e  
@@ -118,6 +135,9 @@ int main(int argc, char* argv[]){
     }
   
   std::cout << "[INFO]: <input list> --> " << inputFileName << std::endl;
+  std::cout << "[INFO]: useTiming --> " << useTiming << std::endl;
+  std::cout << "[INFO]: usePhoChi2 --> " << usePhoChi2 << std::endl;
+  std::cout << "[INFO]: useOddEvent --> " << useOddEvent << std::endl;
   std::cout << "[INFO]: isData --> " << isData << std::endl;
   std::cout << "[INFO]: outputFileName --> " << outputFileName << std::endl;
   std::cout << "[INFO]: option --> " << option << std::endl;
@@ -144,12 +164,12 @@ int main(int argc, char* argv[]){
 	    TFile* f_0 = TFile::Open( curFileName.c_str() );
 	    if( f_0->GetDirectory("ntuples") )
 	      {
-		theChain->SetName("ntuples/llp");
+		theChain->SetName("ntuples/RazorEvents");
 		std::cout << "[INFO]: default configuration for tchain" << std::endl;
 	      }
 	    else
 	      {
-		theChain->SetName("llp");
+		theChain->SetName("RazorEvents");
 		std::cout << "[INFO]: alternative configuration for tchain"<< std::endl;
 	      }
 	    theChain->Add( curFileName.c_str() );
@@ -165,12 +185,12 @@ int main(int argc, char* argv[]){
     std::cout << "Loaded Total of " << NFilesLoaded << " files\n";
     if ( theChain == NULL ) return -1;
     
-    llp_hnl_analyzer analyzer(theChain);
+    %ANALYZER% analyzer(theChain);
     
     //------ EXECUTE ------//
-    cout << "Executing llp_hnl_analyzer..." << endl;
+    cout << "Executing %ANALYZER%..." << endl;
     analyzer.EnableAll();
-    analyzer.Analyze(isData, option, outputFileName, label);
+    analyzer.Analyze(isData, useTiming, usePhoChi2, useOddEvent, option, outputFileName, label);
     cout << "Process completed!" << endl;
     cerr << "------------------------------" << endl; //present so that an empty .err file corresponds to a failed job
     

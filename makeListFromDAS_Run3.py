@@ -52,10 +52,10 @@ datasets = {
 for processName in datasets.keys():
 
     outputFile = open(processName+".list","w")
-    print processName
+    print(processName)
     #command = "dasgoclient -query=\"file dataset=" + datasets[processName] + " instance=prod/phys03 \" -json > tmpOutput.json"
     command = "dasgoclient -query=\"file dataset=" + datasets[processName] + " \" -json > tmpOutput.json"
-    print (command)
+    print(command)
     os.system(command)
 
     jsonFile = open("tmpOutput.json","r")
