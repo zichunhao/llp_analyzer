@@ -79,6 +79,12 @@ if __name__ == "__main__":
     arg_parser.add_argument(
         "--memory", type=int, default=2048, help="Memory to request for the worker nodes (in MB)"
     )
+    arg_parser.add_argument(
+        "--ntupler-prefix", type=str, default="ntupler_", help="prefix of ntupler files so that it is in the format {ntupler_prefix}{i}{ntupler_suffix}.root, where i is an index"
+    )
+    arg_parser.add_argument(
+        "--ntupler-suffix", type=str, default="", help="prefix of ntupler files so that it is in the format {ntupler_prefix}{i}{ntupler_suffix}.root, where i is an index"
+    )
     args = arg_parser.parse_args()
 
     # split the NanoAOD file into n groups and save them as temp lists
@@ -184,9 +190,9 @@ n2 = {n_tmp_list}
 N = $(n1) * $(n2)
 I = ($(Process) / $(n2))
 J = ($(Process) % $(n2))
-Output = runjob-$(Process)-$INT(I)_$INT(J).stdout
-Error  = runjob-$(Process)-$INT(I)_$INT(J).stderr
-Log    = runjob-$(Process)-$INT(I)_$INT(J).log
+Output = runjob-$(Cluster)_$(Process)-$INT(I)_$INT(J).stdout
+Error  = runjob-$(Cluster)_$(Process)-$INT(I)_$INT(J).stderr
+Log    = runjob-$(Cluster)_$(Process)-$INT(I)_$INT(J).log
 Arguments  = "$INT(I) $INT(J)"
 Queue $(N)
 """.strip()
